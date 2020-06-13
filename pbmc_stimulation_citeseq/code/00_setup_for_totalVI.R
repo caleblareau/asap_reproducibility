@@ -8,6 +8,7 @@ import_scRNAseq <- function(dir_base){
   
   data.dir <- paste0("../data/rnaseq/", dir_base)
   raw <- Read10X(data.dir = data.dir)
+  colnames(raw) <- paste0(substr(colnames(raw), 1, 16), "-1")
   
   # import scrublet results
   singlets <- fread(paste0("../data/rnaseq/scrublet_out/", dir_base, ".scrub.tsv")) %>%
@@ -97,8 +98,8 @@ stim_scRNA <- import_scRNAseq("stim")
 ctrl_ADT <- import_kite_counts("ctrl")[,gsub("-1", "", colnames(ctrl_scRNA))]
 stim_ADT <- import_kite_counts("stim")[,gsub("-1", "", colnames(stim_scRNA))]
 
-booctrl <- (colSums(ctrl_ADT) > 25000)
-boostim <- (colSums(stim_ADT) > 25000)
+booctrl <- !(colSums(ctrl_ADT) > 25000)
+boostim <- !(colSums(stim_ADT) > 25000)
 
 # Aggregate
 export_for_totalVI(list(ctrl_ADT[,booctrl], stim_ADT[,boostim]), list(ctrl_scRNA[,booctrl], stim_scRNA[,boostim]),
