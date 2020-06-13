@@ -97,6 +97,12 @@ stim_scRNA <- import_scRNAseq("stim")
 ctrl_ADT <- import_kite_counts("ctrl")[,gsub("-1", "", colnames(ctrl_scRNA))]
 stim_ADT <- import_kite_counts("stim")[,gsub("-1", "", colnames(stim_scRNA))]
 
+booctrl <- (colSums(ctrl_ADT) > 25000)
+boostim <- (colSums(stim_ADT) > 25000)
+
 # Aggregate
-export_for_totalVI(list(ctrl_ADT, stim_ADT), list(ctrl_scRNA, stim_scRNA), "../output/pbmcstim_citeseq_combined")
+export_for_totalVI(list(ctrl_ADT[,booctrl], stim_ADT[,boostim]), list(ctrl_scRNA[,booctrl], stim_scRNA[,boostim]),
+                   "../output/pbmcstim_citeseq_combined")
+
+
 
