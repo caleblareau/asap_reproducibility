@@ -17,8 +17,31 @@ cor_pvalue <- sapply(1:dim(mat)[1], function(i){
 
 data.frame(ADT = rownames(mat),
            corPS = corPS[1,],
-           corPS2 = corPS2[1,],
            pvalue = cor_pvalue) %>% arrange(desc(corPS)) -> cor_df
 
-ggplot(cor_df,aes(x = corPS, y = -log10(pvalue), label = ADT)) +
-  geom_text()
+write.table(cor_df, file = "../output/PS_cor_myeloid.tsv",
+            sep = "\t", quote = FALSE, row.names = FALSE, col.names = TRUE)
+
+# Make a lot of visuals
+proj <- readRDS("../../../asap_large_data_files/bonemarrow_data/output/archr_marrow/archr_proj_analyzed.rds")
+joint_df <- data.frame(proj@embeddings$UMAP$df, mdf,t(mat)) 
+joint_df <- joint_df[!is.na(joint_df$myeloidPS ), ]
+
+lapply(20:261,function(i){
+  ss_df <- joint_df[,c(1,2,17, i)]
+  tag <- colnames(ss_df)[4]
+  colnames(ss_df) <- c("UMAP1", "UMAP2", "PS", "tag")
+  p1 <- ggplot(shuf(ss_df), aes(x = UMAP1, y = UMAP2, color = tag)) +
+    geom_point() + scale_color_viridis(oob = squish, limits = c(0,3)) + 
+    labs(color = tag) + pretty_plot() + L_border() + theme(legend.position = "bottom")
+  
+  p2 <- ggplot(shuf(ss_df), aes(x = PS, y = tag)) +
+    geom_point(alpha = 1/5)  + geom_smooth() +
+    labs(color = tag) + pretty_plot() + L_border() + theme(legend.position = "bottom") +
+    labs(x = "Myeloid Pseudotime (Progenitor -> Monocyte)", y = paste0(tag, " CLR ADT expression"))
+  
+  ggsave(cowplot::plot_grid(p1, p2, nrow = 1), file = paste0("../plots/all_tags_MPS/18June_MyeloidPS_", tag, ".png"), 
+         width = 8, height = 4)
+  i
+})
+

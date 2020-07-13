@@ -10,99 +10,90 @@ import_kite_counts <- function(library, bc_file, tech, bio){
   
   # Import the goodies
   bcs <- substr(fread(bc_file, header = FALSE)[[1]], 1, 16)
-  mtx <- fread(paste0(library,"_featurecounts/featurecounts.mtx"), header = FALSE)
+  mtx <- fread(paste0(library,"featurecounts.mtx.gz"), header = FALSE)
   dim <- mtx[1,]
   mtx <- mtx[-1,]
   matx <- sparseMatrix(i = mtx[[1]], j = mtx[[2]], x = mtx[[3]])
   
   # Label features
-  rownames(matx) <- fread(paste0(library,"_featurecounts/featurecounts.barcodes.txt"), header = FALSE)[[1]]
-  colnames(matx) <- paste0(fread(paste0(library,"_featurecounts/featurecounts.genes.txt"), header = FALSE)[[1]])
+  rownames(matx) <- fread(paste0(library,"/featurecounts.barcodes.txt.gz"), header = FALSE)[[1]]
+  colnames(matx) <- paste0(fread(paste0(library,"/featurecounts.genes.txt.gz"), header = FALSE)[[1]])
   maty <- t(matx)[,rownames(matx) %in% bcs]
-  maty <- maty[,Matrix::rowSums(maty) >= 500 & Matrix::rowSums(maty) < 500000]
+  prop_control <- Matrix::colSums(maty[grepl("sotypeCtrl",rownames(maty)),])/Matrix::colSums(maty)
+  maty <- maty[,Matrix::colSums(maty) >= 500 &prop_control < 0.01]
   colnames(maty) <- paste0(library, "_", colnames(maty))
+  
   
   # Now create a seurat object
   raw <- CreateSeuratObject(counts = maty,  min.cells = 3, min.features = 10, assay = "ADT"); raw$tech <- tech; raw$bio <- bio
-  raw <- NormalizeData(raw)
-  raw <- FindVariableFeatures(raw)
-
+  raw <- NormalizeData(raw, assay = "ADT", normalization.method = "CLR")
+  raw <- ScaleData(raw, assay = "ADT")
+  
   return(raw)
 }
 
+
 # Import counts 
-asap_control <- import_kite_counts("ASAP_ctrl",  "../../CONTROL_v12_hg38-mtMask_FC14k/outs/filtered_tf_bc_matrix/barcodes.tsv", "ASAP", "noStim")
-asap_stim <- import_kite_counts("ASAP_stim",  "../../STIM_v12_hg38-mtMask_FC14k/outs/filtered_tf_bc_matrix/barcodes.tsv","ASAP", "Stim")
-cite_control <- import_kite_counts("CITE_ctrl",  "../../../../asap_paper/asap_reproducibility/pbmc_stimulation_citeseq/data/rnaseq/ctrl/barcodes.tsv.gz","CITE", "noStim")
-cite_stim <- import_kite_counts("CITE_stim",  "../../../../asap_paper/asap_reproducibility/pbmc_stimulation_citeseq/data/rnaseq/stim/barcodes.tsv.gz","CITE", "Stim")
+asap_control <- import_kite_counts("../../pbmc_stimulation_asapseq/data/adt/ASAP_ctrl_ADT/",  "../../pbmc_stimulation_asapseq/data/cellranger/control_barcodes.tsv", "ASAP", "noStim")
+asap_stim <- import_kite_counts("../../pbmc_stimulation_asapseq/data/adt/ASAP_stim_ADT/",  "../../pbmc_stimulation_asapseq/data/cellranger/stim_barcodes.tsv","ASAP", "Stim")
+cite_control <- import_kite_counts("../../pbmc_stimulation_citeseq/data/adt/ctrl_featurecounts/",  "../../pbmc_stimulation_citeseq/data/rnaseq/ctrl/barcodes.tsv.gz","CITE", "noStim")
+cite_stim <- import_kite_counts("../../pbmc_stimulation_citeseq/data/adt/stim_featurecounts/",  "../../pbmc_stimulation_citeseq/data/rnaseq/stim/barcodes.tsv.gz","CITE", "Stim")
 
-features <- SelectIntegrationFeatures(object.list = list(asap_control, asap_stim, cite_control, cite_stim))
-pbmc.list <- lapply(X = list(asap_control, asap_stim, cite_control, cite_stim), FUN = function(x) {
-  x <- ScaleData(x, features = features, verbose = FALSE)
-  x <- RunPCA(x, features = features, verbose = FALSE)
-})
-
-# Run CCA integration
-anchors <- FindIntegrationAnchors(object.list = pbmc.list, reduction = "cca", 
-                                  dims = 1:10)
-pbmc.integrated <- IntegrateData(anchorset = anchors, dims = 1:10)
-
-# Do dimension reduction
-pbmc.integrated <- NormalizeData(pbmc.integrated, assay = "ADT", normalization.method = "CLR")
-pbmc.integrated <- ScaleData(pbmc.integrated, verbose = FALSE)
-pbmc.integrated <- RunPCA(pbmc.integrated, verbose = FALSE)
-
-pbmc.integrated <- RunUMAP(pbmc.integrated, dims = 1:10)
-
-pbmc.integrated <- FindNeighbors(pbmc.integrated, dims = 1:10, verbose = FALSE)
-pbmc.integrated <- FindClusters(pbmc.integrated, verbose = FALSE, resolution = 0.5)
-DimPlot(pbmc.integrated, group.by = "seurat_clusters", label = TRUE)
-
-saveRDS(pbmc.integrated, file = "8JUNE2020_ADTseurat_PBMCstim.rds")
-
-plot_df <- data.frame(pbmc.integrated@reductions$umap@cell.embeddings,
-                      pbmc.integrated@meta.data)
-
-ggplot(shuf(plot_df), aes(x = UMAP_1, y = UMAP_2, color = bio)) +
-  geom_point(size = 0.4) + pretty_plot() + L_border() + labs(color = "", x = "UMAP1", y = "UMAP2") +
-  scale_color_manual(values = c("grey", "firebrick"))
-
-ggplot(shuf(plot_df), aes(x = UMAP_1, y = UMAP_2, color = tech)) +
-  geom_point(size = 0.4) + pretty_plot() + L_border() + labs(color = "", x = "UMAP1", y = "UMAP2") +
-  scale_color_manual(values = c("dodgerblue3", "firebrick"))
-
-pbmc.integrated$cluster.stim <- paste(Idents(pbmc.integrated), pbmc.integrated$bio, sep = "_")
-Idents(pbmc.integrated) <- "cluster.stim"
-
-FindMarkers(pbmc.integrated, ident.1 = "4_Stim", ident.2 = "4_noStim", verbose = FALSE) %>% head(10)
-
-FeaturePlot(pbmc.integrated, features = c("CD3-1", "CD69", "CD56(NCAM)", "CD274", "CD25", "CD71", "CD4-1", "CD8",
-                                          "CD19", "CD16", "CD14", "HLA-DR"),  min.cutoff = "q05", max.cutoff = "q95")
-
-
-pbmc <- merge(merge(merge(asap_control, asap_stim,  add.cell.ids = c("a", "b")), cite_control, add.cell.ids= c("C1", "C2")), cite_stim,add.cell.ids = c("D1", "D2"))
+pbmc <- merge(merge(merge(asap_control, asap_stim,  add.cell.ids = c("AC", "AS")), cite_control, add.cell.ids= c("", "CC")), cite_stim,add.cell.ids = c("", "CS"))
 
 # Do dimension reduction
 pbmc <- NormalizeData(pbmc, assay = "ADT", normalization.method = "CLR")
 pbmc <- ScaleData(pbmc, verbose = FALSE)
-pbmc <- FindVariableFeatures(pbmc)
-pbmc <- RunPCA(pbmc, verbose = FALSE)
-pbmc <- RunHarmony(pbmc, c("tech","bio"), assay.use = "ADT")
-pbmc <- RunUMAP(pbmc, reduction = "harmony", dims = 1:10)
+pbmc <- FindVariableFeatures(pbmc, nfeatures = 100, selection.method = "vst")
 
-pbmc <- FindNeighbors(pbmc, dims = 1:10, verbose = FALSE, reduction = "harmony")
-pbmc <- FindClusters(pbmc, verbose = FALSE, resolution = 0.5)
-DimPlot(pbmc)
+# Manually curage variable features 
+df <- pbmc@assays$ADT@meta.features; df$tag <- rownames(df)
+tag_features <- df %>% arrange(desc(vst.variance)) %>% pull(tag) %>% head(150)
+pbmc@assays$ADT@var.features <- tag_features
+
+pbmc <- RunPCA(pbmc, verbose = FALSE)
+pbmc <- RunHarmony(pbmc, c("tech", "bio"), assay.use = "ADT")
+pbmc <- RunUMAP(pbmc, reduction = "harmony", dims = 1:15)
+
+#pbmc <- FindNeighbors(pbmc, dims = 1:10, verbose = FALSE, reduction = "harmony")
+#pbmc <- FindClusters(pbmc, verbose = FALSE, resolution = 0.5)
+
 plot_df2 <- data.frame(pbmc@reductions$umap@cell.embeddings,
+                       t(pbmc@assays$ADT@scale.data),
                        pbmc@meta.data)
 
+library(viridis)
+ggplot(shuf(plot_df2), aes(x = UMAP_1, y = UMAP_2, color = CD3.2)) +
+  facet_grid(tech~bio) +
+  geom_point(size = 0.4) + pretty_plot() + labs(color = "CD3 CLR", x = "UMAP1", y = "UMAP2") +
+  scale_color_viridis()
+
+ggplot(shuf(plot_df2), aes(x = UMAP_1, y = UMAP_2, color = CD20)) +
+  facet_grid(tech~bio) +
+  geom_point(size = 0.4) + pretty_plot() + labs(color = "CD20 CLR", x = "UMAP1", y = "UMAP2") +
+  scale_color_viridis()
+
+ggplot(shuf(plot_df2), aes(x = UMAP_1, y = UMAP_2, color = CD11c)) +
+  facet_grid(tech~bio) +
+  geom_point(size = 0.4) + pretty_plot() + labs(color = "CD11c CLR", x = "UMAP1", y = "UMAP2") +
+  scale_color_viridis()
+
+
+ggplot(shuf(plot_df2), aes(x = UMAP_1, y = UMAP_2, color = CD25)) +
+  facet_grid(tech~bio) +
+  geom_point(size = 0.4) + pretty_plot() + labs(color = "CD69 CLR", x = "UMAP1", y = "UMAP2") +
+  scale_color_viridis()
+
 ggplot(shuf(plot_df2), aes(x = UMAP_1, y = UMAP_2, color = bio)) +
-  geom_point(size = 0.4) + pretty_plot() + L_border() + labs(color = "", x = "UMAP1", y = "UMAP2") +
+  geom_point(size = 0.4) + pretty_plot() + L_border() + labs(color = "Condition", x = "UMAP1", y = "UMAP2") +
   scale_color_manual(values = c("grey", "firebrick"))
 
 ggplot(shuf(plot_df2), aes(x = UMAP_1, y = UMAP_2, color = tech)) +
   geom_point(size = 0.4) + pretty_plot() + L_border() + labs(color = "", x = "UMAP1", y = "UMAP2") +
   scale_color_manual(values = c("dodgerblue3", "firebrick"))
+
+
+
 
 pbmc@meta.data$log2_nCount_ADT <- log2(pbmc@meta.data$nCount_ADT)
 FeaturePlot(pbmc, "log2_nCount_ADT")

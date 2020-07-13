@@ -12,10 +12,13 @@ SE_filt <- SE[,colnames(SE) %in% barcodes & colData(SE)$depth > 10]
 # Now call mutations
 mSE <- call_mutations_mgatk(SE_filt)
 muts_df <- rowData(mSE)
-vars_clone <- data.frame(muts_df) %>%  filter(n_cells_conf_detected >= 3 & strand_correlation > 0.65 & log10(vmr) > -2 & mean_coverage >= 10) 
+boo <- muts_df$n_cells_conf_detected >= 3 & muts_df$strand_correlation > 0.65 & log10(muts_df$vmr) > -2 & muts_df$mean_coverage >= 10
+vars_clone <- data.frame(muts_df) %>%  filter(boo) 
 vars_clone %>% arrange(desc(mean))
 
 dim(vars_clone)
+saveRDS(mSE[boo,], file = "../output/mitoMutaitons_cov10_marrow.rds")
+
 
 ref_all <- fread("../../global_functions/data/chrM_refAllele.txt")
 
