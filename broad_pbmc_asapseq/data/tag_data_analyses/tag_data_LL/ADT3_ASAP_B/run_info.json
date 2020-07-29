@@ -1,0 +1,13 @@
+{
+	"n_targets": 0,
+	"n_bootstraps": 0,
+	"n_processed": 44210973,
+	"n_pseudoaligned": 41102950,
+	"n_unique": 41102950,
+	"p_pseudoaligned": 93.0,
+	"p_unique": 93.0,
+	"kallisto_version": "0.46.1",
+	"index_version": 0,
+	"start_time": "Tue Feb 25 17:32:08 2020",
+	"call": "kallisto bus -i Regev_FB.idx -o ADT3 -x 10xv2 -t 4 ADT3_ASAP_B_R1.fastq.gz ADT3_ASAP_B_R2.fastq.gz"
+}

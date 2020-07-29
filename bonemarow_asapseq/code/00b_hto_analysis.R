@@ -14,28 +14,43 @@ import_kite_counts <- function(){
 }
 hto <- import_kite_counts()
 cells <- gsub("-1", "", fread("../data/barcodes/step1_barcodes_from_ArchR.tsv")[[1]])
-cmat <- hto[,colnames(hto) %in% cells]
-pbmc.hashtag <- CreateSeuratObject(counts = cmat, assay = "HTO")
-pbmc.hashtag <- NormalizeData(pbmc.hashtag, assay = "HTO", normalization.method = "CLR")
-pbmc.hashtag <- ScaleData(pbmc.hashtag, assay = "HTO", normalization.method = "CLR")
+doublet_scores_archr <-  fread("../data/barcodes/step1_barcodes_from_ArchR.tsv")[[2]]
+vec <- doublet_scores_archr; names(vec) <- cells
 
-pbmc.hashtag <- HTODemux(pbmc.hashtag, assay = "HTO", positive.quantile = 0.995)
-table(pbmc.hashtag$HTO_classification.global)
-Idents(pbmc.hashtag) <- "HTO_maxID"
-pR <- RidgePlot(pbmc.hashtag, assay = "HTO", 
-                features = rownames(pbmc.hashtag[["HTO"]])[1:6], ncol = 3, cols = jdb_palette("corona"))
+# Subset cells
+cmat <- hto[,colnames(hto) %in% cells]
+bm.hashtag <- CreateSeuratObject(counts = cmat, assay = "HTO")
+bm.hashtag <- NormalizeData(bm.hashtag, assay = "HTO", normalization.method = "CLR")
+bm.hashtag <- ScaleData(bm.hashtag, assay = "HTO", normalization.method = "CLR")
+
+bm.hashtag <- HTODemux(bm.hashtag, assay = "HTO", positive.quantile = 0.995)
+val <- vec[rownames(bm.hashtag@meta.data)]
+ddf <- data.frame(
+  barcode = rownames(bm.hashtag@meta.data),
+  classify_hto = bm.hashtag@meta.data$HTO_classification.global,
+  val
+)
+ggplot(ddf, aes(x = classify_hto, y = val)) +
+  geom_boxplot()
+
+df <- data.frame(cells = paste0(colnames(bm.hashtag), "-1"), classification = (bm.hashtag$HTO_classification.global))
+write.table(df[df$classification != "Doublet",1, drop = TRUE], file = "../data/barcodes/step2_singlets_from_HTO.tsv",
+            sep = "\t", quote = FALSE, col.names = FALSE, row.names = FALSE)
+
+
+
+#---------------------------------------
+Idents(bm.hashtag) <- "HTO_maxID"
+pR <- RidgePlot(bm.hashtag, assay = "HTO", 
+                features = rownames(bm.hashtag[["HTO"]])[1:6], ncol = 3, cols = jdb_palette("corona"))
 pR
 #ggsave(pR, file = "HTO_ridges.pdf", width = 10, height = 5)  
 
 # Visualize
-Idents(pbmc.hashtag) <- "HTO_classification.global"
+Idents(bm.hashtag) <- "HTO_classification.global"
 # Calculate a distance matrix using HTO
-hto.dist.mtx <- as.matrix(dist(t(GetAssayData(object = pbmc.hashtag, assay = "HTO"))))
+hto.dist.mtx <- as.matrix(dist(t(GetAssayData(object = bm.hashtag, assay = "HTO"))))
 # Calculate tSNE embeddings with a distance matrix
-pbmc.hashtag <- RunTSNE(pbmc.hashtag, distance.matrix = hto.dist.mtx, perplexity = 100)
+bm.hashtag <- RunTSNE(bm.hashtag, distance.matrix = hto.dist.mtx, perplexity = 100)
 
-DimPlot(pbmc.hashtag)
-
-df <- data.frame(cells = paste0(colnames(pbmc.hashtag), "-1"), classification = (pbmc.hashtag$HTO_classification.global))
-write.table(df[df$classification != "Doublet",1, drop = TRUE], file = "../data/barcodes/step2_singlets_from_HTO.tsv",
-            sep = "\t", quote = FALSE, col.names = FALSE, row.names = FALSE)
+DimPlot(bm.hashtag)

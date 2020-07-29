@@ -19,9 +19,9 @@ import_kite_counts <- function(library, bc_file, tech, bio){
   rownames(matx) <- fread(paste0(library,"/featurecounts.barcodes.txt.gz"), header = FALSE)[[1]]
   colnames(matx) <- paste0(fread(paste0(library,"/featurecounts.genes.txt.gz"), header = FALSE)[[1]])
   maty <- t(matx)[,rownames(matx) %in% bcs]
-  maty <- maty[,Matrix::rowSums(maty) >= 500 & Matrix::rowSums(maty) < 100000]
+  prop_control <- Matrix::colSums(maty[grepl("sotypeCtrl",rownames(maty)),])/Matrix::colSums(maty)
+  maty <- maty[,Matrix::colSums(maty) >= 500 &prop_control < 0.01]
   colnames(maty) <- paste0(library, "_", colnames(maty))
-  
   
   # Now create a seurat object
   raw <- CreateSeuratObject(counts = maty,  min.cells = 3, min.features = 10, assay = "ADT"); raw$tech <- tech; raw$bio <- bio
@@ -47,11 +47,18 @@ rdf <- rbind(
   data.frame(t(cite_stim@assays$ADT@scale.data[c("CD19", "CD20", "CD11c", "CD14", "CD16", "CD8a",  "CD4-1", "CD3-1"),]),
              assay = "CITE", what = "Stim"))
 
-ggplot(rdf %>% filter(CD20 < 8), aes(x = CD11c, y = CD20)) +
+ggplot(rdf %>% filter(CD20 < 8), aes(x = CD4.1, y = CD20)) +
   facet_grid(assay~what) + geom_point(alpha = 0.5) +
   pretty_plot() +
-  geom_vline(xintercept = 1.8, color = "firebrick") +
+  geom_vline(xintercept = 0, color = "firebrick") +
   geom_hline(yintercept = 2, color = "firebrick")
+
+ggplot(rdf %>% filter(CD20 < 8), aes(x = CD4.1, y = CD8a)) +
+  facet_grid(assay~what) + geom_point(alpha = 0.5) +
+  pretty_plot() +
+  geom_vline(xintercept = 0, color = "firebrick") +
+  geom_hline(yintercept = 0.5, color = "firebrick")
+
 
 
 

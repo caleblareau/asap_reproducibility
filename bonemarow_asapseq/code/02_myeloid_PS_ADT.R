@@ -1,4 +1,6 @@
 library(Seurat)
+library(viridis)
+library(scales)
 
 mdf <- readRDS("../output/ArchR_main_metadata.rds")
 mdf$barcode <- gsub("ASAP_marrow_hg38#", "", rownames(mdf))
@@ -10,7 +12,6 @@ adtbm <- ScaleData(adtbm, assay="ADT")
 mat <- data.matrix(adtbm@assays$ADT@scale.data)
 
 corPS <- cor(mdf$myeloidPS, t(mat), use = "pairwise.complete", method = "spearman")
-corPS2 <- cor(mdf$myeloidPS2, t(mat), use = "pairwise.complete", method = "spearman")
 cor_pvalue <- sapply(1:dim(mat)[1], function(i){
   cor.test(mdf$myeloidPS, mat[i,], use = "pairwise.complete", method = "spearman")$p.value
 })
@@ -23,12 +24,11 @@ write.table(cor_df, file = "../output/PS_cor_myeloid.tsv",
             sep = "\t", quote = FALSE, row.names = FALSE, col.names = TRUE)
 
 # Make a lot of visuals
-proj <- readRDS("../../../asap_large_data_files/bonemarrow_data/output/archr_marrow/archr_proj_analyzed.rds")
-joint_df <- data.frame(proj@embeddings$UMAP$df, mdf,t(mat)) 
+joint_df <- data.frame( mdf,t(mat)) 
 joint_df <- joint_df[!is.na(joint_df$myeloidPS ), ]
 
 lapply(20:261,function(i){
-  ss_df <- joint_df[,c(1,2,17, i)]
+  ss_df <- joint_df[,c(17,18,16, i)]
   tag <- colnames(ss_df)[4]
   colnames(ss_df) <- c("UMAP1", "UMAP2", "PS", "tag")
   p1 <- ggplot(shuf(ss_df), aes(x = UMAP1, y = UMAP2, color = tag)) +

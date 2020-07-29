@@ -19,7 +19,7 @@ proj <- subsetCells(ArchRProj = proj, cellNames = keep_cells)
 proj <- addIterativeLSI(ArchRProj = proj, useMatrix = "TileMatrix", name = "IterativeLSI")
 proj <- addImputeWeights(proj)
 proj <- addUMAP(ArchRProj = proj, reducedDims = "IterativeLSI", minDist = 0.4, force = TRUE)
-proj <- addClusters(input = proj, reducedDims = "IterativeLSI")
+proj <- addClusters(input = proj, reducedDims = "IterativeLSI", resolution = 1, force = TRUE)
 
 plotEmbedding(ArchRProj = proj, colorBy = "cellColData", name = "Clusters", embedding = "UMAP")
 
@@ -59,22 +59,17 @@ proj <- addTrajectory(
   ArchRProj = proj, 
   name = "myeloidPS", 
   groupBy = "Clusters",
-  trajectory = c("C1", "C7", "C19", "C20"), 
+  trajectory = c( "C8", "C20", "C21"), 
   embedding = "UMAP", 
   force = TRUE
 )
 p <- plotTrajectory(proj, trajectory = "myeloidPS", colorBy = "cellColData", name = "myeloidPS")
 p[[1]]
 
-proj <- addTrajectory(
-  ArchRProj = proj, 
-  name = "myeloidPS2", 
-  groupBy = "Clusters",
-  trajectory = c("C1", "C7", "C19", "C20", "C17"), 
-  embedding = "UMAP", 
-  force = TRUE
+umap_df <- data.frame(proj@embeddings$UMAP@listData$df); colnames(umap_df) <- c("UMAP1", "UMAP2")
+meta_df <- data.frame(
+  proj@cellColData,
+  umap_df
 )
-p <- plotTrajectory(proj, trajectory = "myeloidPS2", colorBy = "cellColData", name = "myeloidPS2")
-
-saveRDS(proj@cellColData, file = "../output/ArchR_main_metadata.rds")
+saveRDS(meta_df, file = "../output/ArchR_main_metadata.rds")
 saveRDS(proj, file = "../../../asap_large_data_files/bonemarrow_data/output/archr_marrow/archr_proj_analyzed.rds")

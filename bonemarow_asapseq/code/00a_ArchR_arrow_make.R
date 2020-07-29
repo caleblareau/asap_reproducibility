@@ -15,7 +15,9 @@ proj <- ArchRProject(
   outputDirectory = "../../../asap_large_data_files/bonemarrow_data/output/archr_marrow/ASAP_marrow_hg38",
   copyArrows = FALSE
 )
+proj <- addDoubletScores(proj)
 
-df <- data.frame(barcode = substr(rownames(proj@cellColData), 18, 35))
+df <- data.frame(barcode = substr(rownames(proj@cellColData), 18, 35),
+                 doublet_score = proj@cellColData$DoubletEnrichment)
 write.table(df, file = "../data/barcodes/step1_barcodes_from_ArchR.tsv",
             sep = "\t", quote = FALSE, row.names = FALSE, col.names = FALSE)

@@ -9,6 +9,27 @@ SE <- readRDS("../../../asap_large_data_files/bonemarrow_data/input/BM_asap_v12_
 barcodes <- fread("../data/barcodes/step3_ADThq.tsv", header = FALSE)[[1]]
 SE_filt <- SE[,colnames(SE) %in% barcodes & colData(SE)$depth > 10]
 
+# Export a fasta of the most likely genotype / position
+if(FALSE){
+  library(seqinr)
+  get_letter_total <- function(letter) rowSums(assays(SE)[[paste0(letter, "_counts_fw")]]) + rowSums(assays(SE)[[paste0(letter, "_counts_rev")]])
+  mat <- data.matrix(data.frame(
+    xA = get_letter_total("A"),
+    xC = get_letter_total("C"),
+    xG = get_letter_total("G"),
+    xT = get_letter_total("T")
+  ))
+  chars <- c("A", "C", "G", "T")[(max.col(mat))]
+  haplotype <- paste(chars, collapse = "")
+  write.fasta(sequences = haplotype, names = "chrM", file.out = "../output/chrM_haplotype_donor_16260C.fasta")
+  
+  # Look at the T
+  chars_T <- chars
+  chars_T[16260] <- "T"
+  write.fasta(sequences =  paste(chars_T, collapse = ""), names = "chrM", file.out = "../output/chrM_haplotype_donor_16260T.fasta")
+  
+}
+
 # Now call mutations
 mSE <- call_mutations_mgatk(SE_filt)
 muts_df <- rowData(mSE)
