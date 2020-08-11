@@ -13,7 +13,7 @@ genebodyandpromoter.coords <- Extend(x = gene.coords, upstream = 2000, downstrea
 
 # Get fragment files
 frag_file <- "../../../asap_large_data_files/bonemarrow_data/input/asap_marrow_hg38_fragments.tsv.gz"
-bcs <- fread("../data/barcodes/step3_ADThq.tsv")[[1]]
+bcs <- fread("../data/barcodes/step3_ADThq.tsv", header = FALSE)[[1]]
 
 process_ga <- function(frag_file, cells){
   # create a gene by cell matrix

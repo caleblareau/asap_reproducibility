@@ -1,4 +1,5 @@
 library(ArchR)
+library(dplyr)
 
 # Establish ArchR project
 proj <- ArchRProject(
@@ -23,50 +24,60 @@ proj <- addClusters(input = proj, reducedDims = "IterativeLSI", resolution = 1, 
 
 plotEmbedding(ArchRProj = proj, colorBy = "cellColData", name = "Clusters", embedding = "UMAP")
 
-# Visualize marker genes
-markerGenes  <- c(
-  "CD34",  #Early Progenitor
-  "GATA1", #Erythroid
-  "PAX5", "MS4A1",  #B-Cell Trajectory
-  "CD14", "MPO", #Monocytes
-  "CD3D", "CD8A", "CD4" #TCells
+# Pull out UMAP for manual analysis
+umap_df <- data.frame(proj@embeddings$UMAP@listData$df); colnames(umap_df) <- c("UMAP1", "UMAP2")
+meta_df <- data.frame(
+  proj@cellColData,
+  umap_df
+)
+ggplot(meta_df %>% dplyr::filter(Clusters == "C8" & UMAP1 < 0), aes(x = UMAP1, y = UMAP2)) + geom_point() +
+  geom_vline(xintercept = -4, color = "firebrick") +
+  geom_vline(xintercept = -4.7, color = "dodgerblue3") 
+  
+
+proj@cellColData$Clusters_for_ery_PS <- case_when(
+  meta_df$Clusters == "C1" ~ "C1",
+  meta_df$Clusters == "C2" ~ "C2",
+  meta_df$Clusters == "C8" & meta_df$UMAP1 > -4.7 ~ "C0e",
+  TRUE ~ "other"
 )
 
-p <- plotEmbedding(
-  ArchRProj = proj, 
-  colorBy = "GeneScoreMatrix", 
-  name = markerGenes, 
-  embedding = "UMAP",
-  imputeWeights = getImputeWeights(proj)
+proj@cellColData$Clusters_for_mono_PS <- case_when(
+  meta_df$Clusters == "C20" ~ "C20",
+  meta_df$Clusters == "C21" ~ "C21",
+  meta_df$Clusters == "C8" & meta_df$UMAP1 < -4 ~ "C0m",
+  TRUE ~ "other"
 )
 
-#Rearrange for grid plotting
-p2 <- lapply(p, function(x){
-  x + guides(color = FALSE, fill = FALSE) + 
-    theme_ArchR(baseSize = 6.5) +
-    theme(plot.margin = unit(c(0, 0, 0, 0), "cm")) +
-    theme(
-      axis.text.x=element_blank(), 
-      axis.ticks.x=element_blank(), 
-      axis.text.y=element_blank(), 
-      axis.ticks.y=element_blank()
-    )
-})
-do.call(cowplot::plot_grid, c(list(ncol = 3),p2))
+plotEmbedding(ArchRProj = proj, colorBy = "cellColData", name = "Clusters_for_mono_PS", embedding = "UMAP")
+plotEmbedding(ArchRProj = proj, colorBy = "cellColData", name = "Clusters_for_ery_PS", embedding = "UMAP")
 
 # Add a pseudotime
 proj <- addTrajectory(
   ArchRProj = proj, 
-  name = "myeloidPS", 
-  groupBy = "Clusters",
-  trajectory = c( "C8", "C20", "C21"), 
+  name = "monocyte_PS", 
+  groupBy = "Clusters_for_mono_PS",
+  trajectory = c( "C0m", "C20", "C21"), 
   embedding = "UMAP", 
   force = TRUE
 )
-p <- plotTrajectory(proj, trajectory = "myeloidPS", colorBy = "cellColData", name = "myeloidPS")
-p[[1]]
 
-umap_df <- data.frame(proj@embeddings$UMAP@listData$df); colnames(umap_df) <- c("UMAP1", "UMAP2")
+proj <- addTrajectory(
+  ArchRProj = proj, 
+  name = "erythroid_PS", 
+  groupBy = "Clusters_for_ery_PS",
+  trajectory = c( "C0e", "C1", "C2"), 
+  embedding = "UMAP", 
+  force = TRUE
+)
+library(BuenColors)
+p_mps <- plotTrajectory(proj, trajectory = "monocyte_PS", colorBy = "cellColData", name = "monocyte_PS")
+cowplot::ggsave2(p_mps[[1]] + theme_void() + theme(legend.position = "none") + ggtitle(""), file = "../plots/pseudotime_monocyte.pdf",
+                 width = 6, height = 6)
+p_eps <- plotTrajectory(proj, trajectory = "erythroid_PS", colorBy = "cellColData", name = "erythroid_PS")
+cowplot::ggsave2(p_eps[[1]] + theme_void() + theme(legend.position = "none") + ggtitle(""), file = "../plots/pseudotime_erythroid.pdf",
+                 width = 6, height = 6)
+
 meta_df <- data.frame(
   proj@cellColData,
   umap_df

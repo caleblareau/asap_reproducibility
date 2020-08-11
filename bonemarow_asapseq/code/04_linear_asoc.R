@@ -2,9 +2,11 @@ library(Seurat)
 library(viridis)
 library(scales)
 
+# Import ATAC processed data
 mdf <- readRDS("../output/ArchR_main_metadata.rds")
 mdf$barcode <- gsub("ASAP_marrow_hg38#", "", rownames(mdf))
 
+# Look at the ADT data
 adt_ss <- readRDS("../output/adt_mat/ASAP_bonemarrow_matrix.rds")[,mdf$barcode]
 adtbm <- CreateSeuratObject(counts = adt_ss, assay = "ADT")
 adtbm <- NormalizeData(adtbm, assay = "ADT", normalization.method = "CLR")
