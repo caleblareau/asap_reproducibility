@@ -83,7 +83,6 @@ ASAP_ctrl <- estimate_tag_rates("ASAP_ctrl_featurecounts.tsv", "../../CONTROL_v1
 ASAP_stim <- estimate_tag_rates("ASAP_stim_featurecounts.tsv", "../../STIM_v12_hg38-mtMask_FC14k/outs/filtered_tf_bc_matrix/barcodes.tsv", pbmc_vec)
 CITE_ctrl <- estimate_tag_rates("CITE_ctrl_featurecounts.tsv", "../../../../asap_paper/asap_reproducibility/pbmc_stimulation_citeseq/data/rnaseq/ctrl/barcodes.tsv.gz", pbmc_vec)
 CITE_stim <- estimate_tag_rates("CITE_stim_featurecounts.tsv", "../../../../asap_paper/asap_reproducibility/pbmc_stimulation_citeseq/data/rnaseq/stim/barcodes.tsv.gz", pbmc_vec)
-ASAP_marrow <- estimate_tag_rates("BM_featurecounts.tsv", "../../../BM_asap_v12_hg38-mtMask_mgatk/final/BM_asap_v12_hg38-mtMask_mgatk.depthTable.txt", BM_vec)
 
 summary(ASAP_ctrl[ASAP_ctrl$complexity < 100000, "count"])
 summary(CITE_ctrl[CITE_ctrl$complexity < 100000, "count"])
@@ -100,7 +99,6 @@ compute_duplicate_percentage(ASAP_ctrl)
 compute_duplicate_percentage(CITE_ctrl)
 compute_duplicate_percentage(ASAP_ctrl)
 compute_duplicate_percentage(ASAP_stim)
-compute_duplicate_percentage(ASAP_marrow)
 
 
 

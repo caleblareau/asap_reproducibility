@@ -4,29 +4,11 @@ library(Matrix)
 library(Seurat)
 library(harmony)
 
-# Import scRNA-seq
-import_scRNAseq_cite_stim <- function(dir_base){
-  
-  data.dir <- paste0("../../pbmc_stimulation_citeseq/data/rnaseq/", dir_base)
-  raw <- Read10X(data.dir = data.dir)
-  colnames(raw) <- paste0(substr(colnames(raw), 1, 16), "-1")
-  
-  # import scrublet results
-  singlets <- fread(paste0("../../pbmc_stimulation_citeseq/data/rnaseq/scrublet_out/", dir_base, ".scrub.tsv")) %>%
-    data.frame() %>% dplyr::filter(score < 0.2) %>% pull(barcode) # the original called threshold seemed too conservative; this is a better estimate for these libraries
-  
-  # Filter for singlet cells and non-mito genes
-  raw <- raw[!grepl("^MT", rownames(raw)), singlets]
-  raw <- CreateSeuratObject(counts = raw, project = "RNA")
-  raw <- FindVariableFeatures(raw)
-  raw <- NormalizeData(raw)
-  raw <- ScaleData(raw)
-  raw
-}
+source("10a_import_scRNA.R")
 
 # Import matrices
-ctrl_scRNA <- import_scRNAseq_cite_stim("ctrl")
-stim_scRNA <- import_scRNAseq_cite_stim("stim")
+ctrl_scRNA <- import_scRNAseq_cite_stim("ctrl"); dim(ctrl_scRNA)
+stim_scRNA <- import_scRNAseq_cite_stim("stim"); dim(stim_scRNA)
 ga_control <- readRDS("../../../asap_large_data_files/pbmc_stim_data/output/signac_genes_scores/signac_control_ga.rds")
 ga_stim <- readRDS("../../../asap_large_data_files/pbmc_stim_data/output/signac_genes_scores/signac_stim_ga.rds")
 
@@ -53,6 +35,41 @@ cite_control <- import_kite_counts_known_bcs("../../pbmc_stimulation_citeseq/dat
 cite_stim <- import_kite_counts_known_bcs("../../pbmc_stimulation_citeseq/data/adt/stim_featurecounts/",  colnames(stim_scRNA),"CITE", "Stim")
 asap_control <- import_kite_counts_known_bcs("../../pbmc_stimulation_asapseq/data/adt/ASAP_ctrl_ADT/",  colnames(ga_control), "ASAP", "noStim")
 asap_stim <- import_kite_counts_known_bcs("../../pbmc_stimulation_asapseq/data/adt/ASAP_stim_ADT/",  colnames(ga_stim),"ASAP", "Stim")
+
+# Look for super expressors in the citeseq data
+ctrl_meta <- data.frame(
+  total = colSums(cite_control),
+  control_tags = colSums(cite_control[grepl("sotypeCtrl", rownames(cite_control)),]) + 1
+)
+
+stim_meta <- data.frame(
+  total = colSums(cite_stim),
+  control_tags = colSums(cite_stim[grepl("sotypeCtrl", rownames(cite_stim)),]) + 1
+)
+
+ggplot(ctrl_meta, aes(total, control_tags)) +
+  geom_point() + scale_x_log10() + scale_y_log10() +
+  geom_vline(xintercept = 2.5e+04, color = "firebrick")+
+  geom_hline(yintercept = 55, color = "firebrick")
+
+
+ggplot(stim_meta, aes(total, control_tags)) +
+  geom_point() + scale_x_log10() + scale_y_log10() +
+  geom_vline(xintercept = 3e+04, color = "firebrick")+
+  geom_hline(yintercept = 65, color = "firebrick")
+
+
+remove_stim <- stim_meta$total > 25000 | stim_meta$control_tags > 55
+remove_ctrl <- ctrl_meta$total > 30000 | ctrl_meta$control_tags > 65
+
+# Now filter the citeseq data
+ctrl_scRNA <- ctrl_scRNA[,!remove_ctrl]
+stim_scRNA <- stim_scRNA[,!remove_stim]
+
+cite_control <- cite_control[,!remove_ctrl]
+cite_stim <- cite_stim[,!remove_stim]
+dim(ctrl_scRNA); dim(cite_control)
+dim(stim_scRNA); dim(cite_stim)
 
 ctrl_scRNA[["ADT"]] <- CreateAssayObject(counts = cite_control)
 stim_scRNA[["ADT"]] <- CreateAssayObject(counts = cite_stim)
@@ -100,124 +117,20 @@ stim_coembed <- seurat_integration_cca(ga_stim, stim_scRNA, asap_stim)
 control_coembed$stim <- "control"
 stim_coembed$stim <- "stim"
 
+set.seed(1)
 coembed4 <- merge(x = control_coembed, y = stim_coembed)
 coembed4 <- ScaleData(coembed4, features = genes.use, do.scale = FALSE)
 coembed4 <- RunPCA(coembed4, verbose = FALSE, features = genes.use)
-coembed4 <- coembed4 %>%  RunHarmony(c("stim", "orig.ident"))
-coembed4 <- coembed4 %>% RunUMAP(reduction = "harmony", dims = 1:20) %>% 
-  FindNeighbors(reduction = "harmony", dims = 1:20) %>% 
-  FindClusters(resolution = 0.5) %>% 
-  identity()
-
-DimPlot(coembed4, reduction = "umap", group.by = "seurat_clusters", pt.size = .1, split.by = c( 'stim'), label = TRUE)
-FeaturePlot(coembed4, reduction = "umap", features = c("NCAM1", "CD3E", "MS4A1", "LYZ"), pt.size = .3, split.by = c( 'stim'))
-
-mdf <- data.frame(
-  coembed4@reductions$umap@cell.embeddings,
-  assay = coembed4@meta.data$orig.ident,
-  stim = coembed4@meta.data$stim,
-  cluster = coembed4@meta.data$seurat_clusters,
-  barcode = substr(rownames(coembed4@meta.data), 1, 16)
-)
-
-set.seed(10)
-ggplot(mdf,aes(x=UMAP_1, y = UMAP_2, color = cluster)) +
-  geom_point(size = 0.1) + 
-  pretty_plot() + 
-  facet_grid(assay ~ stim) +
-  scale_color_manual(values = sample(jdb_palette("corona")[1:16]))
-
-
-t_cell_df <- mdf %>% filter(cluster %in% c(8,13)) # c(0, 1, 2, 3, 5, 6, 9, 10, 12)
-
-# Quick function for counts per million
-cpm <- function(mat){
-  rs <- rowSums(mat)
-  return(round(rs/sum(rs)*1000000, 2))
-}
-
-extract_cpm <- function(mat, barcodes){
-  (cpm(mat[,substr(colnames(mat), 1, 16) %in% substr(barcodes, 1, 16)]))
-}
-
-# Assemble master table
-atac_control <- extract_cpm(ga_control, t_cell_df %>% filter(assay == "ATAC" & stim == "control") %>% pull(barcode))
-atac_stim <- extract_cpm(ga_stim, t_cell_df %>% filter(assay == "ATAC" & stim == "stim") %>% pull(barcode))
-
-rna_control <- extract_cpm(ctrl_scRNA@assays$RNA@counts, t_cell_df %>% filter(assay == "RNA" & stim == "control") %>% pull(barcode))
-rna_stim <- extract_cpm(stim_scRNA@assays$RNA@counts, t_cell_df %>% filter(assay == "RNA" & stim == "stim") %>% pull(barcode))
-
-protein_control <- coembed4@assays$ADT@counts[, rownames(t_cell_df)[t_cell_df$stim == "control"]] %>% cpm
-protein_stim <- coembed4@assays$ADT@counts[, rownames(t_cell_df)[t_cell_df$stim == "stim"]] %>% cpm
-
-# Create changes for each assay
-gene_mapping$protein_control <- protein_control[gene_mapping$Marker_name]
-gene_mapping$protein_stim <- protein_stim[gene_mapping$Marker_name]
-gene_mapping$log2_protein_change <- log2((gene_mapping$protein_stim + 1) / (gene_mapping$protein_control +  1))
-
-gene_mapping$rna_control <- rna_control[gene_mapping$Gene_symbol]
-gene_mapping$rna_stim <- rna_stim[gene_mapping$Gene_symbol]
-gene_mapping$log2_rna_change <- log2((gene_mapping$rna_stim + 1) / (gene_mapping$rna_control +  1))
-
-gene_mapping$atac_control <- atac_control[gene_mapping$Gene_symbol]
-gene_mapping$atac_stim <- atac_stim[gene_mapping$Gene_symbol]
-gene_mapping$log2_atac_change <- log2((gene_mapping$atac_stim + 1) / (gene_mapping$atac_control +  1))
-
-p1 <- ggplot(gene_mapping %>% filter(rna_control > 10 | rna_stim > 10),
-       aes(x = log2_rna_change, y = log2_protein_change, color = log2_atac_change, label = Marker_name)) +
-  geom_point() + scale_color_gradientn(colors = jdb_palette("solar_basic")) +
-  pretty_plot() + L_border() +theme(legend.position = "bottom") +
-  scale_x_continuous(limits = c(-5.5, 5.5)) + scale_y_continuous(limits = c(-5.5, 5.5))
-
-p2 <- ggplot(gene_mapping %>% filter(rna_control > 10 | rna_stim > 10),
-       aes(x = log2_rna_change, y = log2_protein_change,  label = Marker_name, color = log2_atac_change)) +
-  geom_text(size = 3) + scale_color_gradientn(colors = jdb_palette("solar_basic")) +
-  pretty_plot() + L_border() +theme(legend.position = "bottom") +
-  scale_x_continuous(limits = c(-5.5, 5.5)) + scale_y_continuous(limits = c(-5.5, 5.5))
-
-cowplot::ggsave2(cowplot::plot_grid(p1, p2, nrow = 1), file = "../plots/scatter_DOG_Myeloid.png", width = 8, height = 5)
-write.table(gene_mapping, file = "../output/DOG_source_Myeloid.tsv", sep = "\t", quote = FALSE, row.names = FALSE, col.names = TRUE)
-
-
-
-
+coembed4@meta.data$ca <- paste0(coembed4@meta.data$orig.ident, "_", coembed4@meta.data$stim)
 coembed4 <- NormalizeData(coembed4, assay = "ADT", normalization.method = "CLR")
 coembed4 <- ScaleData(coembed4, assay = "ADT")
+coembed4 <- coembed4 %>%  RunHarmony(c("stim", "orig.ident"))
+coembed4 <- coembed4 %>%  FindNeighbors(reduction = "harmony", dims = 1:35)  %>% RunUMAP(reduction = "harmony", dims = 1:35)
+coembed4 <- FindClusters(coembed4, resolution = 0.4) %>% identity()
+DimPlot(coembed4, reduction = "umap", group.by = "seurat_clusters", pt.size = .1, split.by = c( 'ca'), label = TRUE)
 
-make_six_plot <- function(protein_name, gene_name){
-  DefaultAssay(coembed4) = "ADT"
-  protein_plot <- FeaturePlot(coembed4, features = protein_name, split.by = "stim", ncol = 1)
-  protein_control <- protein_plot[[1]] + theme_void() + theme(legend.position = "none") + ggtitle("ADT control")
-  protein_stim <- protein_plot[[2]] + theme_void() + theme(legend.position = "none")+ ggtitle("ADT stim")
-  
-  DefaultAssay(coembed4) = "ACTIVITY"
-  coembedplot_atac_obj <- coembed4[,coembed4$orig.ident == "ATAC"]
-  atac_plot <- FeaturePlot(coembedplot_atac_obj, features = gene_name, split.by = "stim", ncol = 1)
-  atac_control <- atac_plot[[1]] + theme_void() + theme(legend.position = "none") + ggtitle("ATAC control")
-  atac_stim <- atac_plot[[2]] + theme_void() + theme(legend.position = "none")+ ggtitle("ATAC stim")
-  
-  DefaultAssay(coembed4) = "RNA"
-  coembedplot_rna_obj <- coembed4[,coembed4$orig.ident == "RNA"]
-  rna_plot <- FeaturePlot(coembedplot_rna_obj, features = gene_name, split.by = "stim", ncol = 1)
-  rna_control <- rna_plot[[1]] + theme_void() + theme(legend.position = "none") + ggtitle("RNA control")
-  rna_stim <- rna_plot[[2]] + theme_void() + theme(legend.position = "none")+ ggtitle("RNA stim")
-  
-  cowplot::ggsave2(
-    cowplot::plot_grid(atac_control, rna_control, protein_control, atac_stim, rna_stim, protein_stim, ncol = 3),
-    width = 9, height = 6, file = paste0("../plots/dog/", protein_name, "_dog.png"))
-  
-}
-
-all_dog <- gene_mapping[gene_mapping$Gene_symbol %in% genes.use,]
-
-lapply(1:dim(all_dog), function(i){
-  make_six_plot(as.character(all_dog[i,1]), as.character(all_dog[i,2]))
-})
-make_six_plot("CD71", "TFRC")
-make_six_plot("CD69", "CD69")
-make_six_plot("CD25", "IL2RA")
-make_six_plot("CD28", "CD28")
-make_six_plot("CD3-1", "CD3E")
-make_six_plot("CD279", "PDCD1")
-
+# Verify a couple of proteins
+DefaultAssay(coembed4) = "ADT"
+FeaturePlot(coembed4, reduction = "umap", features = c("CD4-1", "CD19", "CD16", "CD56(NCAM)", "CD8a", "CD14"), pt.size = .3, split.by = c('ca'))
 saveRDS(coembed4, file = "../../../asap_large_data_files/pbmc_stim_data/output/22July2020_Seurat_Coembed4.rds")
+

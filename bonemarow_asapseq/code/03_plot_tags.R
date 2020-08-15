@@ -22,7 +22,7 @@ plot_df_one <- data.frame(
 )  %>% arrange(value) %>% ggplot(aes(x = UMAP1, y = UMAP2, color = value)) +
   geom_point(size = 0.2) + theme_void() + 
   scale_color_gradientn(colors = jdb_palette("samba_color"), limits = c(0,3), oob = scales::squish) -> p_p_for_legend
-cowplot::ggsave2(g_legend(p_p_for_legend), file = "../plots/samba_color_legend.pdf", width = 1, height = 2)
+#cowplot::ggsave2(g_legend(p_p_for_legend), file = "../plots/samba_color_legend.pdf", width = 1, height = 2)
 
 # Function to make little squares for big panel
 plot_factor_shotgun <- function(v){
@@ -46,7 +46,7 @@ plot_factor_trim <- function(v){
   )
   p1 <- ggplot(plot_df_one %>% arrange((value)), aes(x = UMAP1, y = UMAP2, color = value)) +
     geom_point(size = 0.2) + theme_void() + theme(legend.position = "none") +
-    scale_color_gradientn(colors = jdb_palette("samba_color"), limits = c(0,3), oob = scales::squish)
+    scale_color_gradientn(colors = jdb_palette("solar_extra"), limits = c(0,3), oob = scales::squish)
   return(p1)
 }
 
@@ -57,8 +57,8 @@ cowplot::ggsave2(
     plot_factor_trim("CD19"),
     plot_factor_trim("CD14"),
     plot_factor_trim("CD3-2"),
-    plot_factor_trim("CD4-1"), ncol = 3
-  ), file = "../plots/adt_small_panels.png", width = 2.25*4, height = 1.5*4, dpi = 300)
+    plot_factor_trim("CD4-1"), ncol = 3, scale = 0.8
+  ), file = "../plots/adt_small_panels_sa.png", width = 2.25*4, height = 1.5*4, dpi = 300)
 
 
 # Try to understand / annotate clusters
