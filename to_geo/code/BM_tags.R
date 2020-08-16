@@ -39,8 +39,28 @@ write.table(a_s, file = "../output/CD28_CD3_stim_ASAP_ADT.tsv", sep = "\t", quot
 write.table(c_c, file = "../output/CD28_CD3_control_CITE_ADT.tsv", sep = "\t", quote = FALSE, row.names = FALSE, col.names = TRUE)
 write.table(c_s, file = "../output/CD28_CD3_stim_CITE_ADT.tsv", sep = "\t", quote = FALSE, row.names = FALSE, col.names = TRUE)
 
-
+#----- Broad PBMCs ----
 broad_B <- import_kite_counts("../../broad_pbmc_asapseq/data/tag_data_analyses/tag_data_LL/ADT3_ASAP_B/", "", FALSE)
 broad_C <- import_kite_counts("../../broad_pbmc_asapseq/data/tag_data_analyses/tag_data_LL/HTO1_ASAP_C/", "", FALSE)
 write.table(broad_B[,c(1:10)], file = "../output/Broad_LibB_ADT.tsv", sep = "\t", quote = FALSE, row.names = FALSE, col.names = TRUE)
 write.table(broad_C[,c(1, 11:14)], file = "../output/Broad_LibC_HTO.tsv", sep = "\t", quote = FALSE, row.names = FALSE, col.names = TRUE)
+
+
+#----- NYGC PBMCs ----
+intraA <- import_kite_counts("../../nygc_pbmcs/data/intra/", "A", TRUE)
+intraB <- import_kite_counts("../../nygc_pbmcs/data/intra/", "B", TRUE)
+LLLA <- import_kite_counts("../../nygc_pbmcs/data/AvsB/TSA_LLL/featurecounts/", "", FALSE)
+LLLB <- import_kite_counts("../../nygc_pbmcs/data/AvsB/TSB_LLL/featurecounts/", "", FALSE)
+OA <- import_kite_counts("../../nygc_pbmcs/data/AvsB/TSA_OMNI/featurecounts/", "", FALSE)
+OB <- import_kite_counts("../../nygc_pbmcs/data/AvsB/TSB_OMNI/featurecounts/", "", FALSE)
+
+write.table(LLLA, file = "../output/AvsB_TSA_LLL.tsv", sep = "\t", quote = FALSE, row.names = FALSE, col.names = TRUE)
+write.table(LLLB, file = "../output/AvsB_TSB_LLL.tsv", sep = "\t", quote = FALSE, row.names = FALSE, col.names = TRUE)
+write.table(OA, file = "../output/AvsB_TSA_OMNI.tsv", sep = "\t", quote = FALSE, row.names = FALSE, col.names = TRUE)
+write.table(OB, file = "../output/AvsB_TSB_OMNI.tsv", sep = "\t", quote = FALSE, row.names = FALSE, col.names = TRUE)
+write.table(intraA, file = "../output/Intra_TSA.tsv", sep = "\t", quote = FALSE, row.names = FALSE, col.names = TRUE)
+write.table(intraB, file = "../output/Intra_TSB.tsv", sep = "\t", quote = FALSE, row.names = FALSE, col.names = TRUE)
+
+
+
+
