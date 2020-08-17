@@ -1,0 +1,1098 @@
+
+           ___      .______        ______  __    __  .______      
+          /   \     |   _  \      /      ||  |  |  | |   _  \     
+         /  ^  \    |  |_)  |    |  ,----'|  |__|  | |  |_)  |    
+        /  /_\  \   |      /     |  |     |   __   | |      /     
+       /  _____  \  |  |\  \\___ |  `----.|  |  |  | |  |\  \\___.
+      /__/     \__\ | _| `._____| \______||__|  |__| | _| `._____|
+    
+Logging With ArchR!
+
+Start Time : 2020-08-17 03:26:29
+
+------- ArchR Info
+
+ArchRThreads = 12
+
+------- System Info
+
+Computer OS = unix
+Total Cores = 24
+
+------- Session Info
+
+R version 3.6.2 (2019-12-12)
+Platform: x86_64-pc-linux-gnu (64-bit)
+
+Matrix products: default
+BLAS/LAPACK: /usr/lib64/libopenblasp-r0.3.3.so
+
+locale:
+ [1] LC_CTYPE=en_US.UTF-8       LC_NUMERIC=C               LC_TIME=en_US.UTF-8        LC_COLLATE=en_US.UTF-8     LC_MONETARY=en_US.UTF-8   
+ [6] LC_MESSAGES=en_US.UTF-8    LC_PAPER=en_US.UTF-8       LC_NAME=C                  LC_ADDRESS=C               LC_TELEPHONE=C            
+[11] LC_MEASUREMENT=en_US.UTF-8 LC_IDENTIFICATION=C       
+
+attached base packages:
+[1] parallel  stats4    stats     graphics  grDevices utils     datasets  methods   base     
+
+other attached packages:
+ [1] ArchR_0.9.1                 magrittr_1.5                rhdf5_2.30.1                Matrix_1.2-18              
+ [5] SummarizedExperiment_1.16.1 DelayedArray_0.12.3         BiocParallel_1.20.1         matrixStats_0.56.0         
+ [9] Biobase_2.46.0              GenomicRanges_1.38.0        GenomeInfoDb_1.22.1         IRanges_2.20.2             
+[13] S4Vectors_0.24.4            BiocGenerics_0.32.0         BuenColors_0.5.6            ggplot2_3.3.1              
+[17] MASS_7.3-51.6               dplyr_1.0.0                 data.table_1.12.8          
+
+loaded via a namespace (and not attached):
+ [1] tidyselect_1.1.0       purrr_0.3.4            lattice_0.20-41        colorspace_1.4-1       vctrs_0.3.1           
+ [6] generics_0.0.2         utf8_1.1.4             rlang_0.4.6            R.oo_1.23.0            pillar_1.4.4          
+[11] glue_1.4.1             withr_2.2.0            R.utils_2.9.2          GenomeInfoDbData_1.2.2 lifecycle_0.2.0       
+[16] stringr_1.4.0          zlibbioc_1.32.0        munsell_0.5.0          gtable_0.3.0           R.methodsS3_1.8.0     
+[21] labeling_0.3           fansi_0.4.1            Rcpp_1.0.4.6           scales_1.1.1           XVector_0.26.0        
+[26] farver_2.0.3           digest_0.6.25          stringi_1.4.6          cowplot_1.0.0          grid_3.6.2            
+[31] cli_2.0.2              tools_3.6.2            bitops_1.0-6           RCurl_1.98-1.2         tibble_3.0.1          
+[36] crayon_1.3.4           pkgconfig_2.0.3        ellipsis_0.3.1         assertthat_0.2.1       rstudioapi_0.11       
+[41] Rhdf5lib_1.8.0         R6_2.4.1               compiler_3.6.2        
+
+
+------- Log Info
+
+
+2020-08-17 03:26:29 : addDoubletScores Input-Parameters, Class = list
+
+addDoubletScores Input-Parameters$input: length = 1
+class: ArchRProject 
+outputDirectory: /data/aryee/caleb/tenx-scatac/asap_paper/asap_large_data_files/bonemarrow_data/output/archr_marrow/ASAP_marrow_hg38 
+samples(1): ASAP_marrow_hg38
+sampleColData names(1): ArrowFiles
+cellColData names(20): Sample TSSEnrichment ... monocyte_PS erythroid_PS
+numberOfCells(1): 1
+medianTSS(1): 5.918
+medianFrags(1): 98421
+
+
+addDoubletScores Input-Parameters$useMatrix: length = 1
+[1] "TileMatrix"
+
+
+addDoubletScores Input-Parameters$k: length = 1
+[1] 10
+
+
+addDoubletScores Input-Parameters$nTrials: length = 1
+[1] 5
+
+
+addDoubletScores Input-Parameters$dimsToUse: length = 30
+[1] 1 2 3 4 5 6
+
+
+addDoubletScores Input-Parameters$LSIMethod: length = 1
+[1] 1
+
+
+addDoubletScores Input-Parameters$scaleDims: length = 1
+[1] FALSE
+
+
+addDoubletScores Input-Parameters$corCutOff: length = 1
+[1] 0.75
+
+
+addDoubletScores Input-Parameters$knnMethod: length = 1
+[1] "UMAP"
+
+
+addDoubletScores Input-Parameters$outDir: length = 1
+[1] "/data/aryee/caleb/tenx-scatac/asap_paper/asap_large_data_files/bonemarrow_data/output/archr_marrow/ASAP_marrow_hg38"
+
+
+addDoubletScores Input-Parameters$threads: length = 1
+[1] 12
+
+
+addDoubletScores Input-Parameters$force: length = 1
+[1] FALSE
+
+
+addDoubletScores Input-Parameters$parallelParam: length = 0
+NULL
+
+
+addDoubletScores Input-Parameters$verbose: length = 1
+[1] TRUE
+
+
+addDoubletScores Input-Parameters$logFile: length = 1
+[1] "ArchRLogs/ArchR-addDoubletScores-9a881220bfb7-Date-2020-08-17_Time-03-26-29.log"
+
+
+2020-08-17 03:26:29 : Batch Execution w/ safelapply!, 0 mins elapsed.
+2020-08-17 03:26:30 : ASAP_marrow_hg38 (1 of 1) :  Computing Doublet Statistics, 0.002 mins elapsed.
+2020-08-17 03:26:33 : Running IterativeLSI, 0.061 mins elapsed.
+
+2020-08-17 03:26:33 : IterativeLSI Input-Parameters, Class = list
+
+IterativeLSI Input-Parameters$ArchRProj: length = 1
+class: ArchRProject 
+outputDirectory: /data/aryee/caleb/tenx-scatac/asap_paper/asap_reproducibility/bonemarow_asapseq/code/tmp/tmp-9a8825064b2-Date-2020-08-17_Time-03-26-30 
+samples(1): ASAP_marrow_hg38
+sampleColData names(1): ArrowFiles
+cellColData names(15): Sample TSSEnrichment ... DoubletEnrichment BlacklistRatio
+numberOfCells(1): 1
+medianTSS(1): 5.918
+medianFrags(1): 98421
+
+
+IterativeLSI Input-Parameters$useMatrix: length = 1
+[1] "TileMatrix"
+
+
+IterativeLSI Input-Parameters$name: length = 1
+[1] "IterativeLSI"
+
+
+IterativeLSI Input-Parameters$iterations: length = 1
+[1] 2
+
+
+IterativeLSI Input-Parameters$varFeatures: length = 1
+[1] 25000
+
+
+IterativeLSI Input-Parameters$dimsToUse: length = 30
+[1] 1 2 3 4 5 6
+
+
+IterativeLSI Input-Parameters$LSIMethod: length = 1
+[1] 1
+
+
+IterativeLSI Input-Parameters$scaleDims: length = 1
+[1] FALSE
+
+
+IterativeLSI Input-Parameters$corCutOff: length = 1
+[1] 0.75
+
+
+IterativeLSI Input-Parameters$binarize: length = 1
+[1] TRUE
+
+
+IterativeLSI Input-Parameters$outlierQuantiles: length = 0
+NULL
+
+
+IterativeLSI Input-Parameters$filterBias: length = 1
+[1] FALSE
+
+
+IterativeLSI Input-Parameters$sampleCellsPre: length = 1
+[1] 10000
+
+
+IterativeLSI Input-Parameters$projectCellsPre: length = 1
+[1] FALSE
+
+
+IterativeLSI Input-Parameters$sampleCellsFinal: length = 0
+NULL
+
+
+IterativeLSI Input-Parameters$selectionMethod: length = 1
+[1] "var"
+
+
+IterativeLSI Input-Parameters$scaleTo: length = 1
+[1] 10000
+
+
+IterativeLSI Input-Parameters$totalFeatures: length = 1
+[1] 5e+05
+
+
+IterativeLSI Input-Parameters$filterQuantile: length = 1
+[1] 0.995
+
+
+IterativeLSI Input-Parameters$excludeChr: length = 0
+NULL
+
+
+IterativeLSI Input-Parameters$saveIterations: length = 1
+[1] FALSE
+
+
+IterativeLSI Input-Parameters$nPlot: length = 1
+[1] 10000
+
+
+IterativeLSI Input-Parameters$outDir: length = 1
+[1] "/data/aryee/caleb/tenx-scatac/asap_paper/asap_reproducibility/bonemarow_asapseq/code/tmp/tmp-9a8825064b2-Date-2020-08-17_Time-03-26-30"
+
+
+IterativeLSI Input-Parameters$threads: length = 1
+[1] 12
+
+
+IterativeLSI Input-Parameters$seed: length = 1
+[1] 1
+
+
+IterativeLSI Input-Parameters$verbose: length = 1
+[1] FALSE
+
+
+IterativeLSI Input-Parameters$force: length = 1
+[1] TRUE
+
+
+IterativeLSI Input-Parameters$logFile: length = 1
+[1] "ArchRLogs/ArchR-addDoubletScores-9a881220bfb7-Date-2020-08-17_Time-03-26-29.log"
+
+
+2020-08-17 03:26:34 : Computing Total Accessibility Across All Features, 0 mins elapsed.
+2020-08-17 03:26:37 : Computing Top Features, 0.053 mins elapsed.
+###########
+2020-08-17 03:26:38 : Running LSI (1 of 2) on Top Features, 0.061 mins elapsed.
+###########
+2020-08-17 03:26:38 : Sampling Cells (N = 10000) for Estimated LSI, 0.062 mins elapsed.
+2020-08-17 03:26:38 : Creating Sampled Partial Matrix, 0.062 mins elapsed.
+2020-08-17 03:27:17 : Computing Estimated LSI (projectAll = FALSE), 0.708 mins elapsed.
+
+2020-08-17 03:27:17 : LSI Parameters, Class = list
+
+LSI Parameters$: length = 1
+                       
+1 function (name)      
+2 .Internal(args(name))
+
+
+LSI Parameters$mat: nRows = 25000, nCols = 10000
+LSI Parameters$mat: NonZeroEntries = 26954187, EntryRange = [ 1 , 1 ]
+5 x 5 sparse Matrix of class "dgCMatrix"
+     ASAP_marrow_hg38#AAACGAAAGCCTCGCA-1 ASAP_marrow_hg38#AAACGAAAGCGTATCT-1 ASAP_marrow_hg38#AAACGAAAGCGTTGCC-1
+[1,]                                   1                                   .                                   .
+[2,]                                   1                                   .                                   1
+[3,]                                   .                                   .                                   1
+[4,]                                   .                                   .                                   1
+[5,]                                   .                                   .                                   .
+     ASAP_marrow_hg38#AAACGAAAGGATTGAT-1 ASAP_marrow_hg38#AAACGAAAGGCGTCCT-1
+[1,]                                   .                                   1
+[2,]                                   .                                   1
+[3,]                                   .                                   .
+[4,]                                   1                                   .
+[5,]                                   .                                   .
+
+
+LSI Parameters$LSIMethod: length = 1
+[1] 1
+
+
+LSI Parameters$scaleTo: length = 1
+[1] 10000
+
+
+LSI Parameters$nDimensions: length = 1
+[1] 30
+
+
+LSI Parameters$binarize: length = 1
+[1] TRUE
+
+
+LSI Parameters$outlierQuantiles: length = 0
+NULL
+
+
+LSI Parameters$seed: length = 1
+[1] 1
+
+
+LSI Parameters$verbose: length = 1
+[1] FALSE
+
+
+LSI Parameters$tstart: length = 1
+[1] "2020-08-17 03:26:34 EDT"
+
+
+LSI Parameters$logFile: length = 1
+[1] "ArchRLogs/ArchR-addDoubletScores-9a881220bfb7-Date-2020-08-17_Time-03-26-29.log"
+
+
+2020-08-17 03:27:17 : Running LSI, Input Matrix = 0.325 GB, 0.716 mins elapsed.
+2020-08-17 03:27:17 : Binarizing Matrix, 0.716 mins elapsed.
+2020-08-17 03:27:18 : Computing Term Frequency, 0.725 mins elapsed.
+2020-08-17 03:27:18 : Removing 0 Sum Rows, 0.726 mins elapsed.
+2020-08-17 03:27:20 : Computing Inverse Document Frequency, 0.768 mins elapsed.
+2020-08-17 03:27:20 : Computing TF-IDF Matrix, 0.768 mins elapsed.
+2020-08-17 03:27:21 : Computing SVD using irlba, 0.789 mins elapsed.
+2020-08-17 03:27:33 : Finished LSI (TF-IDF SVD) using irlba, 0.984 mins elapsed.
+
+2020-08-17 03:27:35 : outLSI-1, Class = SimpleList
+
+outLSI-1$matSVD: nRows = 10000, nCols = 30
+                                           LSI1          LSI2          LSI3          LSI4          LSI5
+ASAP_marrow_hg38#AAACGAAAGCCTCGCA-1 -0.01398234  0.0001553931  2.594045e-04 -2.329207e-05  1.467843e-04
+ASAP_marrow_hg38#AAACGAAAGCGTATCT-1 -0.01405122 -0.0001138245  1.268957e-04 -4.099055e-05 -7.183292e-05
+ASAP_marrow_hg38#AAACGAAAGCGTTGCC-1 -0.01399490  0.0002620983  7.118133e-05 -7.749453e-05  3.215299e-05
+ASAP_marrow_hg38#AAACGAAAGGATTGAT-1 -0.01587416  0.0001642170 -5.261745e-06 -1.678923e-04  2.062950e-04
+ASAP_marrow_hg38#AAACGAAAGGCGTCCT-1 -0.01413043  0.0003601729 -3.326311e-04  5.047074e-05  2.749355e-04
+
+
+outLSI-1$rowSm: length = 25000
+[1]  999 1063 1058 1225  683  727
+
+
+outLSI-1$nCol: length = 1
+[1] 10000
+
+
+outLSI-1$exclude: length = 0
+NULL
+
+
+outLSI-1$idx: length = 25000
+[1] 1 2 3 4 5 6
+
+
+outLSI-1$u: nRows = 25000, nCols = 30
+             [,1]         [,2]         [,3]          [,4]          [,5]
+[1,] -0.005611852 0.0002125782 0.0001695972 -0.0001588470 -1.688721e-05
+[2,] -0.007442547 0.0004354683 0.0003937802 -0.0005113858  2.088402e-04
+[3,] -0.006563856 0.0003288483 0.0001949307 -0.0002633562  2.870989e-04
+[4,] -0.006524624 0.0001978135 0.0001457943 -0.0002039987  1.570178e-04
+[5,] -0.004571874 0.0001621614 0.0001252248 -0.0001442843  1.589560e-04
+
+
+outLSI-1$v: nRows = 10000, nCols = 30
+             [,1]          [,2]          [,3]          [,4]          [,5]
+[1,] -0.009339525  0.0001671675  2.914212e-04 -2.756630e-05  1.767912e-04
+[2,] -0.009385538 -0.0001224492  1.425577e-04 -4.851256e-05 -8.651761e-05
+[3,] -0.009347915  0.0002819579  7.996682e-05 -9.171524e-05  3.872597e-05
+[4,] -0.010603173  0.0001766600 -5.911170e-06 -1.987016e-04  2.484675e-04
+[5,] -0.009438443  0.0003874637 -3.736857e-04  5.973242e-05  3.311402e-04
+
+
+outLSI-1$binarize: length = 1
+[1] TRUE
+
+
+outLSI-1$scaleTo: length = 1
+[1] 10000
+
+
+outLSI-1$nDimensions: length = 1
+[1] 30
+
+
+outLSI-1$LSIMethod: length = 1
+[1] 1
+
+
+outLSI-1$outliers: length = 1
+[1] NA
+
+
+outLSI-1$date: length = 1
+[1] "2020-08-17"
+
+
+outLSI-1$seed: length = 1
+[1] 1
+
+
+outLSI-1$scaleDims: length = 1
+[1] FALSE
+
+
+outLSI-1$useMatrix: length = 1
+[1] "TileMatrix"
+
+
+outLSI-1$tileSize: length = 1
+[1] 500
+
+
+
+2020-08-17 03:27:35 : Cluster Params, Class = list
+
+Cluster Params$: length = 1
+                       
+1 function (name)      
+2 .Internal(args(name))
+
+
+Cluster Params$matSVD: nRows = 10000, nCols = 30
+                                           LSI1          LSI2          LSI3          LSI4          LSI5
+ASAP_marrow_hg38#AAACGAAAGCCTCGCA-1 -0.01398234  0.0001553931  2.594045e-04 -2.329207e-05  1.467843e-04
+ASAP_marrow_hg38#AAACGAAAGCGTATCT-1 -0.01405122 -0.0001138245  1.268957e-04 -4.099055e-05 -7.183292e-05
+ASAP_marrow_hg38#AAACGAAAGCGTTGCC-1 -0.01399490  0.0002620983  7.118133e-05 -7.749453e-05  3.215299e-05
+ASAP_marrow_hg38#AAACGAAAGGATTGAT-1 -0.01587416  0.0001642170 -5.261745e-06 -1.678923e-04  2.062950e-04
+ASAP_marrow_hg38#AAACGAAAGGCGTCCT-1 -0.01413043  0.0003601729 -3.326311e-04  5.047074e-05  2.749355e-04
+
+
+Cluster Params$corCutOff: length = 1
+[1] 0.75
+
+
+Cluster Params$dimsToUse: length = 30
+[1] 1 2 3 4 5 6
+
+
+Cluster Params$scaleDims: length = 1
+[1] FALSE
+
+
+Cluster Params$verbose: length = 1
+[1] FALSE
+
+
+Cluster Params$j: length = 1
+[1] 1
+
+
+Cluster Params$filterBias: length = 1
+[1] FALSE
+
+
+Cluster Params$cellNames: length = 10928
+[1] "ASAP_marrow_hg38#CCCACATTCAAAGTAG-1" "ASAP_marrow_hg38#AAACTCGTCGCTAGTA-1" "ASAP_marrow_hg38#ATTGTCTGTGGTTCTA-1"
+[4] "ASAP_marrow_hg38#TGCTCGTTCACCACAA-1" "ASAP_marrow_hg38#TCACCACCAATTCAGC-1" "ASAP_marrow_hg38#CCGCATTCACTGCTCT-1"
+
+
+Cluster Params$cellDepth: length = 10928
+ASAP_marrow_hg38#CCCACATTCAAAGTAG-1 ASAP_marrow_hg38#AAACTCGTCGCTAGTA-1 ASAP_marrow_hg38#ATTGTCTGTGGTTCTA-1 
+                           4.993092                            4.992483                            4.992010 
+ASAP_marrow_hg38#TGCTCGTTCACCACAA-1 ASAP_marrow_hg38#TCACCACCAATTCAGC-1 ASAP_marrow_hg38#CCGCATTCACTGCTCT-1 
+                           4.991541                            4.990672                            4.989832 
+
+
+Cluster Params$tstart: length = 1
+[1] "2020-08-17 03:26:34 EDT"
+
+
+Cluster Params$logFile: length = 1
+[1] "ArchRLogs/ArchR-addDoubletScores-9a881220bfb7-Date-2020-08-17_Time-03-26-29.log"
+
+
+2020-08-17 03:27:35 : Identifying Clusters, 1.018 mins elapsed.
+
+2020-08-17 03:27:35 : addClusters Input-Parameters, Class = list
+
+addClusters Input-Parameters$: length = 1
+                       
+1 function (name)      
+2 .Internal(args(name))
+
+
+addClusters Input-Parameters$input: nRows = 10000, nCols = 30
+                                           LSI1          LSI2          LSI3          LSI4          LSI5
+ASAP_marrow_hg38#AAACGAAAGCCTCGCA-1 -0.01398234  0.0001553931  2.594045e-04 -2.329207e-05  1.467843e-04
+ASAP_marrow_hg38#AAACGAAAGCGTATCT-1 -0.01405122 -0.0001138245  1.268957e-04 -4.099055e-05 -7.183292e-05
+ASAP_marrow_hg38#AAACGAAAGCGTTGCC-1 -0.01399490  0.0002620983  7.118133e-05 -7.749453e-05  3.215299e-05
+ASAP_marrow_hg38#AAACGAAAGGATTGAT-1 -0.01587416  0.0001642170 -5.261745e-06 -1.678923e-04  2.062950e-04
+ASAP_marrow_hg38#AAACGAAAGGCGTCCT-1 -0.01413043  0.0003601729 -3.326311e-04  5.047074e-05  2.749355e-04
+
+
+addClusters Input-Parameters$reducedDims: length = 1
+[1] "IterativeLSI"
+
+
+addClusters Input-Parameters$name: length = 1
+[1] "Clusters"
+
+
+addClusters Input-Parameters$sampleCells: length = 1
+[1] 10000
+
+
+addClusters Input-Parameters$seed: length = 1
+[1] 1
+
+
+addClusters Input-Parameters$method: length = 1
+[1] "Seurat"
+
+
+addClusters Input-Parameters$dimsToUse: length = 0
+NULL
+
+
+addClusters Input-Parameters$scaleDims: length = 0
+NULL
+
+
+addClusters Input-Parameters$corCutOff: length = 1
+[1] 0.75
+
+
+addClusters Input-Parameters$knnAssign: length = 1
+[1] 10
+
+
+addClusters Input-Parameters$nOutlier: length = 1
+[1] 5
+
+
+addClusters Input-Parameters$testBias: length = 1
+[1] TRUE
+
+
+addClusters Input-Parameters$filterBias: length = 1
+[1] FALSE
+
+
+addClusters Input-Parameters$biasClusters: length = 1
+[1] 0.01
+
+
+addClusters Input-Parameters$biasCol: length = 1
+[1] "nFrags"
+
+
+addClusters Input-Parameters$biasVals: length = 10000
+[1] 4.840577 4.456654 4.648604 3.899821 4.192679 3.958277
+
+
+addClusters Input-Parameters$biasQuantiles: length = 2
+[1] 0.05 0.95
+
+
+addClusters Input-Parameters$biasEnrich: length = 1
+[1] 10
+
+
+addClusters Input-Parameters$biasProportion: length = 1
+[1] 0.5
+
+
+addClusters Input-Parameters$biasPval: length = 1
+[1] 0.05
+
+
+addClusters Input-Parameters$nPerm: length = 1
+[1] 500
+
+
+addClusters Input-Parameters$prefix: length = 1
+[1] "C"
+
+
+addClusters Input-Parameters$ArchRProj: length = 0
+NULL
+
+
+addClusters Input-Parameters$verbose: length = 1
+[1] FALSE
+
+
+addClusters Input-Parameters$tstart: length = 0
+NULL
+
+
+addClusters Input-Parameters$force: length = 1
+[1] FALSE
+
+
+addClusters Input-Parameters$logFile: length = 1
+[1] "ArchRLogs/ArchR-addDoubletScores-9a881220bfb7-Date-2020-08-17_Time-03-26-29.log"
+
+
+addClusters Input-Parameters$...: length = 2
+[[1]]
+<promise: 0x56392e6ede28>
+
+[[2]]
+<promise: 0x56392e6edf08>
+
+
+
+2020-08-17 03:27:37 : Running Seurats FindClusters (Stuart et al. Cell 2019), 0.032 mins elapsed.
+2020-08-17 03:28:00 : Testing Outlier Clusters, 0.417 mins elapsed.
+2020-08-17 03:28:00 : Assigning Cluster Names to 4 Clusters, 0.417 mins elapsed.
+2020-08-17 03:28:00 : Finished addClusters, 0.418 mins elapsed.
+2020-08-17 03:28:00 : Identified 4 Clusters, 1.439 mins elapsed.
+
+2020-08-17 03:28:00 : clusterDF-1, Class = DFrame
+DataFrame with 10000 rows and 2 columns
+                                cellNames    clusters
+                              <character> <character>
+1     ASAP_marrow_hg38#AAACGAAAGCCTCGCA-1          C3
+2     ASAP_marrow_hg38#AAACGAAAGCGTATCT-1          C3
+3     ASAP_marrow_hg38#AAACGAAAGCGTTGCC-1          C3
+4     ASAP_marrow_hg38#AAACGAAAGGATTGAT-1          C4
+5     ASAP_marrow_hg38#AAACGAAAGGCGTCCT-1          C3
+...                                   ...         ...
+9996  ASAP_marrow_hg38#TTTGTGTGTTCCATCC-1          C4
+9997  ASAP_marrow_hg38#TTTGTGTGTTGGCGAA-1          C4
+9998  ASAP_marrow_hg38#TTTGTGTTCACGTGTA-1          C4
+9999  ASAP_marrow_hg38#TTTGTGTTCCGAATTG-1          C4
+10000 ASAP_marrow_hg38#TTTGTGTTCTCTGAGA-1          C2
+
+2020-08-17 03:28:00 : Creating Cluster Matrix on the total Group Features, 1.439 mins elapsed.
+2020-08-17 03:28:30 : Computing Variable Features, 1.939 mins elapsed.
+###########
+2020-08-17 03:28:31 : Running LSI (2 of 2) on Variable Features, 1.941 mins elapsed.
+###########
+2020-08-17 03:28:31 : Creating Partial Matrix, 1.942 mins elapsed.
+2020-08-17 03:29:02 : Computing LSI, 2.464 mins elapsed.
+
+2020-08-17 03:29:02 : LSI Parameters, Class = list
+
+LSI Parameters$: length = 1
+                       
+1 function (name)      
+2 .Internal(args(name))
+
+
+LSI Parameters$mat: nRows = 25000, nCols = 10928
+LSI Parameters$mat: NonZeroEntries = 27115427, EntryRange = [ 1 , 1 ]
+5 x 5 sparse Matrix of class "dgCMatrix"
+     ASAP_marrow_hg38#CCCACATTCAAAGTAG-1 ASAP_marrow_hg38#AAACTCGTCGCTAGTA-1 ASAP_marrow_hg38#ATTGTCTGTGGTTCTA-1
+[1,]                                   1                                   .                                   .
+[2,]                                   1                                   .                                   .
+[3,]                                   .                                   1                                   .
+[4,]                                   .                                   1                                   .
+[5,]                                   .                                   .                                   .
+     ASAP_marrow_hg38#TGCTCGTTCACCACAA-1 ASAP_marrow_hg38#TCACCACCAATTCAGC-1
+[1,]                                   .                                   .
+[2,]                                   .                                   1
+[3,]                                   1                                   1
+[4,]                                   .                                   1
+[5,]                                   .                                   1
+
+
+LSI Parameters$LSIMethod: length = 1
+[1] 1
+
+
+LSI Parameters$scaleTo: length = 1
+[1] 10000
+
+
+LSI Parameters$nDimensions: length = 1
+[1] 30
+
+
+LSI Parameters$binarize: length = 1
+[1] TRUE
+
+
+LSI Parameters$outlierQuantiles: length = 0
+NULL
+
+
+LSI Parameters$seed: length = 1
+[1] 1
+
+
+LSI Parameters$verbose: length = 1
+[1] FALSE
+
+
+LSI Parameters$tstart: length = 1
+[1] "2020-08-17 03:26:34 EDT"
+
+
+LSI Parameters$logFile: length = 1
+[1] "ArchRLogs/ArchR-addDoubletScores-9a881220bfb7-Date-2020-08-17_Time-03-26-29.log"
+
+
+2020-08-17 03:29:02 : Running LSI, Input Matrix = 0.327 GB, 2.471 mins elapsed.
+2020-08-17 03:29:02 : Binarizing Matrix, 2.471 mins elapsed.
+2020-08-17 03:29:03 : Computing Term Frequency, 2.481 mins elapsed.
+2020-08-17 03:29:03 : Removing 0 Sum Rows, 2.483 mins elapsed.
+2020-08-17 03:29:06 : Computing Inverse Document Frequency, 2.524 mins elapsed.
+2020-08-17 03:29:06 : Computing TF-IDF Matrix, 2.524 mins elapsed.
+2020-08-17 03:29:07 : Computing SVD using irlba, 2.548 mins elapsed.
+2020-08-17 03:29:22 : Finished LSI (TF-IDF SVD) using irlba, 2.801 mins elapsed.
+
+2020-08-17 03:29:23 : outLSI-2, Class = SimpleList
+
+outLSI-2$matSVD: nRows = 10928, nCols = 30
+                                           LSI1          LSI2          LSI3          LSI4          LSI5
+ASAP_marrow_hg38#CCCACATTCAAAGTAG-1 -0.01450352  2.512249e-05 -3.109194e-05  2.801422e-05 -1.580193e-04
+ASAP_marrow_hg38#AAACTCGTCGCTAGTA-1 -0.01447957  1.102504e-04 -3.978954e-05 -2.220224e-05 -1.437368e-05
+ASAP_marrow_hg38#ATTGTCTGTGGTTCTA-1 -0.01436092 -4.678700e-07  5.081144e-06 -1.157179e-04 -7.485254e-04
+ASAP_marrow_hg38#TGCTCGTTCACCACAA-1 -0.01438949 -6.409421e-05  1.025707e-04  3.266687e-04 -2.653899e-04
+ASAP_marrow_hg38#TCACCACCAATTCAGC-1 -0.01478849 -3.711898e-04  9.584038e-05 -4.343508e-05 -2.234956e-04
+
+
+outLSI-2$rowSm: length = 25000
+[1] 1094 1172 1168 1351  765  376
+
+
+outLSI-2$nCol: length = 1
+[1] 10928
+
+
+outLSI-2$exclude: length = 0
+NULL
+
+
+outLSI-2$idx: length = 25000
+[1] 1 2 3 4 5 6
+
+
+outLSI-2$u: nRows = 25000, nCols = 30
+             [,1]         [,2]          [,3]          [,4]         [,5]
+[1,] -0.005639051 1.849911e-04 -0.0001284376 -5.512547e-05 3.865851e-05
+[2,] -0.006782413 3.639201e-04 -0.0003580357 -3.059386e-04 1.529419e-05
+[3,] -0.006363153 3.690734e-04 -0.0003700731 -3.520213e-04 1.021794e-05
+[4,] -0.006534061 8.249529e-05 -0.0001462543 -2.078113e-04 1.297229e-04
+[5,] -0.004523800 1.454360e-04  0.0000469074 -1.222925e-04 1.744759e-04
+
+
+outLSI-2$v: nRows = 10928, nCols = 30
+             [,1]          [,2]          [,3]          [,4]          [,5]
+[1,] -0.008943989  3.228641e-05 -4.247814e-05  3.864710e-05 -2.205659e-04
+[2,] -0.008929216  1.416893e-04 -5.436090e-05 -3.062917e-05 -2.006302e-05
+[3,] -0.008856049 -6.012877e-07  6.941914e-06 -1.596389e-04 -1.044804e-03
+[4,] -0.008873668 -8.237130e-05  1.401332e-04  4.506567e-04 -3.704356e-04
+[5,] -0.009119719 -4.770382e-04  1.309382e-04 -5.992100e-05 -3.119589e-04
+
+
+outLSI-2$binarize: length = 1
+[1] TRUE
+
+
+outLSI-2$scaleTo: length = 1
+[1] 10000
+
+
+outLSI-2$nDimensions: length = 1
+[1] 30
+
+
+outLSI-2$LSIMethod: length = 1
+[1] 1
+
+
+outLSI-2$outliers: length = 1
+[1] NA
+
+
+outLSI-2$date: length = 1
+[1] "2020-08-17"
+
+
+outLSI-2$seed: length = 1
+[1] 1
+
+
+outLSI-2$scaleDims: length = 1
+[1] FALSE
+
+
+outLSI-2$useMatrix: length = 1
+[1] "TileMatrix"
+
+
+outLSI-2$tileSize: length = 1
+[1] 500
+
+
+2020-08-17 03:29:24 : Finished Running IterativeLSI, 2.837 mins elapsed.
+2020-08-17 03:29:24 : Constructing Partial Matrix for Projection, 2.915 mins elapsed.
+
+2020-08-17 03:29:24 : ASAP_marrow_hg38 (1 of 1) : LSI Result, Class = SimpleList
+
+ASAP_marrow_hg38 (1 of 1) : LSI Result$matSVD: nRows = 10928, nCols = 30
+                                           LSI1          LSI2          LSI3          LSI4          LSI5
+ASAP_marrow_hg38#CCCACATTCAAAGTAG-1 -0.01450352  2.512249e-05 -3.109194e-05  2.801422e-05 -1.580193e-04
+ASAP_marrow_hg38#AAACTCGTCGCTAGTA-1 -0.01447957  1.102504e-04 -3.978954e-05 -2.220224e-05 -1.437368e-05
+ASAP_marrow_hg38#ATTGTCTGTGGTTCTA-1 -0.01436092 -4.678700e-07  5.081144e-06 -1.157179e-04 -7.485254e-04
+ASAP_marrow_hg38#TGCTCGTTCACCACAA-1 -0.01438949 -6.409421e-05  1.025707e-04  3.266687e-04 -2.653899e-04
+ASAP_marrow_hg38#TCACCACCAATTCAGC-1 -0.01478849 -3.711898e-04  9.584038e-05 -4.343508e-05 -2.234956e-04
+
+
+ASAP_marrow_hg38 (1 of 1) : LSI Result$rowSm: length = 25000
+[1] 1094 1172 1168 1351  765  376
+
+
+ASAP_marrow_hg38 (1 of 1) : LSI Result$nCol: length = 1
+[1] 10928
+
+
+ASAP_marrow_hg38 (1 of 1) : LSI Result$exclude: length = 0
+NULL
+
+
+ASAP_marrow_hg38 (1 of 1) : LSI Result$idx: length = 25000
+[1] 1 2 3 4 5 6
+
+
+ASAP_marrow_hg38 (1 of 1) : LSI Result$u: nRows = 25000, nCols = 30
+             [,1]         [,2]          [,3]          [,4]         [,5]
+[1,] -0.005639051 1.849911e-04 -0.0001284376 -5.512547e-05 3.865851e-05
+[2,] -0.006782413 3.639201e-04 -0.0003580357 -3.059386e-04 1.529419e-05
+[3,] -0.006363153 3.690734e-04 -0.0003700731 -3.520213e-04 1.021794e-05
+[4,] -0.006534061 8.249529e-05 -0.0001462543 -2.078113e-04 1.297229e-04
+[5,] -0.004523800 1.454360e-04  0.0000469074 -1.222925e-04 1.744759e-04
+
+
+ASAP_marrow_hg38 (1 of 1) : LSI Result$v: nRows = 10928, nCols = 30
+             [,1]          [,2]          [,3]          [,4]          [,5]
+[1,] -0.008943989  3.228641e-05 -4.247814e-05  3.864710e-05 -2.205659e-04
+[2,] -0.008929216  1.416893e-04 -5.436090e-05 -3.062917e-05 -2.006302e-05
+[3,] -0.008856049 -6.012877e-07  6.941914e-06 -1.596389e-04 -1.044804e-03
+[4,] -0.008873668 -8.237130e-05  1.401332e-04  4.506567e-04 -3.704356e-04
+[5,] -0.009119719 -4.770382e-04  1.309382e-04 -5.992100e-05 -3.119589e-04
+
+
+ASAP_marrow_hg38 (1 of 1) : LSI Result$binarize: length = 1
+[1] TRUE
+
+
+ASAP_marrow_hg38 (1 of 1) : LSI Result$scaleTo: length = 1
+[1] 10000
+
+
+ASAP_marrow_hg38 (1 of 1) : LSI Result$nDimensions: length = 1
+[1] 30
+
+
+ASAP_marrow_hg38 (1 of 1) : LSI Result$LSIMethod: length = 1
+[1] 1
+
+
+ASAP_marrow_hg38 (1 of 1) : LSI Result$outliers: length = 1
+[1] NA
+
+
+ASAP_marrow_hg38 (1 of 1) : LSI Result$date: length = 1
+[1] "2020-08-17"
+
+
+ASAP_marrow_hg38 (1 of 1) : LSI Result$seed: length = 1
+[1] 1
+
+
+ASAP_marrow_hg38 (1 of 1) : LSI Result$scaleDims: length = 1
+[1] FALSE
+
+
+ASAP_marrow_hg38 (1 of 1) : LSI Result$useMatrix: length = 1
+[1] "TileMatrix"
+
+
+ASAP_marrow_hg38 (1 of 1) : LSI Result$tileSize: length = 1
+[1] 500
+
+
+ASAP_marrow_hg38 (1 of 1) : LSI Result$dimsKept: length = 30
+[1] 1 2 3 4 5 6
+
+
+2020-08-17 03:29:54 : Running LSI UMAP, 3.406 mins elapsed.
+
+2020-08-17 03:29:54 : ASAP_marrow_hg38 (1 of 1) : UMAP Params, Class = list
+
+ASAP_marrow_hg38 (1 of 1) : UMAP Params$n_neighbors: length = 1
+[1] 40
+
+
+ASAP_marrow_hg38 (1 of 1) : UMAP Params$min_dist: length = 1
+[1] 0.4
+
+
+ASAP_marrow_hg38 (1 of 1) : UMAP Params$metric: length = 1
+[1] "euclidean"
+
+
+ASAP_marrow_hg38 (1 of 1) : UMAP Params$verbose: length = 1
+[1] FALSE
+
+
+ASAP_marrow_hg38 (1 of 1) : UMAP Params$X: nRows = 10928, nCols = 30
+                                           LSI1          LSI2          LSI3          LSI4          LSI5
+ASAP_marrow_hg38#CCCACATTCAAAGTAG-1 -0.01450352  2.512249e-05 -3.109194e-05  2.801422e-05 -1.580193e-04
+ASAP_marrow_hg38#AAACTCGTCGCTAGTA-1 -0.01447957  1.102504e-04 -3.978954e-05 -2.220224e-05 -1.437368e-05
+ASAP_marrow_hg38#ATTGTCTGTGGTTCTA-1 -0.01436092 -4.678700e-07  5.081144e-06 -1.157179e-04 -7.485254e-04
+ASAP_marrow_hg38#TGCTCGTTCACCACAA-1 -0.01438949 -6.409421e-05  1.025707e-04  3.266687e-04 -2.653899e-04
+ASAP_marrow_hg38#TCACCACCAATTCAGC-1 -0.01478849 -3.711898e-04  9.584038e-05 -4.343508e-05 -2.234956e-04
+
+
+ASAP_marrow_hg38 (1 of 1) : UMAP Params$ret_nn: length = 1
+[1] TRUE
+
+
+ASAP_marrow_hg38 (1 of 1) : UMAP Params$ret_model: length = 1
+[1] TRUE
+
+
+ASAP_marrow_hg38 (1 of 1) : UMAP Params$n_threads: length = 1
+[1] 12
+
+
+2020-08-17 03:30:18 : Simulating and Projecting Doublets, 3.805 mins elapsed.
+
+2020-08-17 03:31:08 : ASAP_marrow_hg38 (1 of 1) : SimulatedLSI, Class = matrix
+            LSI1         LSI2          LSI3          LSI4          LSI5
+[1,] -0.01460380 8.317068e-06  2.521054e-04 -0.0001840021 -6.145175e-04
+[2,] -0.01461042 3.644712e-04  1.475616e-04 -0.0003379266 -1.532076e-05
+[3,] -0.01527622 3.459905e-04  2.935774e-05 -0.0001528531 -2.121102e-04
+[4,] -0.01550370 3.765492e-04 -2.311605e-05 -0.0002156028  2.567850e-04
+[5,] -0.01586644 4.409212e-04  6.337155e-06 -0.0003470144  8.287986e-05
+
+ASAP_marrow_hg38 (1 of 1) : SimulatedLSI: nRows = 50000, nCols = 30
+
+
+2020-08-17 03:31:15 : ASAP_marrow_hg38 (1 of 1) : OriginalLSI, Class = matrix
+                                           LSI1          LSI2          LSI3          LSI4          LSI5
+ASAP_marrow_hg38#CCCACATTCAAAGTAG-1 -0.01450352  2.512249e-05 -3.109194e-05  2.801422e-05 -1.580193e-04
+ASAP_marrow_hg38#AAACTCGTCGCTAGTA-1 -0.01447957  1.102504e-04 -3.978954e-05 -2.220224e-05 -1.437368e-05
+ASAP_marrow_hg38#ATTGTCTGTGGTTCTA-1 -0.01436092 -4.678700e-07  5.081144e-06 -1.157179e-04 -7.485254e-04
+ASAP_marrow_hg38#TGCTCGTTCACCACAA-1 -0.01438949 -6.409421e-05  1.025707e-04  3.266687e-04 -2.653899e-04
+ASAP_marrow_hg38#TCACCACCAATTCAGC-1 -0.01478849 -3.711898e-04  9.584038e-05 -4.343508e-05 -2.234956e-04
+
+ASAP_marrow_hg38 (1 of 1) : OriginalLSI: nRows = 10928, nCols = 30
+
+
+2020-08-17 03:31:15 : ASAP_marrow_hg38 (1 of 1) : OriginalReProjectedLSI, Class = matrix
+                                           LSI1          LSI2          LSI3          LSI4          LSI5
+ASAP_marrow_hg38#CCCACATTCAAAGTAG-1 -0.01450352  2.512249e-05 -3.109194e-05  2.801422e-05 -1.580193e-04
+ASAP_marrow_hg38#AAACTCGTCGCTAGTA-1 -0.01447957  1.102504e-04 -3.978954e-05 -2.220224e-05 -1.437368e-05
+ASAP_marrow_hg38#ATTGTCTGTGGTTCTA-1 -0.01436092 -4.678700e-07  5.081144e-06 -1.157179e-04 -7.485254e-04
+ASAP_marrow_hg38#TGCTCGTTCACCACAA-1 -0.01438949 -6.409421e-05  1.025707e-04  3.266687e-04 -2.653899e-04
+ASAP_marrow_hg38#TCACCACCAATTCAGC-1 -0.01478849 -3.711898e-04  9.584038e-05 -4.343508e-05 -2.234956e-04
+
+ASAP_marrow_hg38 (1 of 1) : OriginalReProjectedLSI: nRows = 10928, nCols = 30
+
+
+2020-08-17 03:31:43 : ASAP_marrow_hg38 (1 of 1) : OriginalUMAP, Class = matrix
+         [,1]      [,2]
+[1,] 12.00980 -2.823051
+[2,] 12.00823 -2.947633
+[3,] 13.61435 -6.001715
+[4,] 12.31801 -3.280320
+[5,] 10.87641 -1.636968
+
+ASAP_marrow_hg38 (1 of 1) : OriginalUMAP: nRows = 10928, nCols = 2
+
+
+2020-08-17 03:31:43 : ASAP_marrow_hg38 (1 of 1) : OriginalReProjectedUMAP, Class = matrix
+         [,1]      [,2]
+[1,] 11.92393 -2.636871
+[2,] 12.16647 -3.098436
+[3,] 13.48429 -6.040017
+[4,] 12.24405 -3.273868
+[5,] 10.89917 -1.569112
+
+ASAP_marrow_hg38 (1 of 1) : OriginalReProjectedUMAP: nRows = 10928, nCols = 2
+
+
+2020-08-17 03:31:43 : ASAP_marrow_hg38 (1 of 1) : UMAP Projection R^2 = 0.99483
+
+2020-08-17 03:31:52 : ASAP_marrow_hg38 (1 of 1) : Number of Nearby Simulated Doublets, Class = numeric
+
+ASAP_marrow_hg38 (1 of 1) : Number of Nearby Simulated Doublets: length = 10928
+ASAP_marrow_hg38#CCCACATTCAAAGTAG-1 ASAP_marrow_hg38#AAACTCGTCGCTAGTA-1 ASAP_marrow_hg38#ATTGTCTGTGGTTCTA-1 
+                                386                                 226                                 130 
+ASAP_marrow_hg38#TGCTCGTTCACCACAA-1 ASAP_marrow_hg38#TCACCACCAATTCAGC-1 ASAP_marrow_hg38#CCGCATTCACTGCTCT-1 
+                                190                                 289                                  61 
+
+
+
+2020-08-17 03:31:52 : ASAP_marrow_hg38 (1 of 1) : DoubletScoresLSI, Class = numeric
+
+ASAP_marrow_hg38 (1 of 1) : DoubletScoresLSI: length = 10928
+ASAP_marrow_hg38#CCCACATTCAAAGTAG-1 ASAP_marrow_hg38#AAACTCGTCGCTAGTA-1 ASAP_marrow_hg38#ATTGTCTGTGGTTCTA-1 
+                          177.41692                            63.09207                            14.78267 
+ASAP_marrow_hg38#TGCTCGTTCACCACAA-1 ASAP_marrow_hg38#TCACCACCAATTCAGC-1 ASAP_marrow_hg38#CCGCATTCACTGCTCT-1 
+                           42.60187                           103.67890                             0.00000 
+
+
+
+2020-08-17 03:31:52 : ASAP_marrow_hg38 (1 of 1) : DoubletEnrichLSI, Class = numeric
+
+ASAP_marrow_hg38 (1 of 1) : DoubletEnrichLSI: length = 10928
+ASAP_marrow_hg38#CCCACATTCAAAGTAG-1 ASAP_marrow_hg38#AAACTCGTCGCTAGTA-1 ASAP_marrow_hg38#ATTGTCTGTGGTTCTA-1 
+                               7.72                                4.52                                2.60 
+ASAP_marrow_hg38#TGCTCGTTCACCACAA-1 ASAP_marrow_hg38#TCACCACCAATTCAGC-1 ASAP_marrow_hg38#CCGCATTCACTGCTCT-1 
+                               3.80                                5.78                                1.22 
+
+
+
+2020-08-17 03:31:53 : ASAP_marrow_hg38 (1 of 1) : DoubletScoresUMAP, Class = numeric
+
+ASAP_marrow_hg38 (1 of 1) : DoubletScoresUMAP: length = 10928
+ASAP_marrow_hg38#CCCACATTCAAAGTAG-1 ASAP_marrow_hg38#AAACTCGTCGCTAGTA-1 ASAP_marrow_hg38#ATTGTCTGTGGTTCTA-1 
+                          23.848463                           81.570042                            0.000000 
+ASAP_marrow_hg38#TGCTCGTTCACCACAA-1 ASAP_marrow_hg38#TCACCACCAATTCAGC-1 ASAP_marrow_hg38#CCGCATTCACTGCTCT-1 
+                         133.786990                          105.973890                            1.250575 
+
+
+
+2020-08-17 03:31:53 : ASAP_marrow_hg38 (1 of 1) : DoubletEnrichUMAP, Class = numeric
+
+ASAP_marrow_hg38 (1 of 1) : DoubletEnrichUMAP: length = 10928
+ASAP_marrow_hg38#CCCACATTCAAAGTAG-1 ASAP_marrow_hg38#AAACTCGTCGCTAGTA-1 ASAP_marrow_hg38#ATTGTCTGTGGTTCTA-1 
+                               3.04                                5.12                                1.48 
+ASAP_marrow_hg38#TGCTCGTTCACCACAA-1 ASAP_marrow_hg38#TCACCACCAATTCAGC-1 ASAP_marrow_hg38#CCGCATTCACTGCTCT-1 
+                               6.60                                5.84                                1.72 
+
+
+
+2020-08-17 03:31:53 : ASAP_marrow_hg38 (1 of 1) : SimulationResults, Class = SimpleList
+
+ASAP_marrow_hg38 (1 of 1) : SimulationResults$doubletUMAP: nRows = 50000, nCols = 2
+           [,1]       [,2]
+[1,]  12.854473 -5.1063247
+[2,]  12.170705 -3.1605568
+[3,]   9.312816 -0.4367222
+[4,]  -7.985377  0.7107892
+[5,] -12.422663  1.1560588
+
+
+ASAP_marrow_hg38 (1 of 1) : SimulationResults$doubletScore: length = 10928
+ASAP_marrow_hg38#CCCACATTCAAAGTAG-1 ASAP_marrow_hg38#AAACTCGTCGCTAGTA-1 ASAP_marrow_hg38#ATTGTCTGTGGTTCTA-1 
+                          23.848463                           81.570042                            0.000000 
+ASAP_marrow_hg38#TGCTCGTTCACCACAA-1 ASAP_marrow_hg38#TCACCACCAATTCAGC-1 ASAP_marrow_hg38#CCGCATTCACTGCTCT-1 
+                         133.786990                          105.973890                            1.250575 
+
+
+ASAP_marrow_hg38 (1 of 1) : SimulationResults$doubletEnrich: length = 10928
+ASAP_marrow_hg38#CCCACATTCAAAGTAG-1 ASAP_marrow_hg38#AAACTCGTCGCTAGTA-1 ASAP_marrow_hg38#ATTGTCTGTGGTTCTA-1 
+                               3.04                                5.12                                1.48 
+ASAP_marrow_hg38#TGCTCGTTCACCACAA-1 ASAP_marrow_hg38#TCACCACCAATTCAGC-1 ASAP_marrow_hg38#CCGCATTCACTGCTCT-1 
+                               6.60                                5.84                                1.72 
+
+
+
+2020-08-17 03:31:54 : ASAP_marrow_hg38 (1 of 1) : Sample UMAP, Class = data.frame
+ASAP_marrow_hg38 (1 of 1) : Sample UMAP: nRows = 10928, nCols = 5
+                                          X1        X2       type      score enrichment
+ASAP_marrow_hg38#CCCACATTCAAAGTAG-1 12.00980 -2.823051 experiment  23.848463       3.04
+ASAP_marrow_hg38#AAACTCGTCGCTAGTA-1 12.00823 -2.947633 experiment  81.570042       5.12
+ASAP_marrow_hg38#ATTGTCTGTGGTTCTA-1 13.61435 -6.001715 experiment   0.000000       1.48
+ASAP_marrow_hg38#TGCTCGTTCACCACAA-1 12.31801 -3.280320 experiment 133.786990       6.60
+ASAP_marrow_hg38#TCACCACCAATTCAGC-1 10.87641 -1.636968 experiment 105.973890       5.84
+ASAP_marrow_hg38#CCGCATTCACTGCTCT-1 14.25062 -6.934641 experiment   1.250575       1.72
+
+
+
+2020-08-17 03:31:54 : ASAP_marrow_hg38 (1 of 1) : Simulated Doublet UMAP, Class = data.frame
+ASAP_marrow_hg38 (1 of 1) : Simulated Doublet UMAP: nRows = 50000, nCols = 5
+                       x           y      density              type        color
+doublet_39450   2.393253  0.01018628 6.646861e-06 simulated_doublet 6.646861e-06
+doublet_13846   4.786609 -0.25562128 2.870518e-04 simulated_doublet 2.870518e-04
+doublet_46555 -16.233934 10.54091072 5.358923e-04 simulated_doublet 5.358923e-04
+doublet_6947   18.847525 -4.38660431 6.958050e-04 simulated_doublet 6.958050e-04
+doublet_27429  19.208536 -4.35296917 6.958050e-04 simulated_doublet 6.958050e-04
+doublet_20313 -15.631363 10.22244453 7.554650e-04 simulated_doublet 7.554650e-04
+
+
+
+------- Completed
+
+End Time : 2020-08-17 03:32:07
+Elapsed Time Minutes = 5.64461680253347
+Elapsed Time Hours = 0.0940770502885183
+
+-------
+
+
+
