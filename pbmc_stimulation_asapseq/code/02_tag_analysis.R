@@ -53,33 +53,6 @@ saveRDS(df_clr_scale, file = "../output/adt_mat/ASAP_embedding_CLRadt.rds")
 saveRDS(df_archr_smooth, file = "../output/adt_mat/ASAP_embedding_smoothadt.rds")
 
 
-# A la CiteFuse, train a random forest on the outcome labels to prioritize ADT labels
-library(randomForest)
-outcome_both <- paste0(df_clr_scale$cluster, "_", df_clr_scale$sample)
-
-rf_stim <- randomForest(t(data.matrix(mat)), as.factor(df_clr_scale$sample), importance = TRUE)
-imp_stim <- importance(rf_stim, type=1, scale = FALSE)
-
-rf_cluster <- randomForest(t(data.matrix(mat)), as.factor(df_clr_scale$cluster), importance = TRUE)
-imp_cluster <- importance(rf_cluster, type=1, scale = FALSE)
-
-importance_df <- data.frame(
-  importance_cluster = imp_cluster[,1],
-  importance_stim = imp_stim[,1],
-  ADT = rownames(mat)
-)
-importance_df$control <- grepl("sotypeCtrl", importance_df$ADT)
-
-p1 <- ggplot(importance_df %>% arrange(control), aes(x = importance_cluster*100, y = importance_stim*100, color = control, label = ADT)) +
-  geom_point() + scale_x_continuous(breaks = c(0,2,4,6)) + scale_y_continuous(breaks = c(0,4,8)) +
-  pretty_plot(fontsize = 8) + L_border() + scale_color_manual(values = c("black", "red")) +
-  labs(x = "Cluster importance", y = "Stimulation importance") + theme(legend.position = "none")
-
-cowplot::ggsave2(p1, file = "../plots/ADT_importance.pdf", width =2, height = 2)
-
-ggplot(importance_df %>% arrange(control), aes(x = importance_cluster*100, y = importance_stim*100, color = control, label = ADT)) +
-  geom_text()
-
 library(viridis)
 library(scales)
 

@@ -134,3 +134,10 @@ DefaultAssay(coembed4) = "ADT"
 FeaturePlot(coembed4, reduction = "umap", features = c("CD4-1", "CD19", "CD16", "CD56(NCAM)", "CD8a", "CD14"), pt.size = .3, split.by = c('ca'))
 saveRDS(coembed4, file = "../../../asap_large_data_files/pbmc_stim_data/output/22July2020_Seurat_Coembed4.rds")
 
+pass_bc_df <- data.frame(
+  assay = coembed4@meta.data$ca,
+  barcode = paste0(substr(rownames(coembed4@meta.data), 1, 16), "-1"),
+  cluster = coembed4@meta.data$seurat_clusters
+)
+write.table(pass_bc_df, file = "../output/HQ_barcodes_4exps.tsv", 
+            sep = "\t", quote = FALSE, row.names = FALSE, col.names = TRUE)

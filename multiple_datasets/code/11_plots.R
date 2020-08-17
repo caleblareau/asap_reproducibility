@@ -109,6 +109,30 @@ process_pseudo_bulk_changes(c(3), "NK")
 process_pseudo_bulk_changes(c(0,1,2,5,6,7,8,11), "Tcell")
 
 
+# Reprocess the Bcell stuff
+gene_mapping_b <- fread("../output/DOG_source_Bcell.tsv")
+gene_mapping_b_filt <- gene_mapping_b %>% filter(rna_control > 7.5 | rna_stim > 7.5)
+gmtf_ss <- gene_mapping_b_filt[,c("log2_atac_change", "log2_rna_change", "log2_protein_change")]; names(gmtf_ss) <- c("ATAC", "RNA", "Protein")
+cor(gmtf_ss, use = "pairwise.complete") %>%
+  reshape2::melt() -> go_df
+
+p1 <- ggplot(gene_mapping_b_filt[complete.cases(gene_mapping_b_filt),],
+             aes(x = log2_rna_change, y = log2_protein_change, color = log2_atac_change, label = Marker_name)) +
+  geom_point(size = 0.5) + scale_color_gradientn(colors = jdb_palette("solar_extra")) +
+  pretty_plot(fontsize = 8) + L_border() +theme(legend.position = "bottom") +
+  labs(x = "log2 RNA", y = "log2 protein", color = "log2 atac") +
+  scale_x_continuous(limits = c(-5.5, 5.5)) + scale_y_continuous(limits = c(-5.5, 5.5)) +
+  theme(legend.position = "none")
+
+cowplot::ggsave2(p1, file = "../plots/dog_scatter_B_for_paper.pdf", 
+                 width = 1.8, height = 1.8)
+
+#process_pseudo_bulk_changes(c(9), "Monocyte")
+#process_pseudo_bulk_changes(c(4), "Bcell")
+#process_pseudo_bulk_changes(c(3), "NK")
+#process_pseudo_bulk_changes(c(0,1,2,5,6,7,8,11), "Tcell")
+
+
 # Reprocess the t=cell stuff
 gene_mapping_t <- fread("../output/DOG_source_Tcell.tsv")
 gene_mapping_t_filt <- gene_mapping_t %>% filter(rna_control > 7.5 | rna_stim > 7.5)
@@ -126,6 +150,8 @@ p1 <- ggplot(gene_mapping_t_filt,
 
 cowplot::ggsave2(p1, file = "../plots/dog_scatter_T_for_paper.pdf", 
                  width = 1.45, height = 1.45)
+
+
 
 orderf <- c("Protein", "RNA", "ATAC")
 go_df$Var1 <- factor(as.character(go_df$Var1), rev(orderf))
@@ -170,6 +196,15 @@ make_six_plot <- function(protein_name, gene_name){
   
 }
 
+make_six_plot("CD8", "CD8A")
+make_six_plot("CD4-1", "CD4")
+make_six_plot("CD19", "CD19")
+make_six_plot("CD20", "MS4A1")
+make_six_plot("CD56(NCAM)", "NCAM1")
+
+
+make_six_plot("CD184", "CXCR4")
+make_six_plot("CD71", "TFRC")
 make_six_plot("CD278", "ICOS")
 make_six_plot("CD3-1", "CD3E")
 make_six_plot("CD279", "PDCD1")
