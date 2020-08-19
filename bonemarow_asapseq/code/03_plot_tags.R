@@ -52,6 +52,18 @@ plot_factor_trim <- function(v){
 
 cowplot::ggsave2(
   cowplot::plot_grid(
+    plot_factor_trim("CLEC12A"),
+    plot_factor_trim("CD31"),
+    plot_factor_trim("CD2"),
+    plot_factor_trim("CD9"),
+    plot_factor_trim("CD38-1"),
+    plot_factor_trim("CD56(NCAM)"), ncol = 3, scale = 0.8
+  ), file = "../plots/adt_small_panels_supplement.png", width = 2.25*4, height = 1.5*4, dpi = 300)
+
+c("CLEC12A", "CD31", "CD2", "CD9", "CD38-1", "CD56(NCAM)") %in% rownames(mat)
+
+cowplot::ggsave2(
+  cowplot::plot_grid(
     plot_factor_trim("CD34"),
     plot_factor_trim("CD71"),
     plot_factor_trim("CD19"),

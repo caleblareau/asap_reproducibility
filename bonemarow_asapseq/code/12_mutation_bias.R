@@ -19,7 +19,22 @@ data.frame(
   X16260CT = assays(mSE)[["allele_frequency"]]["16260C>T",],
   lineage = clusters_ordered
 ) %>%
-  group_by(lineage) %>% summarize(mX13069GA = mean(X16260CT))
+  group_by(lineage) %>% 
+  summarize(mX13069GA = mean(X13069GA > 0.05),
+            mX13711GA = mean(X13711GA > 0.05),
+            mX16260CT = mean(X16260CT > 0.5)) %>%
+  reshape2::melt(id.vars = "lineage") -> for_hist_df
+
+phist <- ggplot(for_hist_df, aes(x = lineage, y = value*100, fill = variable)) +
+  facet_wrap(~variable, ncol = 1, scales = "free_y") +
+  geom_bar(stat = "identity", color = "black") +
+  pretty_plot(fontsize = 7) + labs(x = "Lineage", y = "% cells + for mutation") +
+  theme(legend.position = "none") +
+  scale_y_continuous(expand = c(0,0)) +
+  scale_fill_manual(values = c("purple","green4", "blue"))
+cowplot::ggsave2(phist, 
+                 file = "../plots/bars_mtDNA.pdf", height = 1.8, width = 2.2)
+
 
 # Do a per-variant anova
 var_meta_df$kruskal_pvalue <- sapply(1:dim(var_meta_df)[1], function(i){
@@ -37,7 +52,7 @@ pMut_mean <- ggplot(var_meta_df, aes(x = -log10(kruskal_pvalue_adj), y = mean*10
   geom_point(size = 0.5) + scale_y_log10(breaks = c(0.001, 0.01, 0.05, 0.1, 0.2, 0.5)*100) +
   labs(x = "-log10 p cluster bias", y = "Pseudobulk AF% (log10 scale)") +
   pretty_plot(fontsize = 8) + L_border()
-cowplot::ggsave2(pMut_mean, file = "../plots/mutation_bias_mean.pdf", width = 1.8, height= 1.8)
+#cowplot::ggsave2(pMut_mean, file = "../plots/mutation_bias_mean.pdf", width = 1.8, height= 1.8)
 
 
 # Pull in UMAP and variants
@@ -54,14 +69,9 @@ pMain2 <- ggplot(plot_df %>% arrange((X13069G.A)), aes(x = UMAP1, y = UMAP2, col
 cowplot::ggsave2(cowplot::plot_grid(pMain1, pMain2, ncol =1), 
                  file = "../plots/two_mito_mutations_MF.png", height = 1.8*2, width = 0.9*2, dpi = 500)
 
-p2 <- ggplot(shuf(plot_df), aes(x = IterativeLSI.UMAP_Dimension_1, y = IterativeLSI.UMAP_Dimension_2, color = clusters_ordered )) +
-  geom_point(size = 0.2)  + pretty_plot() + theme(legend.position = "bottom") +
-  scale_color_manual(values = c("purple2", "firebrick", "orange", "forestgreen", "dodgerblue3")) +
-  labs(x = "UMAP1", y = "UMAP2")
+pS1 <- ggplot(plot_df %>% arrange((X13711G.A)), aes(x = UMAP1, y = UMAP2, color = X13711G.A > 0.05 )) +
+  geom_point(size = 0.2)  + theme_void() + ggtitle("") + theme(legend.position = "none") + scale_color_manual(values = c("lightgrey", "green4")) 
 
+cowplot::ggsave2(pS1, 
+                 file = "../plots/supplemental_mtDNA_plot.png", height = 1.8, width = 1.8, dpi = 500)
 
-p5 <- ggplot(plot_df %>% arrange((X13711G.A)), aes(x = IterativeLSI.UMAP_Dimension_1, y = IterativeLSI.UMAP_Dimension_2, color = X13711G.A > 0.1 )) +
-  geom_point(size = 0.2) + pretty_plot()+ theme(legend.position = "bottom") + scale_color_manual(values = c("lightgrey", "firebrick")) +
-  labs(x = "UMAP1", y = "UMAP2")
-
-cowplot::ggsave2(cowplot::plot_grid(p1, p2, p3, p4, p5, ncol = 2), file = "../plots/lineage_bias_boneMarrow_plot.png", width = 8, height = 15)

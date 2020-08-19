@@ -13,7 +13,7 @@ stim_scRNA <- import_scRNAseq_cite_stim("stim"); dim(stim_scRNA)
 ga_control <- readRDS("../../../asap_large_data_files/pbmc_stim_data/output/signac_genes_scores/signac_control_ga.rds")
 ga_stim <- readRDS("../../../asap_large_data_files/pbmc_stim_data/output/signac_genes_scores/signac_stim_ga.rds")
 
-DimPlot(coembed4, reduction = "umap", group.by = "seurat_clusters", pt.size = .1, split.by = c( 'ca'), label = TRUE, ncol = 2)
+#DimPlot(coembed4, reduction = "umap", group.by = "seurat_clusters", pt.size = .1, split.by = c( 'ca'), label = TRUE, ncol = 2)
 
 DefaultAssay(coembed4) = "ADT"
 FeaturePlot(coembed4, reduction = "umap", features = c("CD4-1", "CD19", "CD16", "CD56(NCAM)", "CD8a", "CD14"), pt.size = .3, split.by = c('ca'))
@@ -39,7 +39,7 @@ p1 <- ggplot(shuf(mdf),aes(x=UMAP_1, y = UMAP_2, color = cluster)) +
   theme(legend.position = "none") +
   theme(strip.background = element_blank(), strip.text.y = element_blank()) +
   theme(strip.background = element_blank(), strip.text.x = element_blank())
-cowplot::ggsave2(p1, file = "../plots/umap_base_viz.png", width = 12, height = 3, dpi = 500)
+#cowplot::ggsave2(p1, file = "../plots/umap_base_viz.png", width = 12, height = 3, dpi = 500)
 
 
 # import gene <-> protein mapping
@@ -127,10 +127,10 @@ p1 <- ggplot(gene_mapping_b_filt[complete.cases(gene_mapping_b_filt),],
 cowplot::ggsave2(p1, file = "../plots/dog_scatter_B_for_paper.pdf", 
                  width = 1.8, height = 1.8)
 
-#process_pseudo_bulk_changes(c(9), "Monocyte")
-#process_pseudo_bulk_changes(c(4), "Bcell")
-#process_pseudo_bulk_changes(c(3), "NK")
-#process_pseudo_bulk_changes(c(0,1,2,5,6,7,8,11), "Tcell")
+process_pseudo_bulk_changes(c(9), "Monocyte")
+process_pseudo_bulk_changes(c(4), "Bcell")
+process_pseudo_bulk_changes(c(3), "NK")
+process_pseudo_bulk_changes(c(0,1,2,5,6,7,8,11), "Tcell")
 
 
 # Reprocess the t=cell stuff
@@ -165,8 +165,8 @@ pgrid <- ggplot(go_df, aes(x = Var1, y = Var2, fill = value)) +
   scale_y_discrete(expand = c(0,0)) +
   labs(x = "", y = "") +
   scale_fill_gradientn(colors = c(jdb_palette("brewer_heat")[c(5:9)]))
-cowplot::ggsave2(pgrid, file = "../plots/pgrid_3mode.pdf", 
-                 width = 1.85, height = 1.7)
+#cowplot::ggsave2(pgrid, file = "../plots/pgrid_3mode.pdf", 
+#                 width = 1.85, height = 1.7)
 
 make_six_plot <- function(protein_name, gene_name){
   set.seed(1)
@@ -195,6 +195,9 @@ make_six_plot <- function(protein_name, gene_name){
     width = 9, height = 6, file = paste0("../plots/dog/", protein_name, "_dog.png"))
   
 }
+make_six_plot("CD3-1", "CD3E")
+make_six_plot("CD3-2", "CD3E")
+
 
 make_six_plot("CD8", "CD8A")
 make_six_plot("CD4-1", "CD4")
