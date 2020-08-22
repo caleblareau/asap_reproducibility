@@ -13,6 +13,10 @@ Idents(adtbm) <- mdf$Clusters
 mat <- data.matrix(adtbm@assays$ADT@scale.data)
 
 umap_df <- mdf[,c("UMAP1", "UMAP2")]
+umap_mat <- data.matrix(umap_df)
+rownames(umap_mat) <- colnames(adtbm)
+adtbm[["umaparchr"]] <- CreateDimReducObject(embeddings = umap_mat, key = "AU_", assay = DefaultAssay(adtbm))
+
 plot_df <- data.frame(umap_df, t(mat))
 
 v <- "CD4-1"
@@ -39,40 +43,47 @@ plot_factor_shotgun <- function(v){
 #lapply(rownames(mat), plot_factor_shotgun)
 
 # Make selected plot for main figure
-plot_factor_trim <- function(v){
+plot_factor_qs_m <- function(v){
   plot_df_one <- data.frame(
     umap_df,
     value = mat[v,]
   )
+  qs <- quantile(plot_df_one$value, c(0.01, 0.99))
+  q1 <- qs[1]
+  q99 <- qs[2]
+  
   p1 <- ggplot(plot_df_one %>% arrange((value)), aes(x = UMAP1, y = UMAP2, color = value)) +
     geom_point(size = 0.2) + theme_void() + theme(legend.position = "none") +
-    scale_color_gradientn(colors = jdb_palette("solar_extra"), limits = c(0,3), oob = scales::squish)
+    scale_color_gradientn(colors = jdb_palette("solar_extra"), limits = c(q1,q99), oob = scales::squish)
+  return(p1)
+}
+
+plot_factor_qs <- function(v){
+   p1 <- FeaturePlot(adtbm, features = c(v), pt.size = 0.2, reduction = "umaparchr", min.cutoff = "q2", max.cutoff = "q98")+ 
+     theme_void() + theme(legend.position = "none") +
+    scale_color_gradientn(colors = jdb_palette("solar_extra"))
   return(p1)
 }
 
 cowplot::ggsave2(
   cowplot::plot_grid(
-    plot_factor_trim("CLEC12A"),
-    plot_factor_trim("CD31"),
-    plot_factor_trim("CD2"),
-    plot_factor_trim("CD9"),
-    plot_factor_trim("CD38-1"),
-    plot_factor_trim("CD56(NCAM)"), ncol = 3, scale = 0.8
-  ), file = "../plots/adt_small_panels_supplement.png", width = 2.25*4, height = 1.5*4, dpi = 300)
+    plot_factor_qs_m("CLEC12A"),
+    plot_factor_qs_m("CD31"),
+    plot_factor_qs_m("CD2"),
+    plot_factor_qs_m("CD9"),
+    plot_factor_qs_m("CD38-1"),
+    plot_factor_qs_m("CD56(NCAM)"), ncol = 3, scale = 0.8
+  ), file = "../plots/adt_small_panels_supplement_q1_q99.png", width = 2.25*4, height = 1.5*4, dpi = 300)
 
 c("CLEC12A", "CD31", "CD2", "CD9", "CD38-1", "CD56(NCAM)") %in% rownames(mat)
 
 cowplot::ggsave2(
   cowplot::plot_grid(
-    plot_factor_trim("CD34"),
-    plot_factor_trim("CD71"),
-    plot_factor_trim("CD19"),
-    plot_factor_trim("CD14"),
-    plot_factor_trim("CD3-2"),
-    plot_factor_trim("CD4-1"), ncol = 3, scale = 0.8
-  ), file = "../plots/adt_small_panels_sa.png", width = 2.25*4, height = 1.5*4, dpi = 300)
-
-
-# Try to understand / annotate clusters
-FindMarkers(adtbm, ident.1 = "C9") %>% head(10)
+    plot_factor_qs_m("CD34"),
+    plot_factor_qs_m("CD71"),
+    plot_factor_qs_m("CD19"),
+    plot_factor_qs_m("CD14"),
+    plot_factor_qs_m("CD3-2"),
+    plot_factor_qs_m("CD4-1"), ncol = 3, scale = 0.8
+  ), file = "../plots/adt_small_panels_sa_q1_q99.png", width = 2.25*4, height = 1.5*4, dpi = 300)
 

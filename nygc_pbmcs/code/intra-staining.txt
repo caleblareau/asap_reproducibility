@@ -1,9 +1,3 @@
-library(ArchR)
-
-# making the intracellular ArchR project
-setwd("~/Desktop/R_analyses/ASAP/intrASAP/OMNI/ArchR")
-input.file.list = "fragments.tsv.gz"
-sample.name.ls = "OMNI"
 
 ArrowFiles <- createArrowFiles(
   inputFiles = input.file.list,

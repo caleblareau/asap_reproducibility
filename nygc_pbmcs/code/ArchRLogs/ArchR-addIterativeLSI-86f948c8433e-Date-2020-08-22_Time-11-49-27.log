@@ -1,0 +1,1004 @@
+
+           ___      .______        ______  __    __  .______      
+          /   \     |   _  \      /      ||  |  |  | |   _  \     
+         /  ^  \    |  |_)  |    |  ,----'|  |__|  | |  |_)  |    
+        /  /_\  \   |      /     |  |     |   __   | |      /     
+       /  _____  \  |  |\  \\___ |  `----.|  |  |  | |  |\  \\___.
+      /__/     \__\ | _| `._____| \______||__|  |__| | _| `._____|
+    
+Logging With ArchR!
+
+Start Time : 2020-08-22 11:49:27
+
+------- ArchR Info
+
+ArchRThreads = 12
+ArchRGenome = Hg38
+
+------- System Info
+
+Computer OS = unix
+Total Cores = NA
+
+------- Session Info
+
+R version 3.6.2 (2019-12-12)
+Platform: x86_64-pc-linux-gnu (64-bit)
+
+Matrix products: default
+BLAS/LAPACK: /usr/lib64/libopenblasp-r0.3.3.so
+
+locale:
+ [1] LC_CTYPE=en_US.UTF-8       LC_NUMERIC=C               LC_TIME=en_US.UTF-8        LC_COLLATE=en_US.UTF-8     LC_MONETARY=en_US.UTF-8    LC_MESSAGES=en_US.UTF-8   
+ [7] LC_PAPER=en_US.UTF-8       LC_NAME=C                  LC_ADDRESS=C               LC_TELEPHONE=C             LC_MEASUREMENT=en_US.UTF-8 LC_IDENTIFICATION=C       
+
+attached base packages:
+ [1] grid      parallel  stats4    stats     graphics  grDevices utils     datasets  methods   base     
+
+other attached packages:
+ [1] stringi_1.4.6                     ComplexHeatmap_2.2.0              scales_1.1.1                      Rsamtools_2.2.3                  
+ [5] BSgenome.Hsapiens.UCSC.hg38_1.4.1 BSgenome_1.54.0                   rtracklayer_1.46.0                Biostrings_2.54.0                
+ [9] XVector_0.26.0                    viridis_0.5.1                     viridisLite_0.3.0                 stringr_1.4.0                    
+[13] reshape2_1.4.4                    gridExtra_2.3                     ggrastr_0.1.7                     nabor_0.5.0                      
+[17] Seurat_3.1.5                      ArchR_0.9.1                       magrittr_1.5                      rhdf5_2.30.1                     
+[21] Matrix_1.2-18                     SummarizedExperiment_1.16.1       DelayedArray_0.12.3               BiocParallel_1.20.1              
+[25] matrixStats_0.56.0                Biobase_2.46.0                    GenomicRanges_1.38.0              GenomeInfoDb_1.22.1              
+[29] IRanges_2.20.2                    S4Vectors_0.24.4                  BiocGenerics_0.32.0               BuenColors_0.5.6                 
+[33] ggplot2_3.3.1                     MASS_7.3-51.6                     dplyr_1.0.0                       data.table_1.12.8                
+
+loaded via a namespace (and not attached):
+ [1] Rtsne_0.15               colorspace_1.4-1         rjson_0.2.20             ellipsis_0.3.1           ggridges_0.5.2           circlize_0.4.10         
+ [7] GlobalOptions_0.1.2      clue_0.3-57              rstudioapi_0.11          leiden_0.3.3             listenv_0.8.0            ggrepel_0.8.2           
+[13] fansi_0.4.1              codetools_0.2-16         splines_3.6.2            jsonlite_1.6.1           ica_1.0-2                cluster_2.1.0           
+[19] png_0.1-7                uwot_0.1.8               sctransform_0.2.1        compiler_3.6.2           httr_1.4.1               assertthat_0.2.1        
+[25] lazyeval_0.2.2           cli_2.0.2                htmltools_0.4.0          tools_3.6.2              rsvd_1.0.3               igraph_1.2.5            
+[31] gtable_0.3.0             glue_1.4.1               GenomeInfoDbData_1.2.2   RANN_2.6.1               rappdirs_0.3.1           Rcpp_1.0.4.6            
+[37] vctrs_0.3.1              ape_5.4                  nlme_3.1-148             lmtest_0.9-37            globals_0.12.5           lifecycle_0.2.0         
+[43] irlba_2.3.3              XML_3.99-0.3             future_1.17.0            zlibbioc_1.32.0          zoo_1.8-8                RColorBrewer_1.1-2      
+[49] reticulate_1.16          pbapply_1.4-2            shape_1.4.4              rlang_0.4.6              pkgconfig_2.0.3          bitops_1.0-6            
+[55] lattice_0.20-41          ROCR_1.0-11              purrr_0.3.4              Rhdf5lib_1.8.0           GenomicAlignments_1.22.1 patchwork_1.0.0         
+[61] htmlwidgets_1.5.1        cowplot_1.0.0            tidyselect_1.1.0         RcppAnnoy_0.0.16         plyr_1.8.6               R6_2.4.1                
+[67] generics_0.0.2           pillar_1.4.4             withr_2.2.0              fitdistrplus_1.1-1       survival_3.2-3           RCurl_1.98-1.2          
+[73] tibble_3.0.1             future.apply_1.5.0       tsne_0.1-3               crayon_1.3.4             KernSmooth_2.23-17       plotly_4.9.2.1          
+[79] GetoptLong_1.0.0         digest_0.6.25            tidyr_1.1.0              munsell_0.5.0           
+
+
+------- Log Info
+
+
+2020-08-22 11:49:27 : IterativeLSI Input-Parameters, Class = list
+
+IterativeLSI Input-Parameters$ArchRProj: length = 1
+class: ArchRProject 
+outputDirectory: /data/aryee/caleb/tenx-scatac/asap_paper/asap_large_data_files/nygc_pbmc/output/archr/AvsB_combined_out 
+samples(2): AvsB_LLL AvsB_OMNI
+sampleColData names(1): ArrowFiles
+cellColData names(13): Sample TSSEnrichment ... nDiFrags BlacklistRatio
+numberOfCells(1): 1
+medianTSS(1): 6.021
+medianFrags(1): 59015
+
+
+IterativeLSI Input-Parameters$useMatrix: length = 1
+[1] "TileMatrix"
+
+
+IterativeLSI Input-Parameters$name: length = 1
+[1] "IterativeLSI"
+
+
+IterativeLSI Input-Parameters$iterations: length = 1
+[1] 2
+
+
+IterativeLSI Input-Parameters$varFeatures: length = 1
+[1] 25000
+
+
+IterativeLSI Input-Parameters$dimsToUse: length = 30
+[1] 1 2 3 4 5 6
+
+
+IterativeLSI Input-Parameters$LSIMethod: length = 1
+[1] 2
+
+
+IterativeLSI Input-Parameters$scaleDims: length = 1
+[1] TRUE
+
+
+IterativeLSI Input-Parameters$corCutOff: length = 1
+[1] 0.75
+
+
+IterativeLSI Input-Parameters$binarize: length = 1
+[1] TRUE
+
+
+IterativeLSI Input-Parameters$outlierQuantiles: length = 2
+[1] 0.02 0.98
+
+
+IterativeLSI Input-Parameters$filterBias: length = 1
+[1] TRUE
+
+
+IterativeLSI Input-Parameters$sampleCellsPre: length = 1
+[1] 10000
+
+
+IterativeLSI Input-Parameters$projectCellsPre: length = 1
+[1] FALSE
+
+
+IterativeLSI Input-Parameters$sampleCellsFinal: length = 0
+NULL
+
+
+IterativeLSI Input-Parameters$selectionMethod: length = 1
+[1] "var"
+
+
+IterativeLSI Input-Parameters$scaleTo: length = 1
+[1] 10000
+
+
+IterativeLSI Input-Parameters$totalFeatures: length = 1
+[1] 5e+05
+
+
+IterativeLSI Input-Parameters$filterQuantile: length = 1
+[1] 0.995
+
+
+IterativeLSI Input-Parameters$excludeChr: length = 0
+NULL
+
+
+IterativeLSI Input-Parameters$saveIterations: length = 1
+[1] TRUE
+
+
+IterativeLSI Input-Parameters$nPlot: length = 1
+[1] 10000
+
+
+IterativeLSI Input-Parameters$outDir: length = 1
+[1] "/data/aryee/caleb/tenx-scatac/asap_paper/asap_large_data_files/nygc_pbmc/output/archr/AvsB_combined_out"
+
+
+IterativeLSI Input-Parameters$threads: length = 1
+[1] 12
+
+
+IterativeLSI Input-Parameters$seed: length = 1
+[1] 1
+
+
+IterativeLSI Input-Parameters$verbose: length = 1
+[1] TRUE
+
+
+IterativeLSI Input-Parameters$force: length = 1
+[1] FALSE
+
+
+IterativeLSI Input-Parameters$logFile: length = 1
+[1] "ArchRLogs/ArchR-addIterativeLSI-86f948c8433e-Date-2020-08-22_Time-11-49-27.log"
+
+
+2020-08-22 11:49:28 : Computing Total Accessibility Across All Features, 0.004 mins elapsed.
+2020-08-22 11:49:32 : Computing Top Features, 0.075 mins elapsed.
+###########
+2020-08-22 11:49:33 : Running LSI (1 of 2) on Top Features, 0.083 mins elapsed.
+###########
+2020-08-22 11:49:33 : Sampling Cells (N = 10001) for Estimated LSI, 0.084 mins elapsed.
+2020-08-22 11:49:33 : Creating Sampled Partial Matrix, 0.084 mins elapsed.
+2020-08-22 11:49:43 : Computing Estimated LSI (projectAll = FALSE), 0.249 mins elapsed.
+
+2020-08-22 11:49:43 : LSI Parameters, Class = list
+
+LSI Parameters$: length = 1
+                       
+1 function (name)      
+2 .Internal(args(name))
+
+
+LSI Parameters$mat: nRows = 25000, nCols = 10001
+LSI Parameters$mat: NonZeroEntries = 15517859, EntryRange = [ 1 , 1 ]
+5 x 5 sparse Matrix of class "dgCMatrix"
+     AvsB_LLL#AAACGAAAGAGAATTC-1 AvsB_LLL#AAACGAAAGGTAGGAA-1 AvsB_LLL#AAACGAAAGTCCGGAA-1 AvsB_LLL#AAACGAACAGGTGTCC-1 AvsB_LLL#AAACGAACAGTTACAC-1
+[1,]                           .                           .                           .                           .                           .
+[2,]                           .                           .                           .                           .                           .
+[3,]                           1                           .                           .                           .                           .
+[4,]                           .                           .                           1                           .                           .
+[5,]                           .                           .                           1                           .                           .
+
+
+LSI Parameters$LSIMethod: length = 1
+[1] 2
+
+
+LSI Parameters$scaleTo: length = 1
+[1] 10000
+
+
+LSI Parameters$nDimensions: length = 1
+[1] 30
+
+
+LSI Parameters$binarize: length = 1
+[1] TRUE
+
+
+LSI Parameters$outlierQuantiles: length = 2
+[1] 0.02 0.98
+
+
+LSI Parameters$seed: length = 1
+[1] 1
+
+
+LSI Parameters$verbose: length = 1
+[1] FALSE
+
+
+LSI Parameters$tstart: length = 1
+[1] "2020-08-22 11:49:28 EDT"
+
+
+LSI Parameters$logFile: length = 1
+[1] "ArchRLogs/ArchR-addIterativeLSI-86f948c8433e-Date-2020-08-22_Time-11-49-27.log"
+
+
+2020-08-22 11:49:43 : Running LSI, Input Matrix = 0.187 GB, 0.255 mins elapsed.
+2020-08-22 11:49:43 : Binarizing Matrix, 0.255 mins elapsed.
+2020-08-22 11:49:43 : Computing Term Frequency, 0.259 mins elapsed.
+2020-08-22 11:49:43 : Filtering Outliers Based On Counts, 0.26 mins elapsed.
+2020-08-22 11:49:44 : Removing 0 Sum Rows, 0.266 mins elapsed.
+2020-08-22 11:49:45 : Computing Inverse Document Frequency, 0.288 mins elapsed.
+2020-08-22 11:49:47 : Computing SVD using irlba, 0.319 mins elapsed.
+2020-08-22 11:50:39 : Projecting Outliers with LSI-Projection (Granja* et al 2019), 1.191 mins elapsed.
+
+2020-08-22 11:50:39 : LSI-Projection Parameters, Class = list
+
+LSI-Projection Parameters$: length = 1
+                       
+1 function (name)      
+2 .Internal(args(name))
+
+
+LSI-Projection Parameters$mat: nRows = 25000, nCols = 10
+LSI-Projection Parameters$mat: NonZeroEntries = 14569, EntryRange = [ 1 , 1 ]
+5 x 5 sparse Matrix of class "dgCMatrix"
+     AvsB_LLL#AAACGAAAGAGAATTC-1 AvsB_LLL#AAACGAAAGGTAGGAA-1 AvsB_LLL#AAACGAAAGTCCGGAA-1 AvsB_LLL#AAACGAACAGGTGTCC-1 AvsB_LLL#AAACGAACAGTTACAC-1
+[1,]                           .                           .                           .                           .                           .
+[2,]                           .                           .                           .                           .                           .
+[3,]                           1                           .                           .                           .                           .
+[4,]                           .                           .                           1                           .                           .
+[5,]                           .                           .                           1                           .                           .
+
+
+LSI-Projection Parameters$matSVD: nRows = 9599, nCols = 30
+                                 LSI1      LSI2       LSI3         LSI4      LSI5
+AvsB_LLL#AAACGAAAGAGAATTC-1 -58.15379  26.07742 -8.6697236 -8.605046617 -2.634747
+AvsB_LLL#AAACGAAAGGTAGGAA-1 -30.78778  17.18664  8.2475347  5.752885961 -1.926858
+AvsB_LLL#AAACGAAAGTCCGGAA-1 -72.86236 -25.36815 -0.9822341 -4.824488696 -5.291915
+AvsB_LLL#AAACGAACAGGTGTCC-1 -19.93858  10.91280  3.2254029  2.529095208  1.225034
+AvsB_LLL#AAACGAACAGTTACAC-1 -32.63041  17.82809 -7.1188956 -0.006865426  1.554823
+
+
+LSI-Projection Parameters$returnModel: length = 1
+[1] FALSE
+
+
+LSI-Projection Parameters$verbose: length = 1
+[1] FALSE
+
+
+LSI-Projection Parameters$tstart: length = 0
+NULL
+
+
+LSI-Projection Parameters$logFile: length = 1
+[1] "ArchRLogs/ArchR-addIterativeLSI-86f948c8433e-Date-2020-08-22_Time-11-49-27.log"
+
+
+2020-08-22 11:50:39 : Projecting LSI, Input Matrix = 0 GB, 0 mins elapsed.
+2020-08-22 11:50:39 : Subsetting by Non-Zero features in inital Matrix, 0 mins elapsed.
+2020-08-22 11:50:39 : Binarizing Matrix, 0 mins elapsed.
+2020-08-22 11:50:39 : Computing Term Frequency, 0 mins elapsed.
+2020-08-22 11:50:39 : Computing Inverse Document Frequency, 0 mins elapsed.
+2020-08-22 11:50:39 : Computing TF-IDF Matrix, 0 mins elapsed.
+2020-08-22 11:50:40 : Calculating V Matrix, 0.017 mins elapsed.
+2020-08-22 11:50:40 : Computing Projected Coordinates, 0.018 mins elapsed.
+
+2020-08-22 11:50:40 : LSI-Projection Parameters, Class = list
+
+LSI-Projection Parameters$: length = 1
+                       
+1 function (name)      
+2 .Internal(args(name))
+
+
+LSI-Projection Parameters$mat: nRows = 25000, nCols = 402
+LSI-Projection Parameters$mat: NonZeroEntries = 1010747, EntryRange = [ 1 , 1 ]
+5 x 5 sparse Matrix of class "dgCMatrix"
+     AvsB_LLL#AAAGATGAGCACGTAG-1 AvsB_LLL#AAAGGATCATTAGCCA-1 AvsB_LLL#AACAGTCCAACGAGGT-1 AvsB_LLL#AACCAACTCTATATCC-1 AvsB_LLL#AATGCCAAGCATTCCA-1
+[1,]                           .                           .                           .                           1                           .
+[2,]                           .                           .                           .                           1                           .
+[3,]                           .                           .                           .                           1                           .
+[4,]                           .                           .                           .                           .                           .
+[5,]                           .                           .                           .                           .                           .
+
+
+LSI-Projection Parameters$matSVD: nRows = 9599, nCols = 30
+                                 LSI1      LSI2       LSI3         LSI4      LSI5
+AvsB_LLL#AAACGAAAGAGAATTC-1 -58.15379  26.07742 -8.6697236 -8.605046617 -2.634747
+AvsB_LLL#AAACGAAAGGTAGGAA-1 -30.78778  17.18664  8.2475347  5.752885961 -1.926858
+AvsB_LLL#AAACGAAAGTCCGGAA-1 -72.86236 -25.36815 -0.9822341 -4.824488696 -5.291915
+AvsB_LLL#AAACGAACAGGTGTCC-1 -19.93858  10.91280  3.2254029  2.529095208  1.225034
+AvsB_LLL#AAACGAACAGTTACAC-1 -32.63041  17.82809 -7.1188956 -0.006865426  1.554823
+
+
+LSI-Projection Parameters$returnModel: length = 1
+[1] FALSE
+
+
+LSI-Projection Parameters$verbose: length = 1
+[1] FALSE
+
+
+LSI-Projection Parameters$tstart: length = 0
+NULL
+
+
+LSI-Projection Parameters$logFile: length = 1
+[1] "ArchRLogs/ArchR-addIterativeLSI-86f948c8433e-Date-2020-08-22_Time-11-49-27.log"
+
+
+2020-08-22 11:50:40 : Projecting LSI, Input Matrix = 0.012 GB, 0 mins elapsed.
+2020-08-22 11:50:40 : Subsetting by Non-Zero features in inital Matrix, 0 mins elapsed.
+2020-08-22 11:50:40 : Binarizing Matrix, 0 mins elapsed.
+2020-08-22 11:50:40 : Computing Term Frequency, 0 mins elapsed.
+2020-08-22 11:50:40 : Computing Inverse Document Frequency, 0.001 mins elapsed.
+2020-08-22 11:50:40 : Computing TF-IDF Matrix, 0.001 mins elapsed.
+2020-08-22 11:50:41 : Calculating V Matrix, 0.016 mins elapsed.
+2020-08-22 11:50:41 : Computing Projected Coordinates, 0.017 mins elapsed.
+2020-08-22 11:50:41 : Finished LSI (TF-IDF SVD) using irlba, 1.228 mins elapsed.
+
+2020-08-22 11:50:43 : outLSI-1, Class = SimpleList
+
+outLSI-1$matSVD: nRows = 10001, nCols = 30
+                                 LSI1      LSI2       LSI3         LSI4      LSI5
+AvsB_LLL#AAACGAAAGAGAATTC-1 -58.15379  26.07742 -8.6697236 -8.605046617 -2.634747
+AvsB_LLL#AAACGAAAGGTAGGAA-1 -30.78778  17.18664  8.2475347  5.752885961 -1.926858
+AvsB_LLL#AAACGAAAGTCCGGAA-1 -72.86236 -25.36815 -0.9822341 -4.824488696 -5.291915
+AvsB_LLL#AAACGAACAGGTGTCC-1 -19.93858  10.91280  3.2254029  2.529095208  1.225034
+AvsB_LLL#AAACGAACAGTTACAC-1 -32.63041  17.82809 -7.1188956 -0.006865426  1.554823
+
+
+outLSI-1$rowSm: length = 25000
+[1]  399  452  414  670  421 1077
+
+
+outLSI-1$nCol: length = 1
+[1] 9599
+
+
+outLSI-1$exclude: length = 0
+NULL
+
+
+outLSI-1$idx: length = 25000
+[1] 1 2 3 4 5 6
+
+
+outLSI-1$u: nRows = 25000, nCols = 30
+             [,1]          [,2]          [,3]         [,4]          [,5]
+[1,] -0.004728307 -0.0009264987  0.0074926919 -0.005433401 -0.0007342903
+[2,] -0.005143975  0.0001905417  0.0025370304 -0.005081380 -0.0018951659
+[3,] -0.004903969  0.0001620442 -0.0007582155 -0.011330339 -0.0037006366
+[4,] -0.006967185  0.0013539687  0.0026224778 -0.006002952  0.0000439789
+[5,] -0.004733167  0.0041112718  0.0055026213 -0.004775548 -0.0033978571
+
+
+outLSI-1$v: nRows = 9599, nCols = 30
+             [,1]         [,2]         [,3]          [,4]         [,5]
+[1,] -0.012072430  0.013805180 -0.016238313 -1.757895e-02 -0.005683017
+[2,] -0.006391386  0.009098470  0.015447557  1.175237e-02 -0.004156135
+[3,] -0.015125854 -0.013429701 -0.001839715 -9.855781e-03 -0.011414394
+[4,] -0.004139148  0.005777148  0.006041150  5.166601e-03  0.002642335
+[5,] -0.006773908  0.009438049 -0.013333626 -1.402514e-05  0.003353674
+
+
+outLSI-1$binarize: length = 1
+[1] TRUE
+
+
+outLSI-1$scaleTo: length = 1
+[1] 10000
+
+
+outLSI-1$nDimensions: length = 1
+[1] 30
+
+
+outLSI-1$LSIMethod: length = 1
+[1] 2
+
+
+outLSI-1$outliers: length = 402
+[1] "AvsB_LLL#AAAGATGAGCACGTAG-1" "AvsB_LLL#AAAGGATCATTAGCCA-1" "AvsB_LLL#AACAGTCCAACGAGGT-1" "AvsB_LLL#AACCAACTCTATATCC-1" "AvsB_LLL#AATGCCAAGCATTCCA-1"
+[6] "AvsB_LLL#AATGGAAGTCCCTAAA-1"
+
+
+outLSI-1$date: length = 1
+[1] "2020-08-22"
+
+
+outLSI-1$seed: length = 1
+[1] 1
+
+
+outLSI-1$scaleDims: length = 1
+[1] TRUE
+
+
+outLSI-1$useMatrix: length = 1
+[1] "TileMatrix"
+
+
+outLSI-1$tileSize: length = 1
+[1] 500
+
+
+
+2020-08-22 11:50:43 : Cluster Params, Class = list
+
+Cluster Params$: length = 1
+                       
+1 function (name)      
+2 .Internal(args(name))
+
+
+Cluster Params$matSVD: nRows = 10001, nCols = 30
+                                 LSI1      LSI2       LSI3         LSI4      LSI5
+AvsB_LLL#AAACGAAAGAGAATTC-1 -58.15379  26.07742 -8.6697236 -8.605046617 -2.634747
+AvsB_LLL#AAACGAAAGGTAGGAA-1 -30.78778  17.18664  8.2475347  5.752885961 -1.926858
+AvsB_LLL#AAACGAAAGTCCGGAA-1 -72.86236 -25.36815 -0.9822341 -4.824488696 -5.291915
+AvsB_LLL#AAACGAACAGGTGTCC-1 -19.93858  10.91280  3.2254029  2.529095208  1.225034
+AvsB_LLL#AAACGAACAGTTACAC-1 -32.63041  17.82809 -7.1188956 -0.006865426  1.554823
+
+
+Cluster Params$corCutOff: length = 1
+[1] 0.75
+
+
+Cluster Params$dimsToUse: length = 30
+[1] 1 2 3 4 5 6
+
+
+Cluster Params$scaleDims: length = 1
+[1] TRUE
+
+
+Cluster Params$verbose: length = 1
+[1] TRUE
+
+
+Cluster Params$j: length = 1
+[1] 1
+
+
+Cluster Params$filterBias: length = 1
+[1] TRUE
+
+
+Cluster Params$cellNames: length = 11664
+[1] "AvsB_LLL#GCTTTCGAGACCGCAA-1" "AvsB_LLL#TGGAAGGTCTATATCC-1" "AvsB_LLL#GCAAAGGGTTTCTACT-1" "AvsB_LLL#TCAGTCCGTCATTGCA-1" "AvsB_LLL#CCACAGGAGCCCATTA-1"
+[6] "AvsB_LLL#CTTCTAAGTTCACGTA-1"
+
+
+Cluster Params$cellDepth: length = 11664
+AvsB_LLL#GCTTTCGAGACCGCAA-1 AvsB_LLL#TGGAAGGTCTATATCC-1 AvsB_LLL#GCAAAGGGTTTCTACT-1 AvsB_LLL#TCAGTCCGTCATTGCA-1 AvsB_LLL#CCACAGGAGCCCATTA-1 AvsB_LLL#CTTCTAAGTTCACGTA-1 
+                   4.770970                    4.730217                    4.700903                    4.678200                    4.661510                    4.654773 
+
+
+Cluster Params$tstart: length = 1
+[1] "2020-08-22 11:49:28 EDT"
+
+
+Cluster Params$logFile: length = 1
+[1] "ArchRLogs/ArchR-addIterativeLSI-86f948c8433e-Date-2020-08-22_Time-11-49-27.log"
+
+
+2020-08-22 11:50:43 : Identifying Clusters, 1.261 mins elapsed.
+
+2020-08-22 11:50:43 : addClusters Input-Parameters, Class = list
+
+addClusters Input-Parameters$: length = 1
+                       
+1 function (name)      
+2 .Internal(args(name))
+
+
+addClusters Input-Parameters$input: nRows = 10001, nCols = 30
+                                 LSI1      LSI2       LSI3        LSI4        LSI5
+AvsB_LLL#AAACGAAAGAGAATTC-1 -4.630751  2.302204 -0.5577854 -0.55246193 -0.06105476
+AvsB_LLL#AAACGAAAGGTAGGAA-1 -4.454332  2.358460  1.0890286  0.73476641 -0.35582527
+AvsB_LLL#AAACGAAAGTCCGGAA-1 -4.784586 -1.501251  0.1845792 -0.08104075 -0.11335455
+AvsB_LLL#AAACGAACAGGTGTCC-1 -4.455057  2.386567  0.6818052  0.52739147  0.23820180
+AvsB_LLL#AAACGAACAGTTACAC-1 -4.400629  2.492589 -0.9154587  0.05612735  0.26947213
+
+
+addClusters Input-Parameters$reducedDims: length = 1
+[1] "IterativeLSI"
+
+
+addClusters Input-Parameters$name: length = 1
+[1] "Clusters"
+
+
+addClusters Input-Parameters$sampleCells: length = 1
+[1] 10000
+
+
+addClusters Input-Parameters$seed: length = 1
+[1] 1
+
+
+addClusters Input-Parameters$method: length = 1
+[1] "Seurat"
+
+
+addClusters Input-Parameters$dimsToUse: length = 0
+NULL
+
+
+addClusters Input-Parameters$scaleDims: length = 0
+NULL
+
+
+addClusters Input-Parameters$corCutOff: length = 1
+[1] 0.75
+
+
+addClusters Input-Parameters$knnAssign: length = 1
+[1] 10
+
+
+addClusters Input-Parameters$nOutlier: length = 1
+[1] 5
+
+
+addClusters Input-Parameters$testBias: length = 1
+[1] TRUE
+
+
+addClusters Input-Parameters$filterBias: length = 1
+[1] TRUE
+
+
+addClusters Input-Parameters$biasClusters: length = 1
+[1] 0.01
+
+
+addClusters Input-Parameters$biasCol: length = 1
+[1] "nFrags"
+
+
+addClusters Input-Parameters$biasVals: length = 10001
+[1] 4.000043 3.524136 4.069520 3.125806 3.520090 3.527243
+
+
+addClusters Input-Parameters$biasQuantiles: length = 2
+[1] 0.05 0.95
+
+
+addClusters Input-Parameters$biasEnrich: length = 1
+[1] 10
+
+
+addClusters Input-Parameters$biasProportion: length = 1
+[1] 0.5
+
+
+addClusters Input-Parameters$biasPval: length = 1
+[1] 0.05
+
+
+addClusters Input-Parameters$nPerm: length = 1
+[1] 500
+
+
+addClusters Input-Parameters$prefix: length = 1
+[1] "C"
+
+
+addClusters Input-Parameters$ArchRProj: length = 0
+NULL
+
+
+addClusters Input-Parameters$verbose: length = 1
+[1] FALSE
+
+
+addClusters Input-Parameters$tstart: length = 0
+NULL
+
+
+addClusters Input-Parameters$force: length = 1
+[1] FALSE
+
+
+addClusters Input-Parameters$logFile: length = 1
+[1] "ArchRLogs/ArchR-addIterativeLSI-86f948c8433e-Date-2020-08-22_Time-11-49-27.log"
+
+
+addClusters Input-Parameters$...: length = 2
+[[1]]
+<promise: 0x558ccad51f88>
+
+[[2]]
+<promise: 0x558ccad52068>
+
+
+
+2020-08-22 11:50:43 : Estimating Clusters by Sampling, 0 mins elapsed.
+2020-08-22 11:50:43 : Running Seurats FindClusters (Stuart et al. Cell 2019), 0 mins elapsed.
+2020-08-22 11:51:06 : Finding Nearest Clusters, 0.381 mins elapsed.
+2020-08-22 11:51:06 : Assigning Nearest Clusters, 0.381 mins elapsed.
+2020-08-22 11:51:07 : Testing Outlier Clusters, 0.398 mins elapsed.
+2020-08-22 11:51:07 : Assigning Cluster Names to 7 Clusters, 0.398 mins elapsed.
+2020-08-22 11:51:07 : Finished addClusters, 0.398 mins elapsed.
+2020-08-22 11:51:07 : Identified 7 Clusters, 1.662 mins elapsed.
+
+2020-08-22 11:51:07 : clusterDF-1, Class = DFrame
+DataFrame with 10001 rows and 2 columns
+                         cellNames    clusters
+                       <character> <character>
+1      AvsB_LLL#AAACGAAAGAGAATTC-1          C2
+2      AvsB_LLL#AAACGAAAGGTAGGAA-1          C2
+3      AvsB_LLL#AAACGAAAGTCCGGAA-1          C6
+4      AvsB_LLL#AAACGAACAGGTGTCC-1          C2
+5      AvsB_LLL#AAACGAACAGTTACAC-1          C2
+...                            ...         ...
+9997  AvsB_OMNI#TTTGTGTTCGATAGGG-1          C6
+9998  AvsB_OMNI#TTTGTGTTCGCTACCT-1          C2
+9999  AvsB_OMNI#TTTGTGTTCGGACGAA-1          C2
+10000 AvsB_OMNI#TTTGTGTTCTCTATTG-1          C3
+10001 AvsB_OMNI#TTTGTGTTCTGAACGT-1          C6
+
+2020-08-22 11:51:07 : Saving LSI Iteration, 1.662 mins elapsed.
+
+2020-08-22 11:51:07 : Save iteration, Class = list
+
+Save iteration$: length = 1
+                       
+1 function (name)      
+2 .Internal(args(name))
+
+
+Save iteration$matSVD: nRows = 10001, nCols = 30
+                                 LSI1      LSI2       LSI3         LSI4      LSI5
+AvsB_LLL#AAACGAAAGAGAATTC-1 -58.15379  26.07742 -8.6697236 -8.605046617 -2.634747
+AvsB_LLL#AAACGAAAGGTAGGAA-1 -30.78778  17.18664  8.2475347  5.752885961 -1.926858
+AvsB_LLL#AAACGAAAGTCCGGAA-1 -72.86236 -25.36815 -0.9822341 -4.824488696 -5.291915
+AvsB_LLL#AAACGAACAGGTGTCC-1 -19.93858  10.91280  3.2254029  2.529095208  1.225034
+AvsB_LLL#AAACGAACAGTTACAC-1 -32.63041  17.82809 -7.1188956 -0.006865426  1.554823
+
+
+Save iteration$clusters: length = 10001
+[1] "C2" "C2" "C6" "C2" "C2" "C7"
+
+
+Save iteration$nPlot: length = 1
+[1] 10000
+
+
+Save iteration$ArchRProj: length = 1
+class: ArchRProject 
+outputDirectory: /data/aryee/caleb/tenx-scatac/asap_paper/asap_large_data_files/nygc_pbmc/output/archr/AvsB_combined_out 
+samples(2): AvsB_LLL AvsB_OMNI
+sampleColData names(1): ArrowFiles
+cellColData names(13): Sample TSSEnrichment ... nDiFrags BlacklistRatio
+numberOfCells(1): 1
+medianTSS(1): 6.021
+medianFrags(1): 59015
+
+
+Save iteration$scaleDims: length = 1
+[1] TRUE
+
+
+Save iteration$corCutOff: length = 1
+[1] 0.75
+
+
+Save iteration$dimsToUse: length = 30
+[1] 1 2 3 4 5 6
+
+
+Save iteration$j: length = 1
+[1] 1
+
+
+Save iteration$threads: length = 1
+[1] 12
+
+
+Save iteration$outDir: length = 1
+[1] "/data/aryee/caleb/tenx-scatac/asap_paper/asap_large_data_files/nygc_pbmc/output/archr/AvsB_combined_out/IterativeLSI"
+
+
+Save iteration$logFile: length = 1
+[1] "ArchRLogs/ArchR-addIterativeLSI-86f948c8433e-Date-2020-08-22_Time-11-49-27.log"
+
+
+2020-08-22 11:51:29 : Creating Cluster Matrix on the total Group Features, 2.026 mins elapsed.
+2020-08-22 11:51:54 : Computing Variable Features, 2.434 mins elapsed.
+###########
+2020-08-22 11:51:54 : Running LSI (2 of 2) on Variable Features, 2.438 mins elapsed.
+###########
+2020-08-22 11:51:54 : Creating Partial Matrix, 2.438 mins elapsed.
+2020-08-22 11:52:05 : Computing LSI, 2.617 mins elapsed.
+
+2020-08-22 11:52:05 : LSI Parameters, Class = list
+
+LSI Parameters$: length = 1
+                       
+1 function (name)      
+2 .Internal(args(name))
+
+
+LSI Parameters$mat: nRows = 25000, nCols = 11664
+LSI Parameters$mat: NonZeroEntries = 16953562, EntryRange = [ 1 , 1 ]
+5 x 5 sparse Matrix of class "dgCMatrix"
+     AvsB_LLL#GCTTTCGAGACCGCAA-1 AvsB_LLL#TGGAAGGTCTATATCC-1 AvsB_LLL#GCAAAGGGTTTCTACT-1 AvsB_LLL#TCAGTCCGTCATTGCA-1 AvsB_LLL#CCACAGGAGCCCATTA-1
+[1,]                           .                           .                           .                           .                           1
+[2,]                           .                           .                           .                           .                           .
+[3,]                           .                           .                           .                           .                           1
+[4,]                           1                           .                           .                           .                           .
+[5,]                           1                           .                           .                           .                           .
+
+
+LSI Parameters$LSIMethod: length = 1
+[1] 2
+
+
+LSI Parameters$scaleTo: length = 1
+[1] 10000
+
+
+LSI Parameters$nDimensions: length = 1
+[1] 30
+
+
+LSI Parameters$binarize: length = 1
+[1] TRUE
+
+
+LSI Parameters$outlierQuantiles: length = 2
+[1] 0.02 0.98
+
+
+LSI Parameters$seed: length = 1
+[1] 1
+
+
+LSI Parameters$verbose: length = 1
+[1] FALSE
+
+
+LSI Parameters$tstart: length = 1
+[1] "2020-08-22 11:49:28 EDT"
+
+
+LSI Parameters$logFile: length = 1
+[1] "ArchRLogs/ArchR-addIterativeLSI-86f948c8433e-Date-2020-08-22_Time-11-49-27.log"
+
+
+2020-08-22 11:52:05 : Running LSI, Input Matrix = 0.205 GB, 2.622 mins elapsed.
+2020-08-22 11:52:05 : Binarizing Matrix, 2.622 mins elapsed.
+2020-08-22 11:52:06 : Computing Term Frequency, 2.645 mins elapsed.
+2020-08-22 11:52:06 : Filtering Outliers Based On Counts, 2.646 mins elapsed.
+2020-08-22 11:52:07 : Removing 0 Sum Rows, 2.652 mins elapsed.
+2020-08-22 11:52:08 : Computing Inverse Document Frequency, 2.677 mins elapsed.
+2020-08-22 11:52:11 : Computing SVD using irlba, 2.722 mins elapsed.
+2020-08-22 11:52:51 : Projecting Outliers with LSI-Projection (Granja* et al 2019), 3.394 mins elapsed.
+
+2020-08-22 11:52:51 : LSI-Projection Parameters, Class = list
+
+LSI-Projection Parameters$: length = 1
+                       
+1 function (name)      
+2 .Internal(args(name))
+
+
+LSI-Projection Parameters$mat: nRows = 25000, nCols = 10
+LSI-Projection Parameters$mat: NonZeroEntries = 17510, EntryRange = [ 1 , 1 ]
+5 x 5 sparse Matrix of class "dgCMatrix"
+     AvsB_LLL#GCTTTCGAGACCGCAA-1 AvsB_LLL#TGGAAGGTCTATATCC-1 AvsB_LLL#GCAAAGGGTTTCTACT-1 AvsB_LLL#TCAGTCCGTCATTGCA-1 AvsB_LLL#CTTCTAAGTTCACGTA-1
+[1,]                           .                           .                           .                           .                           .
+[2,]                           .                           .                           .                           .                           .
+[3,]                           .                           .                           .                           .                           .
+[4,]                           1                           .                           .                           .                           .
+[5,]                           1                           .                           .                           .                           .
+
+
+LSI-Projection Parameters$matSVD: nRows = 11196, nCols = 30
+                                 LSI1        LSI2       LSI3       LSI4      LSI5
+AvsB_LLL#GCTTTCGAGACCGCAA-1 -76.91762 -28.4437669 -1.3260088 -0.7072542  1.440645
+AvsB_LLL#TGGAAGGTCTATATCC-1 -57.05842 -20.8808844 -0.1743951 -0.2366702 -2.819180
+AvsB_LLL#GCAAAGGGTTTCTACT-1 -44.40683 -10.1061773 -1.2014933  3.0531764  1.227985
+AvsB_LLL#TCAGTCCGTCATTGCA-1 -48.20029   0.1709611  0.1313194  1.0738843  2.680935
+AvsB_LLL#CTTCTAAGTTCACGTA-1 -49.04362  18.2757414  7.4904037 -5.2259281 -9.975243
+
+
+LSI-Projection Parameters$returnModel: length = 1
+[1] FALSE
+
+
+LSI-Projection Parameters$verbose: length = 1
+[1] FALSE
+
+
+LSI-Projection Parameters$tstart: length = 0
+NULL
+
+
+LSI-Projection Parameters$logFile: length = 1
+[1] "ArchRLogs/ArchR-addIterativeLSI-86f948c8433e-Date-2020-08-22_Time-11-49-27.log"
+
+
+2020-08-22 11:52:51 : Projecting LSI, Input Matrix = 0 GB, 0 mins elapsed.
+2020-08-22 11:52:51 : Subsetting by Non-Zero features in inital Matrix, 0 mins elapsed.
+2020-08-22 11:52:51 : Binarizing Matrix, 0 mins elapsed.
+2020-08-22 11:52:51 : Computing Term Frequency, 0 mins elapsed.
+2020-08-22 11:52:51 : Computing Inverse Document Frequency, 0 mins elapsed.
+2020-08-22 11:52:51 : Computing TF-IDF Matrix, 0 mins elapsed.
+2020-08-22 11:52:53 : Calculating V Matrix, 0.019 mins elapsed.
+2020-08-22 11:52:53 : Computing Projected Coordinates, 0.019 mins elapsed.
+
+2020-08-22 11:52:53 : LSI-Projection Parameters, Class = list
+
+LSI-Projection Parameters$: length = 1
+                       
+1 function (name)      
+2 .Internal(args(name))
+
+
+LSI-Projection Parameters$mat: nRows = 25000, nCols = 468
+LSI-Projection Parameters$mat: NonZeroEntries = 1151914, EntryRange = [ 1 , 1 ]
+5 x 5 sparse Matrix of class "dgCMatrix"
+     AvsB_LLL#CCACAGGAGCCCATTA-1 AvsB_LLL#ACCAAACCACGCGCAT-1 AvsB_LLL#CAGCCTTCATCACAGT-1 AvsB_LLL#CTAACTTTCCCAGCGA-1 AvsB_LLL#AATGGCTGTAAAGGCC-1
+[1,]                           1                           1                           1                           .                           .
+[2,]                           .                           .                           .                           .                           .
+[3,]                           1                           .                           .                           1                           1
+[4,]                           .                           1                           .                           .                           .
+[5,]                           .                           1                           .                           .                           .
+
+
+LSI-Projection Parameters$matSVD: nRows = 11196, nCols = 30
+                                 LSI1        LSI2       LSI3       LSI4      LSI5
+AvsB_LLL#GCTTTCGAGACCGCAA-1 -76.91762 -28.4437669 -1.3260088 -0.7072542  1.440645
+AvsB_LLL#TGGAAGGTCTATATCC-1 -57.05842 -20.8808844 -0.1743951 -0.2366702 -2.819180
+AvsB_LLL#GCAAAGGGTTTCTACT-1 -44.40683 -10.1061773 -1.2014933  3.0531764  1.227985
+AvsB_LLL#TCAGTCCGTCATTGCA-1 -48.20029   0.1709611  0.1313194  1.0738843  2.680935
+AvsB_LLL#CTTCTAAGTTCACGTA-1 -49.04362  18.2757414  7.4904037 -5.2259281 -9.975243
+
+
+LSI-Projection Parameters$returnModel: length = 1
+[1] FALSE
+
+
+LSI-Projection Parameters$verbose: length = 1
+[1] FALSE
+
+
+LSI-Projection Parameters$tstart: length = 0
+NULL
+
+
+LSI-Projection Parameters$logFile: length = 1
+[1] "ArchRLogs/ArchR-addIterativeLSI-86f948c8433e-Date-2020-08-22_Time-11-49-27.log"
+
+
+2020-08-22 11:52:53 : Projecting LSI, Input Matrix = 0.014 GB, 0 mins elapsed.
+2020-08-22 11:52:53 : Subsetting by Non-Zero features in inital Matrix, 0 mins elapsed.
+2020-08-22 11:52:53 : Binarizing Matrix, 0 mins elapsed.
+2020-08-22 11:52:53 : Computing Term Frequency, 0.001 mins elapsed.
+2020-08-22 11:52:53 : Computing Inverse Document Frequency, 0.001 mins elapsed.
+2020-08-22 11:52:53 : Computing TF-IDF Matrix, 0.001 mins elapsed.
+2020-08-22 11:52:54 : Calculating V Matrix, 0.019 mins elapsed.
+2020-08-22 11:52:54 : Computing Projected Coordinates, 0.021 mins elapsed.
+2020-08-22 11:52:54 : Finished LSI (TF-IDF SVD) using irlba, 3.437 mins elapsed.
+
+2020-08-22 11:52:55 : outLSI-2, Class = SimpleList
+
+outLSI-2$matSVD: nRows = 11664, nCols = 30
+                                  LSI1        LSI2       LSI3       LSI4      LSI5
+AvsB_LLL#GCTTTCGAGACCGCAA-1  -76.91762 -28.4437669 -1.3260088 -0.7072542  1.440645
+AvsB_LLL#TGGAAGGTCTATATCC-1  -57.05842 -20.8808844 -0.1743951 -0.2366702 -2.819180
+AvsB_LLL#GCAAAGGGTTTCTACT-1  -44.40683 -10.1061773 -1.2014933  3.0531764  1.227985
+AvsB_LLL#TCAGTCCGTCATTGCA-1  -48.20029   0.1709611  0.1313194  1.0738843  2.680935
+AvsB_LLL#CCACAGGAGCCCATTA-1 -119.88563 -48.5333791 -2.2663098 -3.3480334 -9.163878
+
+
+outLSI-2$rowSm: length = 25000
+[1] 1244  173  698 1157  624  651
+
+
+outLSI-2$nCol: length = 1
+[1] 11196
+
+
+outLSI-2$exclude: length = 0
+NULL
+
+
+outLSI-2$idx: length = 25000
+[1] 1 2 3 4 5 6
+
+
+outLSI-2$u: nRows = 25000, nCols = 30
+             [,1]         [,2]          [,3]          [,4]         [,5]
+[1,] -0.009712265  0.001337103  0.0027101005 -0.0030027789 -0.009866409
+[2,] -0.001846424  0.003691783 -0.0085106324  0.0030556273 -0.001044033
+[3,] -0.006356554 -0.001325275  0.0013793797  0.0002827993 -0.013150824
+[4,] -0.009500149 -0.005688717  0.0002011828 -0.0032560564 -0.016513126
+[5,] -0.005941116 -0.001850688 -0.0005912401 -0.0008971031 -0.010834540
+
+
+outLSI-2$v: nRows = 11196, nCols = 30
+             [,1]          [,2]          [,3]          [,4]         [,5]
+[1,] -0.014262311 -0.0121729938 -0.0017457976 -0.0009995359  0.002509990
+[2,] -0.010579955 -0.0089363296 -0.0002296052 -0.0003344772 -0.004911767
+[3,] -0.008234056 -0.0043251105 -0.0015818629  0.0043149400  0.002139479
+[4,] -0.008937452  0.0000731657  0.0001728925  0.0015176804  0.004670908
+[5,] -0.009093824  0.0078214143  0.0098617207 -0.0073856087 -0.017379548
+
+
+outLSI-2$binarize: length = 1
+[1] TRUE
+
+
+outLSI-2$scaleTo: length = 1
+[1] 10000
+
+
+outLSI-2$nDimensions: length = 1
+[1] 30
+
+
+outLSI-2$LSIMethod: length = 1
+[1] 2
+
+
+outLSI-2$outliers: length = 468
+[1] "AvsB_LLL#CCACAGGAGCCCATTA-1" "AvsB_LLL#ACCAAACCACGCGCAT-1" "AvsB_LLL#CAGCCTTCATCACAGT-1" "AvsB_LLL#CTAACTTTCCCAGCGA-1" "AvsB_LLL#AATGGCTGTAAAGGCC-1"
+[6] "AvsB_LLL#GAAACAACACGCGACT-1"
+
+
+outLSI-2$date: length = 1
+[1] "2020-08-22"
+
+
+outLSI-2$seed: length = 1
+[1] 1
+
+
+outLSI-2$scaleDims: length = 1
+[1] TRUE
+
+
+outLSI-2$useMatrix: length = 1
+[1] "TileMatrix"
+
+
+outLSI-2$tileSize: length = 1
+[1] 500
+
+
+2020-08-22 11:52:56 : Finished Running IterativeLSI, 3.473 mins elapsed.

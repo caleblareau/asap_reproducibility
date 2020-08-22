@@ -30,6 +30,10 @@ color_vec <- c("orange2", "orange4", "firebrick", "purple2"); names(color_vec) <
 t_cell_vec <- c("#0868AC","#084081", rev(jdb_palette("brewer_marine")[2:7]))
 names(t_cell_vec) <- as.character(c(0,1,2,5,6,7,8,11))
 
+tcell_df <- data.frame(
+  mdf, t(coembed4@assays$ADT@scale.data)[,c("CD4-1", "CD8")])
+tcell_df %>% group_by(cluster) %>% summarize(mean(CD4.1), mean(CD8))
+
 set.seed(1)
 p1 <- ggplot(shuf(mdf),aes(x=UMAP_1, y = UMAP_2, color = cluster)) +
   geom_point(size = 0.1) + 
@@ -72,11 +76,14 @@ process_pseudo_bulk_changes <- function(clusters, out_name){
   
   protein_control <- coembed4@assays$ADT@counts[, rownames(celltype_df)[celltype_df$stim == "control"]] %>% cpm
   protein_stim <- coembed4@assays$ADT@counts[, rownames(celltype_df)[celltype_df$stim == "stim"]] %>% cpm
+  protein_control_clr <- rowMeans(coembed4@assays$ADT@scale.data[, rownames(celltype_df)[celltype_df$stim == "control"]])
+  protein_stim_clr <- rowMeans(coembed4@assays$ADT@scale.data[, rownames(celltype_df)[celltype_df$stim == "stim"]])
   
   # Create changes for each assay
   gene_mapping$protein_control <- protein_control[gene_mapping$Marker_name]
   gene_mapping$protein_stim <- protein_stim[gene_mapping$Marker_name]
   gene_mapping$log2_protein_change <- log2((gene_mapping$protein_stim + 1) / (gene_mapping$protein_control +  1))
+  gene_mapping$diff_protein_CLR <- protein_stim_clr-protein_control_clr
   
   gene_mapping$rna_control <- rna_control[gene_mapping$Gene_symbol]
   gene_mapping$rna_stim <- rna_stim[gene_mapping$Gene_symbol]
@@ -102,11 +109,13 @@ process_pseudo_bulk_changes <- function(clusters, out_name){
   write.table(gene_mapping, file = paste0("../output/DOG_source_",out_name,".tsv"), sep = "\t", quote = FALSE, row.names = FALSE, col.names = TRUE)
   out_name
 } 
+process_pseudo_bulk_changes(c(0,1,6,7,8,11), "CD4Tcell")
+process_pseudo_bulk_changes(c(2,5), "CD8Tcell")
+process_pseudo_bulk_changes(c(0,1,2,5,6,7,8,11), "Tcell")
 
 process_pseudo_bulk_changes(c(9), "Monocyte")
 process_pseudo_bulk_changes(c(4), "Bcell")
 process_pseudo_bulk_changes(c(3), "NK")
-process_pseudo_bulk_changes(c(0,1,2,5,6,7,8,11), "Tcell")
 
 
 # Reprocess the Bcell stuff
@@ -168,6 +177,34 @@ pgrid <- ggplot(go_df, aes(x = Var1, y = Var2, fill = value)) +
 #cowplot::ggsave2(pgrid, file = "../plots/pgrid_3mode.pdf", 
 #                 width = 1.85, height = 1.7)
 
+make_asap_cite_protein_plot <- function(protein_name){
+  set.seed(1)
+  cite <- coembed4[,coembed4$orig.ident == "RNA"]
+  asap <- coembed4[,coembed4$orig.ident == "ATAC"]
+  DefaultAssay(cite) = "ADT"
+  DefaultAssay(asap) = "ADT"
+  
+  protein_plot_asap <- FeaturePlot(asap, features = protein_name, split.by = "stim", ncol = 1, cells = sample(1:dim(asap)[2]),
+                              min.cutoff = "q02", max.cutoff = "q98")
+  protein_control_asap <- protein_plot_asap[[1]] + theme_void() + theme(legend.position = "none") + scale_color_gradientn(colors = jdb_palette("ocean_red"))+ ggtitle(NULL)
+  protein_stim_asap <- protein_plot_asap[[2]] + theme_void() + theme(legend.position = "none")+ scale_color_gradientn(colors = jdb_palette("ocean_red"))+ ggtitle(NULL)
+  
+  protein_plot_cite <- FeaturePlot(cite, features = protein_name, split.by = "stim", ncol = 1, cells = sample(1:dim(cite)[2]),
+                                   min.cutoff = "q02", max.cutoff = "q98")
+  protein_control_cite <- protein_plot_cite[[1]] + theme_void() + theme(legend.position = "none") + scale_color_gradientn(colors = jdb_palette("ocean_red"))+ ggtitle(NULL)
+  protein_stim_cite <- protein_plot_cite[[2]] + theme_void() + theme(legend.position = "none")+ scale_color_gradientn(colors = jdb_palette("ocean_red"))+ ggtitle(NULL)
+  
+  cowplot::ggsave2(
+    cowplot::plot_grid(protein_control_asap,protein_control_cite, protein_stim_asap,protein_stim_cite,  ncol = 2, scale = 0.9),
+    width = 9, height = 9, file = paste0("../plots/", protein_name, "_ASAP_CITE.png"), dpi = 300)
+  
+}
+make_asap_cite_protein_plot("CD278")
+make_asap_cite_protein_plot("CD71")
+
+
+# Make DOG plots
+
 make_six_plot <- function(protein_name, gene_name){
   set.seed(1)
   DefaultAssay(coembed4) = "ADT"
@@ -195,6 +232,17 @@ make_six_plot <- function(protein_name, gene_name){
     width = 9, height = 6, file = paste0("../plots/dog/", protein_name, "_dog.png"))
   
 }
+
+make_six_plot("CD45-1","PTPRC")
+make_six_plot("CD45-2","PTPRC")
+make_six_plot("CD45RA","PTPRC")
+make_six_plot("CD45RO","PTPRC")
+make_six_plot("CD45RB","PTPRC")
+
+make_six_plot("CD366", "TNFRSF18")
+make_six_plot("CD357", "HAVCR2")
+
+
 make_six_plot("CD3-1", "CD3E")
 make_six_plot("CD3-2", "CD3E")
 

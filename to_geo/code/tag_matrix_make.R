@@ -1,6 +1,6 @@
 library(data.table)
 
-import_kite_counts <- function(path,library, gz = FALSE){
+import_kite_counts <- function(path, library, gz = FALSE){
   if(gz){
     xx <- ".gz"
   } else {
