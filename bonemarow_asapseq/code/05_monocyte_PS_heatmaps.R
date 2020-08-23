@@ -4,6 +4,9 @@ library(scales)
 library(Matrix)
 library(ComplexHeatmap)
 library(BuenColors)
+library(dplyr)
+library(data.table)
+"%ni%" <- Negate("%in%")
 
 # Import ATAC processed data
 mdf <- readRDS("../output/ArchR_main_metadata.rds")
@@ -104,7 +107,7 @@ if(FALSE){
   
   pdf("../plots/monocytic_heatmap_chromatin.pdf", width = 4, height = 2)
   Heatmap(cbind(smooth_groups_minmax_gs[genes_order,]),
-          col=as.character(jdb_palette("solar_rojos",type="continuous")),
+          col=as.character(jdb_palette("solar_blues",type="continuous")),
           show_row_names = FALSE, 
           cluster_columns = FALSE,
           cluster_rows = FALSE,

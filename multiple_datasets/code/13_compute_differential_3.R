@@ -8,16 +8,16 @@ library(edgeR)
 coembed4 <- readRDS(file = "../../../asap_large_data_files/pbmc_stim_data/output/22July2020_Seurat_Coembed4.rds")
 bcdt <- fread('../output/HQ_barcodes_4exps.tsv')
 tcellsboo <- c(coembed4@meta.data$seurat_clusters %in% as.character(c(0,1,2,5,6,7,8,11)))
-boo_control <- (bcdt$assay %in% c("ATAC_control")) & tcellsboo
-boo_stim <- (bcdt$assay %in% c("ATAC_stim"))& tcellsboo
+boo_control <- (bcdt$assay %in% c("RNA_control")) & tcellsboo
+boo_stim <- (bcdt$assay %in% c("RNA_stim"))& tcellsboo
 table(boo_stim)
 table(boo_control)
 
-# Do proteins first
-control_adt_mat <- t(coembed4@assays$ADT@counts)[boo_control,]
-stim_adt_mat <- t(coembed4@assays$ADT@counts)[boo_stim,]
+# Do RNA first
+control_rna_mat <- t(coembed4@assays$RNA@counts)[boo_control,]
+stim_rna_mat <- t(coembed4@assays$RNA@counts)[boo_stim,]
 
-run_edgeRQLFtotal_CL <- function(count, condt) {
+run_edgeRQLFdetect_CL <- function(count, condt) {
   
   dge <- DGEList(count, group = condt)
   dge <- calcNormFactors(dge)
@@ -26,7 +26,7 @@ run_edgeRQLFtotal_CL <- function(count, condt) {
   cdr <- scale(colMeans(count > 0))
   cdr2 <- scale(colSums(count))
   
-  design <- model.matrix(~ cdr2 + condt) 
+  design <- model.matrix(~ cdr + condt) 
   dge <- estimateDisp(dge, design = design)
   fit <- glmQLFit(dge, design = design)
   qlf <- glmQLFTest(fit)
@@ -52,8 +52,14 @@ run_edgeRQLFtotal_CL <- function(count, condt) {
 }
 
 condt <- c(
-  rep("c", dim(control_adt_mat)[1]),
-  rep("s", dim(stim_adt_mat)[1])
+  rep("c", dim(control_rna_mat)[1]),
+  rep("s", dim(stim_rna_mat)[1])
 )
-counts <- t(data.matrix(rbind(control_adt_mat, stim_adt_mat)))
-protein_dge <- run_edgeRQLFtotal_CL(counts, condt)
+counts <- t(data.matrix(rbind(control_rna_mat, stim_rna_mat)))
+rs <- rowSums(counts)
+cpms <- round(rs/sum(rs) *1000000,1)
+counts2 <- counts[cpms > 2,]
+RNA_DGE <- run_edgeRQLFdetect_CL(counts2, condt)
+RNA_DGE_rank <- RNA_DGE %>% arrange(desc(F))
+table(RNA_DGE_rank$FDR < 0.01 & (abs(RNA_DGE_rank$logFC) > 0.5))
+saveRDS(RNA_DGE_rank, file = "../output/DGE_RNA_Tcell_Activation.rds")

@@ -16,11 +16,10 @@ lll = cbind(tsa1,tsb1)
 colnames(lll) = c("TSA_CD4",  "TSA_CD56" ,"TSA_CD45", "TSA_CD16", "TSA_CD14", "TSA_CD3", "TSA_CD19", "TSA_CD8", "TSA_CD11c", "TSB_CD4", "TSB_CD56", "TSB_CD45", "TSB_CD16", "TSB_CD14", "TSB_CD3", "TSB_CD19", "TSB_CD8", "TSB_CD11c")
 
 pal <- colorRampPalette(c("white", "dark green"))
-greens = pal(10)
 
-par(mfrow=c(3,3))
-par(mar=c(1,1,1,1))
-smoothScatter(lll$TSA_CD3, lll$TSB_CD3, nbin = 328, colramp = colorRampPalette(c("white", greens)),nrpoints = 0, ret.selection = FALSE, xlab="", ylab="", xlim=c(0,4), ylim=c(0,4),labels=FALSE)
+
+
+
 dg <- par("usr")
 segments(dg[1],dg[3],dg[2],dg[4], col='black', lty=2)
 smoothScatter(lll$TSA_CD4, lll$TSB_CD4, nbin = 328, colramp = colorRampPalette(c("white", greens)),nrpoints = 0, ret.selection = FALSE, xlab="", ylab="",  xlim=c(0,4), ylim=c(0,4),labels=FALSE)

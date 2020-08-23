@@ -2,7 +2,9 @@ library(data.table)
 library(dplyr)
 library(Matrix)
 library(Seurat)
+library(BuenColors)
 source("10a_import_scRNA.R")
+"%ni%" <- Negate("%in%")
 
 # Import main object
 coembed4 <- readRDS(file = "../../../asap_large_data_files/pbmc_stim_data/output/22July2020_Seurat_Coembed4.rds")
@@ -232,6 +234,7 @@ make_six_plot <- function(protein_name, gene_name){
     width = 9, height = 6, file = paste0("../plots/dog/", protein_name, "_dog.png"))
   
 }
+make_six_plot("CD52","CD52")
 
 make_six_plot("CD45-1","PTPRC")
 make_six_plot("CD45-2","PTPRC")
