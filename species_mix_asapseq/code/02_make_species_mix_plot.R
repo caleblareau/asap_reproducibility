@@ -1,6 +1,7 @@
 library(data.table)
 library(Matrix)
 library(ggrastr)
+library(dplyr)
 
 import_kite_counts <- function(path, library){
   mtx <- fread(paste0(path, "featurecounts",library,".mtx"), header = FALSE)
@@ -47,6 +48,19 @@ one <- import_kite_counts("../data/adt/", "1")
 two <- import_kite_counts("../data/adt/", "2")
 sc_one <- merge(one, fread("../data/singlecell1.csv.gz"), by = "barcode") %>% assign_organism
 sc_two <- merge(two, fread("../data/singlecell2.csv.gz"), by = "barcode") %>% assign_organism
+
+sc_one %>% filter(assignment_atac != "none" & assignment_cite != "none") %>% 
+  summarize(sum(assignment_atac == assignment_cite),
+            sum(assignment_atac != assignment_cite))
+sc_two %>% filter(assignment_atac != "none" & assignment_cite != "none") %>% 
+  summarize(sum(assignment_atac == assignment_cite),
+            sum(assignment_atac != assignment_cite))
+
+
+sc_one %>% filter(assignment_atac != "none" & assignment_cite != "none") %>% 
+  filter(assignment_atac != assignment_cite) %>% group_by(assignment_atac, assignment_cite) %>% summarize(count =n())
+sc_two %>% filter(assignment_atac != "none" & assignment_cite != "none") %>% 
+  filter(assignment_atac != assignment_cite) %>% group_by(assignment_atac, assignment_cite) %>% summarize(count =n())
 
 p1 <- ggplot(sc_one , aes(x = peak_region_fragments_GRCh38/1000, y = peak_region_fragments_mm10/1000, color = assignment_atac)) +
   geom_point_rast(size = 2)  + pretty_plot(fontsize = 8) + L_border() + 
