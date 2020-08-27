@@ -1,0 +1,1144 @@
+
+           ___      .______        ______  __    __  .______      
+          /   \     |   _  \      /      ||  |  |  | |   _  \     
+         /  ^  \    |  |_)  |    |  ,----'|  |__|  | |  |_)  |    
+        /  /_\  \   |      /     |  |     |   __   | |      /     
+       /  _____  \  |  |\  \\___ |  `----.|  |  |  | |  |\  \\___.
+      /__/     \__\ | _| `._____| \______||__|  |__| | _| `._____|
+    
+Logging With ArchR!
+
+Start Time : 2020-08-17 20:23:09
+
+------- ArchR Info
+
+ArchRThreads = 30
+ArchRGenome = Hg38
+
+------- System Info
+
+Computer OS = unix
+Total Cores = 112
+
+------- Session Info
+
+R version 3.6.3 (2020-02-29)
+Platform: x86_64-pc-linux-gnu (64-bit)
+Running under: CentOS Linux 7 (Core)
+
+Matrix products: default
+BLAS:   /home/ytakeshima/tool/R-3.6.3/lib/libRblas.so
+LAPACK: /home/ytakeshima/tool/R-3.6.3/lib/libRlapack.so
+
+locale:
+ [1] LC_CTYPE=en_US.UTF-8       LC_NUMERIC=C              
+ [3] LC_TIME=en_US.UTF-8        LC_COLLATE=en_US.UTF-8    
+ [5] LC_MONETARY=en_US.UTF-8    LC_MESSAGES=en_US.UTF-8   
+ [7] LC_PAPER=en_US.UTF-8       LC_NAME=C                 
+ [9] LC_ADDRESS=C               LC_TELEPHONE=C            
+[11] LC_MEASUREMENT=en_US.UTF-8 LC_IDENTIFICATION=C       
+
+attached base packages:
+ [1] grid      parallel  stats4    stats     graphics  grDevices utils    
+ [8] datasets  methods   base     
+
+other attached packages:
+ [1] Rsamtools_2.2.3                   BSgenome.Hsapiens.UCSC.hg38_1.4.1
+ [3] BSgenome_1.54.0                   rtracklayer_1.46.0               
+ [5] Biostrings_2.54.0                 XVector_0.26.0                   
+ [7] gridExtra_2.3                     forcats_0.5.0                    
+ [9] stringr_1.4.0                     dplyr_1.0.0                      
+[11] purrr_0.3.4                       readr_1.3.1                      
+[13] tidyr_1.0.3                       tibble_3.0.1                     
+[15] tidyverse_1.3.0                   patchwork_1.0.0                  
+[17] ArchR_0.9.4                       magrittr_1.5                     
+[19] rhdf5_2.30.1                      Matrix_1.2-18                    
+[21] data.table_1.12.8                 SummarizedExperiment_1.16.1      
+[23] DelayedArray_0.12.3               BiocParallel_1.20.1              
+[25] matrixStats_0.56.0                Biobase_2.46.0                   
+[27] GenomicRanges_1.38.0              GenomeInfoDb_1.22.1              
+[29] IRanges_2.20.2                    S4Vectors_0.24.4                 
+[31] BiocGenerics_0.32.0               ggplot2_3.3.2                    
+
+loaded via a namespace (and not attached):
+ [1] httr_1.4.1               jsonlite_1.6.1           modelr_0.1.6            
+ [4] assertthat_0.2.1         GenomeInfoDbData_1.2.2   cellranger_1.1.0        
+ [7] pillar_1.4.4             backports_1.1.8          lattice_0.20-41         
+[10] glue_1.4.1               digest_0.6.25            rvest_0.3.5             
+[13] colorspace_1.4-1         XML_3.99-0.3             pkgconfig_2.0.3         
+[16] broom_0.5.6              haven_2.2.0              zlibbioc_1.32.0         
+[19] scales_1.1.1             generics_0.0.2           farver_2.0.3            
+[22] ellipsis_0.3.1           withr_2.2.0              cli_2.0.2               
+[25] crayon_1.3.4             readxl_1.3.1             fs_1.4.1                
+[28] fansi_0.4.1              MASS_7.3-51.6            nlme_3.1-147            
+[31] xml2_1.3.1               Cairo_1.5-12             tools_3.6.3             
+[34] hms_0.5.3                lifecycle_0.2.0          Rhdf5lib_1.8.0          
+[37] munsell_0.5.0            reprex_0.3.0             compiler_3.6.3          
+[40] rlang_0.4.6              RCurl_1.98-1.2           rstudioapi_0.11         
+[43] bitops_1.0-6             labeling_0.3             gtable_0.3.0            
+[46] DBI_1.1.0                R6_2.4.1                 GenomicAlignments_1.22.1
+[49] lubridate_1.7.8          stringi_1.4.6            Rcpp_1.0.4.6            
+[52] vctrs_0.3.1              dbplyr_1.4.3             tidyselect_1.1.0        
+
+
+------- Log Info
+
+
+2020-08-17 20:23:09 : addDoubletScores Input-Parameters, Class = list
+
+addDoubletScores Input-Parameters$input: length = 1
+[1] "Perturb_CD4_stim.arrow"
+
+
+addDoubletScores Input-Parameters$useMatrix: length = 1
+[1] "TileMatrix"
+
+
+addDoubletScores Input-Parameters$k: length = 1
+[1] 10
+
+
+addDoubletScores Input-Parameters$nTrials: length = 1
+[1] 5
+
+
+addDoubletScores Input-Parameters$dimsToUse: length = 30
+[1] 1 2 3 4 5 6
+
+
+addDoubletScores Input-Parameters$LSIMethod: length = 1
+[1] 1
+
+
+addDoubletScores Input-Parameters$scaleDims: length = 1
+[1] FALSE
+
+
+addDoubletScores Input-Parameters$corCutOff: length = 1
+[1] 0.75
+
+
+addDoubletScores Input-Parameters$knnMethod: length = 1
+[1] "UMAP"
+
+
+addDoubletScores Input-Parameters$outDir: length = 1
+[1] "QualityControl"
+
+
+addDoubletScores Input-Parameters$threads: length = 1
+[1] 30
+
+
+addDoubletScores Input-Parameters$force: length = 1
+[1] FALSE
+
+
+addDoubletScores Input-Parameters$parallelParam: length = 0
+NULL
+
+
+addDoubletScores Input-Parameters$verbose: length = 1
+[1] TRUE
+
+
+addDoubletScores Input-Parameters$logFile: length = 1
+[1] "ArchRLogs/ArchR-addDoubletScores-35d904e9aaf67-Date-2020-08-17_Time-20-23-09.log"
+
+
+2020-08-17 20:23:09 : Batch Execution w/ safelapply!, 0 mins elapsed.
+2020-08-17 20:23:09 : Perturb_CD4_stim (1 of 1) :  Computing Doublet Statistics, 0 mins elapsed.
+2020-08-17 20:23:10 : Running IterativeLSI, 0.008 mins elapsed.
+
+2020-08-17 20:23:10 : IterativeLSI Input-Parameters, Class = list
+
+IterativeLSI Input-Parameters$ArchRProj: length = 1
+class: ArchRProject 
+outputDirectory: /home/ytakeshima/wd/2020/200817_Perturb_CD4_w_reseq_log_check_final/tmp/tmp-35d901f0e32a4-Date-2020-08-17_Time-20-23-09 
+samples(1): Perturb_CD4_stim
+sampleColData names(1): ArrowFiles
+cellColData names(13): Sample TSSEnrichment ... nDiFrags BlacklistRatio
+numberOfCells(1): 1
+medianTSS(1): 8.375
+medianFrags(1): 97624
+
+
+IterativeLSI Input-Parameters$useMatrix: length = 1
+[1] "TileMatrix"
+
+
+IterativeLSI Input-Parameters$name: length = 1
+[1] "IterativeLSI"
+
+
+IterativeLSI Input-Parameters$iterations: length = 1
+[1] 2
+
+
+IterativeLSI Input-Parameters$varFeatures: length = 1
+[1] 25000
+
+
+IterativeLSI Input-Parameters$dimsToUse: length = 30
+[1] 1 2 3 4 5 6
+
+
+IterativeLSI Input-Parameters$LSIMethod: length = 1
+[1] 1
+
+
+IterativeLSI Input-Parameters$scaleDims: length = 1
+[1] FALSE
+
+
+IterativeLSI Input-Parameters$corCutOff: length = 1
+[1] 0.75
+
+
+IterativeLSI Input-Parameters$binarize: length = 1
+[1] TRUE
+
+
+IterativeLSI Input-Parameters$outlierQuantiles: length = 0
+NULL
+
+
+IterativeLSI Input-Parameters$filterBias: length = 1
+[1] FALSE
+
+
+IterativeLSI Input-Parameters$sampleCellsPre: length = 1
+[1] 10000
+
+
+IterativeLSI Input-Parameters$projectCellsPre: length = 1
+[1] FALSE
+
+
+IterativeLSI Input-Parameters$sampleCellsFinal: length = 0
+NULL
+
+
+IterativeLSI Input-Parameters$selectionMethod: length = 1
+[1] "var"
+
+
+IterativeLSI Input-Parameters$scaleTo: length = 1
+[1] 10000
+
+
+IterativeLSI Input-Parameters$totalFeatures: length = 1
+[1] 5e+05
+
+
+IterativeLSI Input-Parameters$filterQuantile: length = 1
+[1] 0.995
+
+
+IterativeLSI Input-Parameters$excludeChr: length = 0
+NULL
+
+
+IterativeLSI Input-Parameters$saveIterations: length = 1
+[1] FALSE
+
+
+IterativeLSI Input-Parameters$nPlot: length = 1
+[1] 10000
+
+
+IterativeLSI Input-Parameters$outDir: length = 1
+[1] "/home/ytakeshima/wd/2020/200817_Perturb_CD4_w_reseq_log_check_final/tmp/tmp-35d901f0e32a4-Date-2020-08-17_Time-20-23-09"
+
+
+IterativeLSI Input-Parameters$threads: length = 1
+[1] 30
+
+
+IterativeLSI Input-Parameters$seed: length = 1
+[1] 1
+
+
+IterativeLSI Input-Parameters$verbose: length = 1
+[1] FALSE
+
+
+IterativeLSI Input-Parameters$force: length = 1
+[1] TRUE
+
+
+IterativeLSI Input-Parameters$logFile: length = 1
+[1] "ArchRLogs/ArchR-addDoubletScores-35d904e9aaf67-Date-2020-08-17_Time-20-23-09.log"
+
+
+2020-08-17 20:23:10 : Computing Total Accessibility Across All Features, 0 mins elapsed.
+2020-08-17 20:23:12 : Computing Top Features, 0.028 mins elapsed.
+###########
+2020-08-17 20:23:12 : Running LSI (1 of 2) on Top Features, 0.035 mins elapsed.
+###########
+2020-08-17 20:23:12 : Sampling Cells (N = 10000) for Estimated LSI, 0.036 mins elapsed.
+2020-08-17 20:23:12 : Creating Sampled Partial Matrix, 0.036 mins elapsed.
+2020-08-17 20:23:50 : Computing Estimated LSI (projectAll = FALSE), 0.664 mins elapsed.
+
+2020-08-17 20:23:50 : LSI Parameters, Class = list
+
+LSI Parameters$: length = 1
+                       
+1 function (name)      
+2 .Internal(args(name))
+
+
+LSI Parameters$mat: nRows = 25000, nCols = 10000
+LSI Parameters$mat: NonZeroEntries = 27332911, EntryRange = [ 1 , 1 ]
+5 x 5 sparse Matrix of class "dgCMatrix"
+     Perturb_CD4_stim#AAACGAAAGCTCGTTA-1 Perturb_CD4_stim#AAACGAAAGCTGAGGT-1
+[1,]                                   .                                   .
+[2,]                                   1                                   .
+[3,]                                   1                                   .
+[4,]                                   .                                   .
+[5,]                                   .                                   .
+     Perturb_CD4_stim#AAACGAAAGGTGAACC-1 Perturb_CD4_stim#AAACGAACAACATAAG-1
+[1,]                                   .                                   .
+[2,]                                   .                                   1
+[3,]                                   .                                   .
+[4,]                                   .                                   .
+[5,]                                   .                                   .
+     Perturb_CD4_stim#AAACGAACAATAGCGG-1
+[1,]                                   .
+[2,]                                   .
+[3,]                                   1
+[4,]                                   1
+[5,]                                   .
+
+
+LSI Parameters$LSIMethod: length = 1
+[1] 1
+
+
+LSI Parameters$scaleTo: length = 1
+[1] 10000
+
+
+LSI Parameters$nDimensions: length = 1
+[1] 30
+
+
+LSI Parameters$binarize: length = 1
+[1] TRUE
+
+
+LSI Parameters$outlierQuantiles: length = 0
+NULL
+
+
+LSI Parameters$seed: length = 1
+[1] 1
+
+
+LSI Parameters$verbose: length = 1
+[1] FALSE
+
+
+LSI Parameters$tstart: length = 1
+[1] "2020-08-17 20:23:10 JST"
+
+
+LSI Parameters$logFile: length = 1
+[1] "ArchRLogs/ArchR-addDoubletScores-35d904e9aaf67-Date-2020-08-17_Time-20-23-09.log"
+
+
+2020-08-17 20:23:50 : Running LSI, Input Matrix = 0.329 GB, 0.672 mins elapsed.
+2020-08-17 20:23:50 : Binarizing Matrix, 0.672 mins elapsed.
+2020-08-17 20:23:51 : Computing Term Frequency, 0.681 mins elapsed.
+2020-08-17 20:23:51 : Removing 0 Sum Rows, 0.684 mins elapsed.
+2020-08-17 20:23:53 : Computing Inverse Document Frequency, 0.717 mins elapsed.
+2020-08-17 20:23:53 : Computing TF-IDF Matrix, 0.717 mins elapsed.
+2020-08-17 20:23:54 : Computing SVD using irlba, 0.735 mins elapsed.
+2020-08-17 20:24:08 : Finished LSI (TF-IDF SVD) using irlba, 0.96 mins elapsed.
+
+2020-08-17 20:24:10 : outLSI-1, Class = SimpleList
+
+outLSI-1$matSVD: nRows = 10000, nCols = 30
+                                           LSI1          LSI2          LSI3
+Perturb_CD4_stim#AAACGAAAGCTCGTTA-1 -0.01485290 -0.0003430522 -0.0004209005
+Perturb_CD4_stim#AAACGAAAGCTGAGGT-1 -0.01479222 -0.0001358823 -0.0004105975
+Perturb_CD4_stim#AAACGAAAGGTGAACC-1 -0.01468781  0.0022194414 -0.0002963164
+Perturb_CD4_stim#AAACGAACAACATAAG-1 -0.01478295 -0.0001947988 -0.0004049884
+Perturb_CD4_stim#AAACGAACAATAGCGG-1 -0.01451023  0.0001972230 -0.0003739554
+                                             LSI4          LSI5
+Perturb_CD4_stim#AAACGAAAGCTCGTTA-1 -3.758856e-04  3.823357e-04
+Perturb_CD4_stim#AAACGAAAGCTGAGGT-1 -8.060713e-05 -1.465491e-05
+Perturb_CD4_stim#AAACGAAAGGTGAACC-1 -3.495675e-04 -4.031384e-04
+Perturb_CD4_stim#AAACGAACAACATAAG-1 -1.379915e-04 -3.647822e-04
+Perturb_CD4_stim#AAACGAACAATAGCGG-1 -3.622052e-04  1.454287e-05
+
+
+outLSI-1$rowSm: length = 25000
+[1]  885 1243 1059  693 1380 1736
+
+
+outLSI-1$nCol: length = 1
+[1] 10000
+
+
+outLSI-1$exclude: length = 0
+NULL
+
+
+outLSI-1$idx: length = 25000
+[1] 1 2 3 4 5 6
+
+
+outLSI-1$u: nRows = 25000, nCols = 30
+             [,1]          [,2]          [,3]          [,4]          [,5]
+[1,] -0.004995606 -1.437641e-04 -0.0001296303 -0.0001099164 -6.730956e-05
+[2,] -0.006638384 -1.822560e-04 -0.0002206731 -0.0001040569 -1.697905e-04
+[3,] -0.005515976  1.439880e-05 -0.0002004169 -0.0001513795 -1.665057e-04
+[4,] -0.004518876 -8.872669e-05 -0.0001584561 -0.0001367811 -6.767988e-05
+[5,] -0.006653464 -1.927474e-04 -0.0002010449 -0.0001968005 -1.119446e-04
+
+
+outLSI-1$v: nRows = 10000, nCols = 30
+             [,1]          [,2]          [,3]          [,4]          [,5]
+[1,] -0.010101071 -0.0003914008 -0.0004825887 -4.520518e-04  4.624015e-04
+[2,] -0.010059808 -0.0001550330 -0.0004707757 -9.694066e-05 -1.772383e-05
+[3,] -0.009988798  0.0025322413 -0.0003397453 -4.204008e-04 -4.875605e-04
+[4,] -0.010053504 -0.0002222530 -0.0004643445 -1.659529e-04 -4.411720e-04
+[5,] -0.009868035  0.0002250189 -0.0004287632 -4.355993e-04  1.758833e-05
+
+
+outLSI-1$binarize: length = 1
+[1] TRUE
+
+
+outLSI-1$scaleTo: length = 1
+[1] 10000
+
+
+outLSI-1$nDimensions: length = 1
+[1] 30
+
+
+outLSI-1$LSIMethod: length = 1
+[1] 1
+
+
+outLSI-1$outliers: length = 1
+[1] NA
+
+
+outLSI-1$date: length = 1
+[1] "2020-08-17"
+
+
+outLSI-1$seed: length = 1
+[1] 1
+
+
+outLSI-1$scaleDims: length = 1
+[1] FALSE
+
+
+outLSI-1$useMatrix: length = 1
+[1] "TileMatrix"
+
+
+outLSI-1$tileSize: length = 1
+[1] 500
+
+
+
+2020-08-17 20:24:10 : Cluster Params, Class = list
+
+Cluster Params$: length = 1
+                       
+1 function (name)      
+2 .Internal(args(name))
+
+
+Cluster Params$matSVD: nRows = 10000, nCols = 30
+                                           LSI1          LSI2          LSI3
+Perturb_CD4_stim#AAACGAAAGCTCGTTA-1 -0.01485290 -0.0003430522 -0.0004209005
+Perturb_CD4_stim#AAACGAAAGCTGAGGT-1 -0.01479222 -0.0001358823 -0.0004105975
+Perturb_CD4_stim#AAACGAAAGGTGAACC-1 -0.01468781  0.0022194414 -0.0002963164
+Perturb_CD4_stim#AAACGAACAACATAAG-1 -0.01478295 -0.0001947988 -0.0004049884
+Perturb_CD4_stim#AAACGAACAATAGCGG-1 -0.01451023  0.0001972230 -0.0003739554
+                                             LSI4          LSI5
+Perturb_CD4_stim#AAACGAAAGCTCGTTA-1 -3.758856e-04  3.823357e-04
+Perturb_CD4_stim#AAACGAAAGCTGAGGT-1 -8.060713e-05 -1.465491e-05
+Perturb_CD4_stim#AAACGAAAGGTGAACC-1 -3.495675e-04 -4.031384e-04
+Perturb_CD4_stim#AAACGAACAACATAAG-1 -1.379915e-04 -3.647822e-04
+Perturb_CD4_stim#AAACGAACAATAGCGG-1 -3.622052e-04  1.454287e-05
+
+
+Cluster Params$corCutOff: length = 1
+[1] 0.75
+
+
+Cluster Params$dimsToUse: length = 30
+[1] 1 2 3 4 5 6
+
+
+Cluster Params$scaleDims: length = 1
+[1] FALSE
+
+
+Cluster Params$verbose: length = 1
+[1] FALSE
+
+
+Cluster Params$j: length = 1
+[1] 1
+
+
+Cluster Params$filterBias: length = 1
+[1] FALSE
+
+
+Cluster Params$cellNames: length = 11010
+[1] "Perturb_CD4_stim#CATTCCGTCAGCACGC-1" "Perturb_CD4_stim#CCAATGAGTACGGATG-1"
+[3] "Perturb_CD4_stim#TTCTAACTCTACTGCC-1" "Perturb_CD4_stim#TAGGTGTTCCCAGTAA-1"
+[5] "Perturb_CD4_stim#TACTAGGTCGCAAGCC-1" "Perturb_CD4_stim#GAAAGTAGTAACATAG-1"
+
+
+Cluster Params$cellDepth: length = 11010
+Perturb_CD4_stim#CATTCCGTCAGCACGC-1 Perturb_CD4_stim#CCAATGAGTACGGATG-1 
+                           4.989561                            4.987380 
+Perturb_CD4_stim#TTCTAACTCTACTGCC-1 Perturb_CD4_stim#TAGGTGTTCCCAGTAA-1 
+                           4.985081                            4.984950 
+Perturb_CD4_stim#TACTAGGTCGCAAGCC-1 Perturb_CD4_stim#GAAAGTAGTAACATAG-1 
+                           4.970403                            4.967904 
+
+
+Cluster Params$tstart: length = 1
+[1] "2020-08-17 20:23:10 JST"
+
+
+Cluster Params$logFile: length = 1
+[1] "ArchRLogs/ArchR-addDoubletScores-35d904e9aaf67-Date-2020-08-17_Time-20-23-09.log"
+
+
+2020-08-17 20:24:10 : Identifying Clusters, 0.997 mins elapsed.
+
+2020-08-17 20:24:10 : addClusters Input-Parameters, Class = list
+
+addClusters Input-Parameters$: length = 1
+                       
+1 function (name)      
+2 .Internal(args(name))
+
+
+addClusters Input-Parameters$input: nRows = 10000, nCols = 30
+                                           LSI1          LSI2          LSI3
+Perturb_CD4_stim#AAACGAAAGCTCGTTA-1 -0.01485290 -0.0003430522 -0.0004209005
+Perturb_CD4_stim#AAACGAAAGCTGAGGT-1 -0.01479222 -0.0001358823 -0.0004105975
+Perturb_CD4_stim#AAACGAAAGGTGAACC-1 -0.01468781  0.0022194414 -0.0002963164
+Perturb_CD4_stim#AAACGAACAACATAAG-1 -0.01478295 -0.0001947988 -0.0004049884
+Perturb_CD4_stim#AAACGAACAATAGCGG-1 -0.01451023  0.0001972230 -0.0003739554
+                                             LSI4          LSI5
+Perturb_CD4_stim#AAACGAAAGCTCGTTA-1 -3.758856e-04  3.823357e-04
+Perturb_CD4_stim#AAACGAAAGCTGAGGT-1 -8.060713e-05 -1.465491e-05
+Perturb_CD4_stim#AAACGAAAGGTGAACC-1 -3.495675e-04 -4.031384e-04
+Perturb_CD4_stim#AAACGAACAACATAAG-1 -1.379915e-04 -3.647822e-04
+Perturb_CD4_stim#AAACGAACAATAGCGG-1 -3.622052e-04  1.454287e-05
+
+
+addClusters Input-Parameters$reducedDims: length = 1
+[1] "IterativeLSI"
+
+
+addClusters Input-Parameters$name: length = 1
+[1] "Clusters"
+
+
+addClusters Input-Parameters$sampleCells: length = 1
+[1] 10000
+
+
+addClusters Input-Parameters$seed: length = 1
+[1] 1
+
+
+addClusters Input-Parameters$method: length = 1
+[1] "Seurat"
+
+
+addClusters Input-Parameters$dimsToUse: length = 0
+NULL
+
+
+addClusters Input-Parameters$scaleDims: length = 0
+NULL
+
+
+addClusters Input-Parameters$corCutOff: length = 1
+[1] 0.75
+
+
+addClusters Input-Parameters$knnAssign: length = 1
+[1] 10
+
+
+addClusters Input-Parameters$nOutlier: length = 1
+[1] 5
+
+
+addClusters Input-Parameters$testBias: length = 1
+[1] TRUE
+
+
+addClusters Input-Parameters$filterBias: length = 1
+[1] FALSE
+
+
+addClusters Input-Parameters$biasClusters: length = 1
+[1] 0.01
+
+
+addClusters Input-Parameters$biasCol: length = 1
+[1] "nFrags"
+
+
+addClusters Input-Parameters$biasVals: length = 10000
+[1] 3.791129 4.075510 3.773860 4.259809 4.217326 4.129464
+
+
+addClusters Input-Parameters$biasQuantiles: length = 2
+[1] 0.05 0.95
+
+
+addClusters Input-Parameters$biasEnrich: length = 1
+[1] 10
+
+
+addClusters Input-Parameters$biasProportion: length = 1
+[1] 0.5
+
+
+addClusters Input-Parameters$biasPval: length = 1
+[1] 0.05
+
+
+addClusters Input-Parameters$nPerm: length = 1
+[1] 500
+
+
+addClusters Input-Parameters$prefix: length = 1
+[1] "C"
+
+
+addClusters Input-Parameters$ArchRProj: length = 0
+NULL
+
+
+addClusters Input-Parameters$verbose: length = 1
+[1] FALSE
+
+
+addClusters Input-Parameters$tstart: length = 0
+NULL
+
+
+addClusters Input-Parameters$force: length = 1
+[1] FALSE
+
+
+addClusters Input-Parameters$logFile: length = 1
+[1] "ArchRLogs/ArchR-addDoubletScores-35d904e9aaf67-Date-2020-08-17_Time-20-23-09.log"
+
+
+addClusters Input-Parameters$...: length = 2
+[[1]]
+<promise: 0x2dd21a20>
+
+[[2]]
+<promise: 0x2dd21b00>
+
+
+
+2020-08-17 20:24:25 : Running Seurats FindClusters (Stuart et al. Cell 2019), 0.248 mins elapsed.
+2020-08-17 20:24:47 : Testing Outlier Clusters, 0.618 mins elapsed.
+2020-08-17 20:24:47 : Assigning Cluster Names to 2 Clusters, 0.618 mins elapsed.
+2020-08-17 20:24:47 : Finished addClusters, 0.618 mins elapsed.
+2020-08-17 20:24:47 : Identified 2 Clusters, 1.617 mins elapsed.
+
+2020-08-17 20:24:47 : clusterDF-1, Class = DFrame
+DataFrame with 10000 rows and 2 columns
+                                cellNames    clusters
+                              <character> <character>
+1     Perturb_CD4_stim#AAACGAAAGCTCGTTA-1          C1
+2     Perturb_CD4_stim#AAACGAAAGCTGAGGT-1          C1
+3     Perturb_CD4_stim#AAACGAAAGGTGAACC-1          C2
+4     Perturb_CD4_stim#AAACGAACAACATAAG-1          C1
+5     Perturb_CD4_stim#AAACGAACAATAGCGG-1          C1
+...                                   ...         ...
+9996  Perturb_CD4_stim#TTTGTGTTCCAACGCG-1          C1
+9997  Perturb_CD4_stim#TTTGTGTTCGATAGCT-1          C1
+9998  Perturb_CD4_stim#TTTGTGTTCGTGGGTC-1          C2
+9999  Perturb_CD4_stim#TTTGTGTTCTGCTACC-1          C1
+10000 Perturb_CD4_stim#TTTGTGTTCTGTTGCC-1          C1
+
+2020-08-17 20:24:47 : Creating Cluster Matrix on the total Group Features, 1.617 mins elapsed.
+2020-08-17 20:24:59 : Computing Variable Features, 1.815 mins elapsed.
+###########
+2020-08-17 20:24:59 : Running LSI (2 of 2) on Variable Features, 1.816 mins elapsed.
+###########
+2020-08-17 20:24:59 : Creating Partial Matrix, 1.817 mins elapsed.
+2020-08-17 20:25:36 : Computing LSI, 2.435 mins elapsed.
+
+2020-08-17 20:25:36 : LSI Parameters, Class = list
+
+LSI Parameters$: length = 1
+                       
+1 function (name)      
+2 .Internal(args(name))
+
+
+LSI Parameters$mat: nRows = 25000, nCols = 11010
+LSI Parameters$mat: NonZeroEntries = 20434797, EntryRange = [ 1 , 1 ]
+5 x 5 sparse Matrix of class "dgCMatrix"
+     Perturb_CD4_stim#CATTCCGTCAGCACGC-1 Perturb_CD4_stim#CCAATGAGTACGGATG-1
+[1,]                                   1                                   .
+[2,]                                   .                                   .
+[3,]                                   .                                   .
+[4,]                                   1                                   .
+[5,]                                   .                                   .
+     Perturb_CD4_stim#TTCTAACTCTACTGCC-1 Perturb_CD4_stim#TAGGTGTTCCCAGTAA-1
+[1,]                                   .                                   .
+[2,]                                   .                                   .
+[3,]                                   .                                   1
+[4,]                                   .                                   .
+[5,]                                   .                                   .
+     Perturb_CD4_stim#TACTAGGTCGCAAGCC-1
+[1,]                                   .
+[2,]                                   1
+[3,]                                   .
+[4,]                                   1
+[5,]                                   1
+
+
+LSI Parameters$LSIMethod: length = 1
+[1] 1
+
+
+LSI Parameters$scaleTo: length = 1
+[1] 10000
+
+
+LSI Parameters$nDimensions: length = 1
+[1] 30
+
+
+LSI Parameters$binarize: length = 1
+[1] TRUE
+
+
+LSI Parameters$outlierQuantiles: length = 0
+NULL
+
+
+LSI Parameters$seed: length = 1
+[1] 1
+
+
+LSI Parameters$verbose: length = 1
+[1] FALSE
+
+
+LSI Parameters$tstart: length = 1
+[1] "2020-08-17 20:23:10 JST"
+
+
+LSI Parameters$logFile: length = 1
+[1] "ArchRLogs/ArchR-addDoubletScores-35d904e9aaf67-Date-2020-08-17_Time-20-23-09.log"
+
+
+2020-08-17 20:25:36 : Running LSI, Input Matrix = 0.246 GB, 2.441 mins elapsed.
+2020-08-17 20:25:36 : Binarizing Matrix, 2.441 mins elapsed.
+2020-08-17 20:25:37 : Computing Term Frequency, 2.448 mins elapsed.
+2020-08-17 20:25:37 : Removing 0 Sum Rows, 2.45 mins elapsed.
+2020-08-17 20:25:38 : Computing Inverse Document Frequency, 2.475 mins elapsed.
+2020-08-17 20:25:38 : Computing TF-IDF Matrix, 2.475 mins elapsed.
+2020-08-17 20:25:40 : Computing SVD using irlba, 2.493 mins elapsed.
+2020-08-17 20:25:47 : Finished LSI (TF-IDF SVD) using irlba, 2.62 mins elapsed.
+
+2020-08-17 20:25:48 : outLSI-2, Class = SimpleList
+
+outLSI-2$matSVD: nRows = 11010, nCols = 30
+                                          LSI1         LSI2          LSI3
+Perturb_CD4_stim#CATTCCGTCAGCACGC-1 0.01667495 0.0003623686  2.083178e-04
+Perturb_CD4_stim#CCAATGAGTACGGATG-1 0.01685044 0.0002473701  2.994405e-04
+Perturb_CD4_stim#TTCTAACTCTACTGCC-1 0.01686032 0.0003584312  1.392560e-04
+Perturb_CD4_stim#TAGGTGTTCCCAGTAA-1 0.01673449 0.0002828985  7.615941e-05
+Perturb_CD4_stim#TACTAGGTCGCAAGCC-1 0.01654641 0.0004427021 -1.374263e-04
+                                             LSI4          LSI5
+Perturb_CD4_stim#CATTCCGTCAGCACGC-1 -5.836086e-05  3.779680e-05
+Perturb_CD4_stim#CCAATGAGTACGGATG-1  1.866465e-04 -1.457420e-04
+Perturb_CD4_stim#TTCTAACTCTACTGCC-1 -2.547429e-04  2.913239e-04
+Perturb_CD4_stim#TAGGTGTTCCCAGTAA-1  8.596537e-06  1.879178e-04
+Perturb_CD4_stim#TACTAGGTCGCAAGCC-1  7.168808e-05  2.004226e-05
+
+
+outLSI-2$rowSm: length = 25000
+[1]  398  141  624  472 1362 1158
+
+
+outLSI-2$nCol: length = 1
+[1] 11010
+
+
+outLSI-2$exclude: length = 0
+NULL
+
+
+outLSI-2$idx: length = 25000
+[1] 1 2 3 4 5 6
+
+
+outLSI-2$u: nRows = 25000, nCols = 30
+            [,1]         [,2]         [,3]          [,4]          [,5]
+[1,] 0.003408637 1.066340e-04 6.486327e-05 -9.726214e-05  8.986285e-05
+[2,] 0.002482998 7.015297e-05 7.477775e-05 -1.100595e-04  1.043903e-04
+[3,] 0.004363477 1.311462e-04 9.631656e-05 -1.176050e-04 -8.156148e-06
+[4,] 0.003331169 9.795970e-05 7.436620e-05 -7.694022e-05  9.712924e-05
+[5,] 0.008196801 2.534584e-04 1.743012e-04 -1.151072e-04  2.148445e-04
+
+
+outLSI-2$v: nRows = 11010, nCols = 30
+            [,1]         [,2]          [,3]          [,4]          [,5]
+[1,] 0.009155745 0.0002508432  1.818821e-04 -5.304642e-05  3.469801e-05
+[2,] 0.009252104 0.0001712375  2.614413e-04  1.696502e-04 -1.337933e-04
+[3,] 0.009257528 0.0002481176  1.215843e-04 -2.315456e-04  2.674396e-04
+[4,] 0.009188440 0.0001958314  6.649472e-05  7.813721e-06  1.725112e-04
+[5,] 0.009085171 0.0003064526 -1.199868e-04  6.516003e-05  1.839908e-05
+
+
+outLSI-2$binarize: length = 1
+[1] TRUE
+
+
+outLSI-2$scaleTo: length = 1
+[1] 10000
+
+
+outLSI-2$nDimensions: length = 1
+[1] 30
+
+
+outLSI-2$LSIMethod: length = 1
+[1] 1
+
+
+outLSI-2$outliers: length = 1
+[1] NA
+
+
+outLSI-2$date: length = 1
+[1] "2020-08-17"
+
+
+outLSI-2$seed: length = 1
+[1] 1
+
+
+outLSI-2$scaleDims: length = 1
+[1] FALSE
+
+
+outLSI-2$useMatrix: length = 1
+[1] "TileMatrix"
+
+
+outLSI-2$tileSize: length = 1
+[1] 500
+
+
+2020-08-17 20:25:51 : Finished Running IterativeLSI, 2.691 mins elapsed.
+2020-08-17 20:25:51 : Constructing Partial Matrix for Projection, 2.701 mins elapsed.
+
+2020-08-17 20:25:51 : Perturb_CD4_stim (1 of 1) : LSI Result, Class = SimpleList
+
+Perturb_CD4_stim (1 of 1) : LSI Result$matSVD: nRows = 11010, nCols = 30
+                                          LSI1         LSI2          LSI3
+Perturb_CD4_stim#CATTCCGTCAGCACGC-1 0.01667495 0.0003623686  2.083178e-04
+Perturb_CD4_stim#CCAATGAGTACGGATG-1 0.01685044 0.0002473701  2.994405e-04
+Perturb_CD4_stim#TTCTAACTCTACTGCC-1 0.01686032 0.0003584312  1.392560e-04
+Perturb_CD4_stim#TAGGTGTTCCCAGTAA-1 0.01673449 0.0002828985  7.615941e-05
+Perturb_CD4_stim#TACTAGGTCGCAAGCC-1 0.01654641 0.0004427021 -1.374263e-04
+                                             LSI4          LSI5
+Perturb_CD4_stim#CATTCCGTCAGCACGC-1 -5.836086e-05  3.779680e-05
+Perturb_CD4_stim#CCAATGAGTACGGATG-1  1.866465e-04 -1.457420e-04
+Perturb_CD4_stim#TTCTAACTCTACTGCC-1 -2.547429e-04  2.913239e-04
+Perturb_CD4_stim#TAGGTGTTCCCAGTAA-1  8.596537e-06  1.879178e-04
+Perturb_CD4_stim#TACTAGGTCGCAAGCC-1  7.168808e-05  2.004226e-05
+
+
+Perturb_CD4_stim (1 of 1) : LSI Result$rowSm: length = 25000
+[1]  398  141  624  472 1362 1158
+
+
+Perturb_CD4_stim (1 of 1) : LSI Result$nCol: length = 1
+[1] 11010
+
+
+Perturb_CD4_stim (1 of 1) : LSI Result$exclude: length = 0
+NULL
+
+
+Perturb_CD4_stim (1 of 1) : LSI Result$idx: length = 25000
+[1] 1 2 3 4 5 6
+
+
+Perturb_CD4_stim (1 of 1) : LSI Result$u: nRows = 25000, nCols = 30
+            [,1]         [,2]         [,3]          [,4]          [,5]
+[1,] 0.003408637 1.066340e-04 6.486327e-05 -9.726214e-05  8.986285e-05
+[2,] 0.002482998 7.015297e-05 7.477775e-05 -1.100595e-04  1.043903e-04
+[3,] 0.004363477 1.311462e-04 9.631656e-05 -1.176050e-04 -8.156148e-06
+[4,] 0.003331169 9.795970e-05 7.436620e-05 -7.694022e-05  9.712924e-05
+[5,] 0.008196801 2.534584e-04 1.743012e-04 -1.151072e-04  2.148445e-04
+
+
+Perturb_CD4_stim (1 of 1) : LSI Result$v: nRows = 11010, nCols = 30
+            [,1]         [,2]          [,3]          [,4]          [,5]
+[1,] 0.009155745 0.0002508432  1.818821e-04 -5.304642e-05  3.469801e-05
+[2,] 0.009252104 0.0001712375  2.614413e-04  1.696502e-04 -1.337933e-04
+[3,] 0.009257528 0.0002481176  1.215843e-04 -2.315456e-04  2.674396e-04
+[4,] 0.009188440 0.0001958314  6.649472e-05  7.813721e-06  1.725112e-04
+[5,] 0.009085171 0.0003064526 -1.199868e-04  6.516003e-05  1.839908e-05
+
+
+Perturb_CD4_stim (1 of 1) : LSI Result$binarize: length = 1
+[1] TRUE
+
+
+Perturb_CD4_stim (1 of 1) : LSI Result$scaleTo: length = 1
+[1] 10000
+
+
+Perturb_CD4_stim (1 of 1) : LSI Result$nDimensions: length = 1
+[1] 30
+
+
+Perturb_CD4_stim (1 of 1) : LSI Result$LSIMethod: length = 1
+[1] 1
+
+
+Perturb_CD4_stim (1 of 1) : LSI Result$outliers: length = 1
+[1] NA
+
+
+Perturb_CD4_stim (1 of 1) : LSI Result$date: length = 1
+[1] "2020-08-17"
+
+
+Perturb_CD4_stim (1 of 1) : LSI Result$seed: length = 1
+[1] 1
+
+
+Perturb_CD4_stim (1 of 1) : LSI Result$scaleDims: length = 1
+[1] FALSE
+
+
+Perturb_CD4_stim (1 of 1) : LSI Result$useMatrix: length = 1
+[1] "TileMatrix"
+
+
+Perturb_CD4_stim (1 of 1) : LSI Result$tileSize: length = 1
+[1] 500
+
+
+Perturb_CD4_stim (1 of 1) : LSI Result$dimsKept: length = 30
+[1] 1 2 3 4 5 6
+
+
+2020-08-17 20:26:22 : Running LSI UMAP, 3.203 mins elapsed.
+
+2020-08-17 20:26:22 : Perturb_CD4_stim (1 of 1) : UMAP Params, Class = list
+
+Perturb_CD4_stim (1 of 1) : UMAP Params$n_neighbors: length = 1
+[1] 40
+
+
+Perturb_CD4_stim (1 of 1) : UMAP Params$min_dist: length = 1
+[1] 0.4
+
+
+Perturb_CD4_stim (1 of 1) : UMAP Params$metric: length = 1
+[1] "euclidean"
+
+
+Perturb_CD4_stim (1 of 1) : UMAP Params$verbose: length = 1
+[1] FALSE
+
+
+Perturb_CD4_stim (1 of 1) : UMAP Params$X: nRows = 11010, nCols = 30
+                                          LSI1         LSI2          LSI3
+Perturb_CD4_stim#CATTCCGTCAGCACGC-1 0.01667495 0.0003623686  2.083178e-04
+Perturb_CD4_stim#CCAATGAGTACGGATG-1 0.01685044 0.0002473701  2.994405e-04
+Perturb_CD4_stim#TTCTAACTCTACTGCC-1 0.01686032 0.0003584312  1.392560e-04
+Perturb_CD4_stim#TAGGTGTTCCCAGTAA-1 0.01673449 0.0002828985  7.615941e-05
+Perturb_CD4_stim#TACTAGGTCGCAAGCC-1 0.01654641 0.0004427021 -1.374263e-04
+                                             LSI4          LSI5
+Perturb_CD4_stim#CATTCCGTCAGCACGC-1 -5.836086e-05  3.779680e-05
+Perturb_CD4_stim#CCAATGAGTACGGATG-1  1.866465e-04 -1.457420e-04
+Perturb_CD4_stim#TTCTAACTCTACTGCC-1 -2.547429e-04  2.913239e-04
+Perturb_CD4_stim#TAGGTGTTCCCAGTAA-1  8.596537e-06  1.879178e-04
+Perturb_CD4_stim#TACTAGGTCGCAAGCC-1  7.168808e-05  2.004226e-05
+
+
+Perturb_CD4_stim (1 of 1) : UMAP Params$ret_nn: length = 1
+[1] TRUE
+
+
+Perturb_CD4_stim (1 of 1) : UMAP Params$ret_model: length = 1
+[1] TRUE
+
+
+Perturb_CD4_stim (1 of 1) : UMAP Params$n_threads: length = 1
+[1] 30
+
+
+2020-08-17 20:26:48 : Simulating and Projecting Doublets, 3.636 mins elapsed.
+
+2020-08-17 20:26:59 : Perturb_CD4_stim (1 of 1) : SimulatedLSI, Class = matrix
+           LSI1         LSI2          LSI3          LSI4         LSI5
+[1,] 0.01731307 0.0002358679  0.0001167896  8.719588e-05 0.0003287502
+[2,] 0.01750297 0.0005016742  0.0003205383 -3.919429e-04 0.0003582193
+[3,] 0.01732571 0.0004965382 -0.0004468253 -3.954210e-04 0.0001859932
+[4,] 0.01729763 0.0005015198  0.0002676817 -1.350733e-04 0.0001080575
+[5,] 0.01709720 0.0002008293  0.0002791954 -3.847812e-04 0.0003304956
+
+Perturb_CD4_stim (1 of 1) : SimulatedLSI: nRows = 55000, nCols = 30
+
+
+2020-08-17 20:27:05 : Perturb_CD4_stim (1 of 1) : OriginalLSI, Class = matrix
+                                          LSI1         LSI2          LSI3
+Perturb_CD4_stim#CATTCCGTCAGCACGC-1 0.01667495 0.0003623686  2.083178e-04
+Perturb_CD4_stim#CCAATGAGTACGGATG-1 0.01685044 0.0002473701  2.994405e-04
+Perturb_CD4_stim#TTCTAACTCTACTGCC-1 0.01686032 0.0003584312  1.392560e-04
+Perturb_CD4_stim#TAGGTGTTCCCAGTAA-1 0.01673449 0.0002828985  7.615941e-05
+Perturb_CD4_stim#TACTAGGTCGCAAGCC-1 0.01654641 0.0004427021 -1.374263e-04
+                                             LSI4          LSI5
+Perturb_CD4_stim#CATTCCGTCAGCACGC-1 -5.836086e-05  3.779680e-05
+Perturb_CD4_stim#CCAATGAGTACGGATG-1  1.866465e-04 -1.457420e-04
+Perturb_CD4_stim#TTCTAACTCTACTGCC-1 -2.547429e-04  2.913239e-04
+Perturb_CD4_stim#TAGGTGTTCCCAGTAA-1  8.596537e-06  1.879178e-04
+Perturb_CD4_stim#TACTAGGTCGCAAGCC-1  7.168808e-05  2.004226e-05
+
+Perturb_CD4_stim (1 of 1) : OriginalLSI: nRows = 11010, nCols = 30
+
+
+2020-08-17 20:27:05 : Perturb_CD4_stim (1 of 1) : OriginalReProjectedLSI, Class = matrix
+                                          LSI1         LSI2          LSI3
+Perturb_CD4_stim#CATTCCGTCAGCACGC-1 0.01667495 0.0003623686  2.083178e-04
+Perturb_CD4_stim#CCAATGAGTACGGATG-1 0.01685044 0.0002473701  2.994405e-04
+Perturb_CD4_stim#TTCTAACTCTACTGCC-1 0.01686032 0.0003584312  1.392560e-04
+Perturb_CD4_stim#TAGGTGTTCCCAGTAA-1 0.01673449 0.0002828985  7.615941e-05
+Perturb_CD4_stim#TACTAGGTCGCAAGCC-1 0.01654641 0.0004427021 -1.374263e-04
+                                             LSI4          LSI5
+Perturb_CD4_stim#CATTCCGTCAGCACGC-1 -5.836086e-05  3.779680e-05
+Perturb_CD4_stim#CCAATGAGTACGGATG-1  1.866465e-04 -1.457420e-04
+Perturb_CD4_stim#TTCTAACTCTACTGCC-1 -2.547429e-04  2.913239e-04
+Perturb_CD4_stim#TAGGTGTTCCCAGTAA-1  8.596537e-06  1.879178e-04
+Perturb_CD4_stim#TACTAGGTCGCAAGCC-1  7.168808e-05  2.004226e-05
+
+Perturb_CD4_stim (1 of 1) : OriginalReProjectedLSI: nRows = 11010, nCols = 30
+
+
+2020-08-17 20:27:29 : Perturb_CD4_stim (1 of 1) : OriginalUMAP, Class = matrix
+          [,1]      [,2]
+[1,] 0.9083812 -3.218799
+[2,] 0.3859529 -2.776982
+[3,] 0.5561273 -2.119037
+[4,] 0.7800455 -3.254056
+[5,] 0.9908628 -3.190019
+
+Perturb_CD4_stim (1 of 1) : OriginalUMAP: nRows = 11010, nCols = 2
+
+
+2020-08-17 20:27:29 : Perturb_CD4_stim (1 of 1) : OriginalReProjectedUMAP, Class = matrix
+         [,1]      [,2]
+[1,] 0.961687 -3.576137
+[2,] 0.553554 -3.516017
+[3,] 1.184821 -3.377616
+[4,] 1.037419 -3.315464
+[5,] 1.088656 -3.537024
+
+Perturb_CD4_stim (1 of 1) : OriginalReProjectedUMAP: nRows = 11010, nCols = 2
+
+
+2020-08-17 20:27:29 : Perturb_CD4_stim (1 of 1) : UMAP Projection R^2 = 0.7421
+
+2020-08-17 20:27:29 : Perturb_CD4_stim (1 of 1) : Correlation of UMAP Projection is below 0.9 (normally this is ~0.99)
+This means there is little heterogeneity in your sample and thus doubletCalling is inaccurate.
+force = FALSE, thus returning -1 doubletScores and doubletEnrichments!
+Set force = TRUE if you want to contniue (not recommended).
+
+2020-08-17 20:27:29 : Perturb_CD4_stim (1 of 1) : SimulationResults, Class = SimpleList
+
+Perturb_CD4_stim (1 of 1) : SimulationResults$doubletUMAP: nRows = 55000, nCols = 2
+            [,1]       [,2]
+[1,]  0.06338107 -3.6227555
+[2,]  2.84323096  0.2064403
+[3,]  2.01727939 -3.1069372
+[4,]  1.28024018  0.9614367
+[5,] -2.05718493 -2.0386045
+
+
+Perturb_CD4_stim (1 of 1) : SimulationResults$doubletScore: length = 11010
+[1] -1 -1 -1 -1 -1 -1
+
+
+Perturb_CD4_stim (1 of 1) : SimulationResults$doubletEnrich: length = 11010
+[1] -1 -1 -1 -1 -1 -1
+
+
+
+2020-08-17 20:27:31 : Perturb_CD4_stim (1 of 1) : Sample UMAP, Class = data.frame
+Perturb_CD4_stim (1 of 1) : Sample UMAP: nRows = 11010, nCols = 5
+                                           X1         X2       type score
+Perturb_CD4_stim#CATTCCGTCAGCACGC-1 0.9083812 -3.2187985 experiment     0
+Perturb_CD4_stim#CCAATGAGTACGGATG-1 0.3859529 -2.7769822 experiment     0
+Perturb_CD4_stim#TTCTAACTCTACTGCC-1 0.5561273 -2.1190366 experiment     0
+Perturb_CD4_stim#TAGGTGTTCCCAGTAA-1 0.7800455 -3.2540559 experiment     0
+Perturb_CD4_stim#TACTAGGTCGCAAGCC-1 0.9908628 -3.1900185 experiment     0
+Perturb_CD4_stim#GAAAGTAGTAACATAG-1 2.3484108 -0.9660548 experiment     0
+                                    enrichment
+Perturb_CD4_stim#CATTCCGTCAGCACGC-1          0
+Perturb_CD4_stim#CCAATGAGTACGGATG-1          0
+Perturb_CD4_stim#TTCTAACTCTACTGCC-1          0
+Perturb_CD4_stim#TAGGTGTTCCCAGTAA-1          0
+Perturb_CD4_stim#TACTAGGTCGCAAGCC-1          0
+Perturb_CD4_stim#GAAAGTAGTAACATAG-1          0
+
+
+
+2020-08-17 20:27:31 : Perturb_CD4_stim (1 of 1) : Simulated Doublet UMAP, Class = data.frame
+Perturb_CD4_stim (1 of 1) : Simulated Doublet UMAP: nRows = 55000, nCols = 5
+                        x          y      density              type
+doublet_44337 -4.26254988  1.7693213 0.0001300362 simulated_doublet
+doublet_52317 -3.70455718  3.0666378 0.0001503027 simulated_doublet
+doublet_17675 -2.56965780  4.4376650 0.0002194688 simulated_doublet
+doublet_5625  -0.09685408  5.6475086 0.0002241628 simulated_doublet
+doublet_13493 -4.33404827 -0.3525966 0.0003254667 simulated_doublet
+doublet_7446  -3.50701737  2.9483824 0.0003285241 simulated_doublet
+                     color
+doublet_44337 0.0001300362
+doublet_52317 0.0001503027
+doublet_17675 0.0002194688
+doublet_5625  0.0002241628
+doublet_13493 0.0003254667
+doublet_7446  0.0003285241
+
+
+
+------- Completed
+
+End Time : 2020-08-17 20:27:47
+Elapsed Time Minutes = 4.63630052010218
+Elapsed Time Hours = 0.0772717837492625
+
+-------
+
+
+
