@@ -409,4 +409,4 @@ write.table(res_sum,"../output/ArchR/chromVAR/WMW_res/deviation_zScore_median_da
 # Saving information
 #****************************************#
 
-save(list=ls(),file=paste0("../output/ArchR/Rdata/ArchR.Rdata"))
+save(list=ls(),file=paste0("../../../asap_large_data_files/CD4_stimulation_asapseq/output/ArchR/ArchR.Rdata"))

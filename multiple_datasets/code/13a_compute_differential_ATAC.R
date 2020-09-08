@@ -19,7 +19,7 @@ ss_mat_control <- atac_mat[,colnames(atac_mat) %in% control_cells]
 dim(ss_mat_stim)
 dim(ss_mat_control)
 
-# Filter for peaks with a CPM > 2
+# Filter for peaks with a CPM > 1
 cpm <- function(counts){
   rs <- rowSums(counts)
   cpms <- round(rs/sum(rs) *1000000,1)

@@ -23,7 +23,7 @@ set.seed(111)
 #****************************************#
 # Loading information
 #****************************************#
-load("../output/ArchR/Rdata/ArchR.Rdata")
+load("../../../asap_large_data_files/CD4_stimulation_asapseq/output/ArchR.Rdata")
 
 #****************************************#
 # summarizing WMW analysis
