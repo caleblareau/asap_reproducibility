@@ -1,0 +1,395 @@
+
+           ___      .______        ______  __    __  .______      
+          /   \     |   _  \      /      ||  |  |  | |   _  \     
+         /  ^  \    |  |_)  |    |  ,----'|  |__|  | |  |_)  |    
+        /  /_\  \   |      /     |  |     |   __   | |      /     
+       /  _____  \  |  |\  \\___ |  `----.|  |  |  | |  |\  \\___.
+      /__/     \__\ | _| `._____| \______||__|  |__| | _| `._____|
+    
+Logging With ArchR!
+
+Start Time : 2020-08-17 20:48:21
+
+------- ArchR Info
+
+ArchRThreads = 30
+ArchRGenome = Hg38
+
+------- System Info
+
+Computer OS = unix
+Total Cores = 112
+
+------- Session Info
+
+R version 3.6.3 (2020-02-29)
+Platform: x86_64-pc-linux-gnu (64-bit)
+Running under: CentOS Linux 7 (Core)
+
+Matrix products: default
+BLAS:   /home/ytakeshima/tool/R-3.6.3/lib/libRblas.so
+LAPACK: /home/ytakeshima/tool/R-3.6.3/lib/libRlapack.so
+
+locale:
+ [1] LC_CTYPE=en_US.UTF-8       LC_NUMERIC=C              
+ [3] LC_TIME=en_US.UTF-8        LC_COLLATE=en_US.UTF-8    
+ [5] LC_MONETARY=en_US.UTF-8    LC_MESSAGES=en_US.UTF-8   
+ [7] LC_PAPER=en_US.UTF-8       LC_NAME=C                 
+ [9] LC_ADDRESS=C               LC_TELEPHONE=C            
+[11] LC_MEASUREMENT=en_US.UTF-8 LC_IDENTIFICATION=C       
+
+attached base packages:
+ [1] grid      parallel  stats4    stats     graphics  grDevices utils    
+ [8] datasets  methods   base     
+
+other attached packages:
+ [1] chromVARmotifs_0.2.0              motifmatchr_1.8.0                
+ [3] circlize_0.4.9                    ComplexHeatmap_2.2.0             
+ [5] nabor_0.5.0                       uwot_0.1.8                       
+ [7] Seurat_3.1.5                      Rsamtools_2.2.3                  
+ [9] BSgenome.Hsapiens.UCSC.hg38_1.4.1 BSgenome_1.54.0                  
+[11] rtracklayer_1.46.0                Biostrings_2.54.0                
+[13] XVector_0.26.0                    gridExtra_2.3                    
+[15] forcats_0.5.0                     stringr_1.4.0                    
+[17] dplyr_1.0.0                       purrr_0.3.4                      
+[19] readr_1.3.1                       tidyr_1.0.3                      
+[21] tibble_3.0.1                      tidyverse_1.3.0                  
+[23] patchwork_1.0.0                   ArchR_0.9.4                      
+[25] magrittr_1.5                      rhdf5_2.30.1                     
+[27] Matrix_1.2-18                     data.table_1.12.8                
+[29] SummarizedExperiment_1.16.1       DelayedArray_0.12.3              
+[31] BiocParallel_1.20.1               matrixStats_0.56.0               
+[33] Biobase_2.46.0                    GenomicRanges_1.38.0             
+[35] GenomeInfoDb_1.22.1               IRanges_2.20.2                   
+[37] S4Vectors_0.24.4                  BiocGenerics_0.32.0              
+[39] ggplot2_3.3.2                    
+
+loaded via a namespace (and not attached):
+  [1] reticulate_1.15             R.utils_2.9.2              
+  [3] tidyselect_1.1.0            poweRlaw_0.70.6            
+  [5] RSQLite_2.2.0               AnnotationDbi_1.48.0       
+  [7] htmlwidgets_1.5.1           Rtsne_0.15                 
+  [9] munsell_0.5.0               codetools_0.2-16           
+ [11] ica_1.0-2                   DT_0.13                    
+ [13] future_1.17.0               miniUI_0.1.1.1             
+ [15] withr_2.2.0                 colorspace_1.4-1           
+ [17] chromVAR_1.8.0              rstudioapi_0.11            
+ [19] ROCR_1.0-11                 listenv_0.8.0              
+ [21] labeling_0.3                GenomeInfoDbData_1.2.2     
+ [23] bit64_0.9-7                 farver_2.0.3               
+ [25] vctrs_0.3.1                 generics_0.0.2             
+ [27] R6_2.4.1                    clue_0.3-57                
+ [29] rsvd_1.0.3                  bitops_1.0-6               
+ [31] assertthat_0.2.1            promises_1.1.0             
+ [33] scales_1.1.1                gtable_0.3.0               
+ [35] npsurv_0.4-0.1              Cairo_1.5-12               
+ [37] globals_0.12.5              seqLogo_1.52.0             
+ [39] rlang_0.4.6                 GlobalOptions_0.1.1        
+ [41] splines_3.6.3               lazyeval_0.2.2             
+ [43] broom_0.5.6                 reshape2_1.4.4             
+ [45] modelr_0.1.6                backports_1.1.8            
+ [47] httpuv_1.5.2                tools_3.6.3                
+ [49] ellipsis_0.3.1              RColorBrewer_1.1-2         
+ [51] ggridges_0.5.2              Rcpp_1.0.4.6               
+ [53] plyr_1.8.6                  zlibbioc_1.32.0            
+ [55] RCurl_1.98-1.2              pbapply_1.4-2              
+ [57] GetoptLong_0.1.8            cowplot_1.0.0              
+ [59] zoo_1.8-7                   haven_2.2.0                
+ [61] ggrepel_0.8.2               cluster_2.1.0              
+ [63] fs_1.4.1                    RSpectra_0.16-0            
+ [65] lmtest_0.9-37               reprex_0.3.0               
+ [67] RANN_2.6.1                  fitdistrplus_1.0-14        
+ [69] hms_0.5.3                   lsei_1.2-0.1               
+ [71] mime_0.9                    xtable_1.8-4               
+ [73] XML_3.99-0.3                readxl_1.3.1               
+ [75] shape_1.4.4                 compiler_3.6.3             
+ [77] KernSmooth_2.23-17          crayon_1.3.4               
+ [79] R.oo_1.23.0                 htmltools_0.4.0            
+ [81] later_1.0.0                 TFBSTools_1.24.0           
+ [83] lubridate_1.7.8             DBI_1.1.0                  
+ [85] dbplyr_1.4.3                MASS_7.3-51.6              
+ [87] rappdirs_0.3.1              cli_2.0.2                  
+ [89] R.methodsS3_1.8.0           igraph_1.2.5               
+ [91] pkgconfig_2.0.3             GenomicAlignments_1.22.1   
+ [93] TFMPvalue_0.0.8             plotly_4.9.2.1             
+ [95] xml2_1.3.1                  annotate_1.64.0            
+ [97] DirichletMultinomial_1.28.0 rvest_0.3.5                
+ [99] digest_0.6.25               sctransform_0.2.1          
+[101] RcppAnnoy_0.0.16            pracma_2.2.9               
+[103] tsne_0.1-3                  CNEr_1.22.0                
+[105] cellranger_1.1.0            leiden_0.3.3               
+[107] shiny_1.4.0.2               gtools_3.8.2               
+[109] rjson_0.2.20                lifecycle_0.2.0            
+[111] nlme_3.1-147                jsonlite_1.6.1             
+[113] Rhdf5lib_1.8.0              viridisLite_0.3.0          
+[115] fansi_0.4.1                 pillar_1.4.4               
+[117] lattice_0.20-41             KEGGREST_1.26.1            
+[119] fastmap_1.0.1               httr_1.4.1                 
+[121] survival_3.1-12             GO.db_3.10.0               
+[123] glue_1.4.1                  png_0.1-7                  
+[125] bit_1.1-15.2                stringi_1.4.6              
+[127] blob_1.2.1                  caTools_1.18.0             
+[129] memoise_1.1.0               irlba_2.3.3                
+[131] future.apply_1.5.0          ape_5.3                    
+
+
+------- Log Info
+
+
+2020-08-17 20:48:23 : Deviations-Args, Class = list
+
+Deviations-Args$bgdPeaks: length = 112469
+class: RangedSummarizedExperiment 
+dim: 6 50 
+metadata(0):
+assays(1): bgdPeaks
+rownames: NULL
+rowData names(2): value GC
+colnames: NULL
+colData names(0):
+
+
+Deviations-Args$matrixName: length = 1
+[1] "MotifMatrix"
+
+
+Deviations-Args$out: length = 2
+[1] "z"          "deviations"
+
+
+Deviations-Args$binarize: length = 1
+[1] FALSE
+
+
+Deviations-Args$threads: length = 1
+[1] 1
+
+
+Deviations-Args$verbose: length = 1
+[1] TRUE
+
+
+Deviations-Args$parallelParam: length = 0
+NULL
+
+
+Deviations-Args$force: length = 1
+[1] TRUE
+
+
+Deviations-Args$logFile: length = 1
+[1] "ArchRLogs/ArchR-addDeviationsMatrix-35d9075e0169a-Date-2020-08-17_Time-20-48-21.log"
+
+
+Deviations-Args$annotationsMatrix: nRows = 112469, nCols = 870
+Deviations-Args$annotationsMatrix: NonZeroEntries = 6459557, EntryRange = [ 1 , 1 ]
+5 x 5 sparse Matrix of class "dgCMatrix"
+                   TFAP2B_1 TFAP2D_2 TFAP2C_3 TFAP2E_4 TFAP2A_5
+chr1_827298_827798        .        1        .        .        .
+chr1_844380_844880        .        .        .        .        .
+chr1_869662_870162        .        1        1        1        .
+chr1_875232_875732        .        .        .        .        .
+chr1_876372_876872        .        .        .        .        .
+
+
+Deviations-Args$useMatrix: length = 1
+[1] "PeakMatrix"
+
+
+Deviations-Args$ArrowFiles: length = 1
+                                                                                                                   Perturb_CD4_stim 
+"/home/ytakeshima/wd/2020/200817_Perturb_CD4_w_reseq_log_check_final/ArchR/plot_Perturb_CD4_stim/ArrowFiles/Perturb_CD4_stim.arrow" 
+
+
+Deviations-Args$allCells: length = 5825
+[1] "Perturb_CD4_stim#AAACGAAAGCTGAGGT-1" "Perturb_CD4_stim#AAACGAACAACATAAG-1"
+[3] "Perturb_CD4_stim#AAACGAACAATCCATG-1" "Perturb_CD4_stim#AAACGAACAGAGATGC-1"
+[5] "Perturb_CD4_stim#AAACGAACAGCGTAGA-1" "Perturb_CD4_stim#AAACGAAGTAAACGAT-1"
+
+
+Deviations-Args$X: length = 1
+[1] 1
+
+
+Deviations-Args$FUN: length = 1
+                                                                                     
+1 function (i = NULL, ArrowFiles = NULL, annotationsMatrix = NULL,                   
+2     out = c("z", "deviations"), cellNames = NULL, allCells = NULL,                 
+3     featureDF = NULL, bgdPeaks = NULL, binarize = FALSE, useMatrix = "PeakMatrix", 
+4     matrixName = "Motif", force = FALSE, verbose = TRUE, tstart = NULL,            
+5     subThreads = 1, logFile = NULL)                                                
+6 {                                                                                  
+
+
+Deviations-Args$registryDir: length = 1
+[1] "/home/ytakeshima/wd/2020/200817_Perturb_CD4_w_reseq_log_check_final/ArchR/plot_Perturb_CD4_stim/MotifMatrixDeviationsRegistry"
+
+
+2020-08-17 20:48:24 : Batch Execution w/ safelapply!, 0 mins elapsed.
+2020-08-17 20:48:25 : chromVAR deviations Perturb_CD4_stim (1 of 1) Schep (2017), 0.017 mins elapsed.
+2020-08-17 20:48:58 : Perturb_CD4_stim (1 of 1) : Deviations for Annotation 8 of 870, 0.232 mins elapsed.
+2020-08-17 20:49:11 : Perturb_CD4_stim (1 of 1) : Deviations for Annotation 16 of 870, 0.451 mins elapsed.
+2020-08-17 20:49:23 : Perturb_CD4_stim (1 of 1) : Deviations for Annotation 24 of 870, 0.645 mins elapsed.
+2020-08-17 20:49:33 : Perturb_CD4_stim (1 of 1) : Deviations for Annotation 32 of 870, 0.814 mins elapsed.
+2020-08-17 20:49:45 : Perturb_CD4_stim (1 of 1) : Deviations for Annotation 40 of 870, 1.015 mins elapsed.
+2020-08-17 20:49:51 : Perturb_CD4_stim (1 of 1) : Deviations for Annotation 43 of 870, 1.106 mins elapsed.
+2020-08-17 20:49:58 : Perturb_CD4_stim (1 of 1) : Deviations for Annotation 48 of 870, 1.223 mins elapsed.
+2020-08-17 20:50:08 : Perturb_CD4_stim (1 of 1) : Deviations for Annotation 56 of 870, 1.396 mins elapsed.
+2020-08-17 20:50:20 : Perturb_CD4_stim (1 of 1) : Deviations for Annotation 64 of 870, 1.592 mins elapsed.
+2020-08-17 20:50:32 : Perturb_CD4_stim (1 of 1) : Deviations for Annotation 72 of 870, 1.798 mins elapsed.
+2020-08-17 20:50:43 : Perturb_CD4_stim (1 of 1) : Deviations for Annotation 80 of 870, 1.982 mins elapsed.
+2020-08-17 20:50:51 : Perturb_CD4_stim (1 of 1) : Deviations for Annotation 86 of 870, 2.113 mins elapsed.
+2020-08-17 20:50:55 : Perturb_CD4_stim (1 of 1) : Deviations for Annotation 88 of 870, 2.169 mins elapsed.
+2020-08-17 20:51:06 : Perturb_CD4_stim (1 of 1) : Deviations for Annotation 96 of 870, 2.365 mins elapsed.
+2020-08-17 20:51:17 : Perturb_CD4_stim (1 of 1) : Deviations for Annotation 104 of 870, 2.551 mins elapsed.
+2020-08-17 20:51:28 : Perturb_CD4_stim (1 of 1) : Deviations for Annotation 112 of 870, 2.723 mins elapsed.
+2020-08-17 20:51:38 : Perturb_CD4_stim (1 of 1) : Deviations for Annotation 120 of 870, 2.9 mins elapsed.
+2020-08-17 20:51:50 : Perturb_CD4_stim (1 of 1) : Deviations for Annotation 128 of 870, 3.098 mins elapsed.
+2020-08-17 20:51:51 : Perturb_CD4_stim (1 of 1) : Deviations for Annotation 129 of 870, 3.114 mins elapsed.
+2020-08-17 20:52:02 : Perturb_CD4_stim (1 of 1) : Deviations for Annotation 136 of 870, 3.293 mins elapsed.
+2020-08-17 20:52:16 : Perturb_CD4_stim (1 of 1) : Deviations for Annotation 144 of 870, 3.522 mins elapsed.
+2020-08-17 20:52:27 : Perturb_CD4_stim (1 of 1) : Deviations for Annotation 152 of 870, 3.717 mins elapsed.
+2020-08-17 20:52:41 : Perturb_CD4_stim (1 of 1) : Deviations for Annotation 160 of 870, 3.945 mins elapsed.
+2020-08-17 20:52:57 : Perturb_CD4_stim (1 of 1) : Deviations for Annotation 168 of 870, 4.211 mins elapsed.
+2020-08-17 20:53:04 : Perturb_CD4_stim (1 of 1) : Deviations for Annotation 172 of 870, 4.329 mins elapsed.
+2020-08-17 20:53:14 : Perturb_CD4_stim (1 of 1) : Deviations for Annotation 176 of 870, 4.497 mins elapsed.
+2020-08-17 20:53:31 : Perturb_CD4_stim (1 of 1) : Deviations for Annotation 184 of 870, 4.778 mins elapsed.
+2020-08-17 20:53:46 : Perturb_CD4_stim (1 of 1) : Deviations for Annotation 192 of 870, 5.02 mins elapsed.
+2020-08-17 20:54:01 : Perturb_CD4_stim (1 of 1) : Deviations for Annotation 200 of 870, 5.271 mins elapsed.
+2020-08-17 20:54:16 : Perturb_CD4_stim (1 of 1) : Deviations for Annotation 208 of 870, 5.524 mins elapsed.
+2020-08-17 20:54:29 : Perturb_CD4_stim (1 of 1) : Deviations for Annotation 215 of 870, 5.743 mins elapsed.
+2020-08-17 20:54:32 : Perturb_CD4_stim (1 of 1) : Deviations for Annotation 216 of 870, 5.788 mins elapsed.
+2020-08-17 20:54:48 : Perturb_CD4_stim (1 of 1) : Deviations for Annotation 224 of 870, 6.063 mins elapsed.
+2020-08-17 20:55:02 : Perturb_CD4_stim (1 of 1) : Deviations for Annotation 232 of 870, 6.298 mins elapsed.
+2020-08-17 20:55:17 : Perturb_CD4_stim (1 of 1) : Deviations for Annotation 240 of 870, 6.537 mins elapsed.
+2020-08-17 20:55:31 : Perturb_CD4_stim (1 of 1) : Deviations for Annotation 248 of 870, 6.774 mins elapsed.
+2020-08-17 20:55:46 : Perturb_CD4_stim (1 of 1) : Deviations for Annotation 256 of 870, 7.022 mins elapsed.
+2020-08-17 20:55:50 : Perturb_CD4_stim (1 of 1) : Deviations for Annotation 258 of 870, 7.094 mins elapsed.
+2020-08-17 20:56:02 : Perturb_CD4_stim (1 of 1) : Deviations for Annotation 264 of 870, 7.289 mins elapsed.
+2020-08-17 20:56:19 : Perturb_CD4_stim (1 of 1) : Deviations for Annotation 272 of 870, 7.573 mins elapsed.
+2020-08-17 20:56:32 : Perturb_CD4_stim (1 of 1) : Deviations for Annotation 280 of 870, 7.799 mins elapsed.
+2020-08-17 20:56:45 : Perturb_CD4_stim (1 of 1) : Deviations for Annotation 288 of 870, 8.006 mins elapsed.
+2020-08-17 20:56:55 : Perturb_CD4_stim (1 of 1) : Deviations for Annotation 296 of 870, 8.184 mins elapsed.
+2020-08-17 20:57:02 : Perturb_CD4_stim (1 of 1) : Deviations for Annotation 301 of 870, 8.287 mins elapsed.
+2020-08-17 20:57:07 : Perturb_CD4_stim (1 of 1) : Deviations for Annotation 304 of 870, 8.371 mins elapsed.
+2020-08-17 20:57:17 : Perturb_CD4_stim (1 of 1) : Deviations for Annotation 312 of 870, 8.55 mins elapsed.
+2020-08-17 20:57:29 : Perturb_CD4_stim (1 of 1) : Deviations for Annotation 320 of 870, 8.743 mins elapsed.
+2020-08-17 20:57:43 : Perturb_CD4_stim (1 of 1) : Deviations for Annotation 328 of 870, 8.984 mins elapsed.
+2020-08-17 20:57:56 : Perturb_CD4_stim (1 of 1) : Deviations for Annotation 336 of 870, 9.196 mins elapsed.
+2020-08-17 20:58:10 : Perturb_CD4_stim (1 of 1) : Deviations for Annotation 344 of 870, 9.434 mins elapsed.
+2020-08-17 20:58:25 : Perturb_CD4_stim (1 of 1) : Deviations for Annotation 352 of 870, 9.68 mins elapsed.
+2020-08-17 20:58:39 : Perturb_CD4_stim (1 of 1) : Deviations for Annotation 360 of 870, 9.906 mins elapsed.
+2020-08-17 20:58:52 : Perturb_CD4_stim (1 of 1) : Deviations for Annotation 368 of 870, 10.127 mins elapsed.
+2020-08-17 20:59:05 : Perturb_CD4_stim (1 of 1) : Deviations for Annotation 376 of 870, 10.351 mins elapsed.
+2020-08-17 20:59:18 : Perturb_CD4_stim (1 of 1) : Deviations for Annotation 384 of 870, 10.557 mins elapsed.
+2020-08-17 20:59:22 : Perturb_CD4_stim (1 of 1) : Deviations for Annotation 387 of 870, 10.634 mins elapsed.
+2020-08-17 20:59:30 : Perturb_CD4_stim (1 of 1) : Deviations for Annotation 392 of 870, 10.753 mins elapsed.
+2020-08-17 20:59:41 : Perturb_CD4_stim (1 of 1) : Deviations for Annotation 400 of 870, 10.942 mins elapsed.
+2020-08-17 20:59:51 : Perturb_CD4_stim (1 of 1) : Deviations for Annotation 408 of 870, 11.114 mins elapsed.
+2020-08-17 21:00:01 : Perturb_CD4_stim (1 of 1) : Deviations for Annotation 416 of 870, 11.271 mins elapsed.
+2020-08-17 21:00:11 : Perturb_CD4_stim (1 of 1) : Deviations for Annotation 424 of 870, 11.437 mins elapsed.
+2020-08-17 21:00:19 : Perturb_CD4_stim (1 of 1) : Deviations for Annotation 430 of 870, 11.57 mins elapsed.
+2020-08-17 21:00:22 : Perturb_CD4_stim (1 of 1) : Deviations for Annotation 432 of 870, 11.631 mins elapsed.
+2020-08-17 21:00:32 : Perturb_CD4_stim (1 of 1) : Deviations for Annotation 440 of 870, 11.801 mins elapsed.
+2020-08-17 21:00:43 : Perturb_CD4_stim (1 of 1) : Deviations for Annotation 448 of 870, 11.974 mins elapsed.
+2020-08-17 21:00:53 : Perturb_CD4_stim (1 of 1) : Deviations for Annotation 456 of 870, 12.15 mins elapsed.
+2020-08-17 21:01:04 : Perturb_CD4_stim (1 of 1) : Deviations for Annotation 464 of 870, 12.325 mins elapsed.
+2020-08-17 21:01:15 : Perturb_CD4_stim (1 of 1) : Deviations for Annotation 472 of 870, 12.507 mins elapsed.
+2020-08-17 21:01:16 : Perturb_CD4_stim (1 of 1) : Deviations for Annotation 473 of 870, 12.529 mins elapsed.
+2020-08-17 21:01:26 : Perturb_CD4_stim (1 of 1) : Deviations for Annotation 480 of 870, 12.695 mins elapsed.
+2020-08-17 21:01:36 : Perturb_CD4_stim (1 of 1) : Deviations for Annotation 488 of 870, 12.854 mins elapsed.
+2020-08-17 21:01:46 : Perturb_CD4_stim (1 of 1) : Deviations for Annotation 496 of 870, 13.022 mins elapsed.
+2020-08-17 21:01:56 : Perturb_CD4_stim (1 of 1) : Deviations for Annotation 504 of 870, 13.194 mins elapsed.
+2020-08-17 21:02:07 : Perturb_CD4_stim (1 of 1) : Deviations for Annotation 512 of 870, 13.369 mins elapsed.
+2020-08-17 21:02:12 : Perturb_CD4_stim (1 of 1) : Deviations for Annotation 516 of 870, 13.466 mins elapsed.
+2020-08-17 21:02:19 : Perturb_CD4_stim (1 of 1) : Deviations for Annotation 520 of 870, 13.578 mins elapsed.
+2020-08-17 21:02:29 : Perturb_CD4_stim (1 of 1) : Deviations for Annotation 528 of 870, 13.751 mins elapsed.
+2020-08-17 21:02:40 : Perturb_CD4_stim (1 of 1) : Deviations for Annotation 536 of 870, 13.919 mins elapsed.
+2020-08-17 21:02:51 : Perturb_CD4_stim (1 of 1) : Deviations for Annotation 544 of 870, 14.106 mins elapsed.
+2020-08-17 21:03:02 : Perturb_CD4_stim (1 of 1) : Deviations for Annotation 552 of 870, 14.301 mins elapsed.
+2020-08-17 21:03:12 : Perturb_CD4_stim (1 of 1) : Deviations for Annotation 559 of 870, 14.451 mins elapsed.
+2020-08-17 21:03:14 : Perturb_CD4_stim (1 of 1) : Deviations for Annotation 560 of 870, 14.489 mins elapsed.
+2020-08-17 21:03:25 : Perturb_CD4_stim (1 of 1) : Deviations for Annotation 568 of 870, 14.669 mins elapsed.
+2020-08-17 21:03:36 : Perturb_CD4_stim (1 of 1) : Deviations for Annotation 576 of 870, 14.855 mins elapsed.
+2020-08-17 21:03:47 : Perturb_CD4_stim (1 of 1) : Deviations for Annotation 584 of 870, 15.047 mins elapsed.
+2020-08-17 21:03:58 : Perturb_CD4_stim (1 of 1) : Deviations for Annotation 592 of 870, 15.234 mins elapsed.
+2020-08-17 21:04:10 : Perturb_CD4_stim (1 of 1) : Deviations for Annotation 600 of 870, 15.423 mins elapsed.
+2020-08-17 21:04:13 : Perturb_CD4_stim (1 of 1) : Deviations for Annotation 602 of 870, 15.473 mins elapsed.
+2020-08-17 21:04:21 : Perturb_CD4_stim (1 of 1) : Deviations for Annotation 608 of 870, 15.607 mins elapsed.
+2020-08-17 21:04:33 : Perturb_CD4_stim (1 of 1) : Deviations for Annotation 616 of 870, 15.804 mins elapsed.
+2020-08-17 21:04:45 : Perturb_CD4_stim (1 of 1) : Deviations for Annotation 624 of 870, 16.01 mins elapsed.
+2020-08-17 21:04:57 : Perturb_CD4_stim (1 of 1) : Deviations for Annotation 632 of 870, 16.212 mins elapsed.
+2020-08-17 21:05:10 : Perturb_CD4_stim (1 of 1) : Deviations for Annotation 640 of 870, 16.434 mins elapsed.
+2020-08-17 21:05:19 : Perturb_CD4_stim (1 of 1) : Deviations for Annotation 645 of 870, 16.582 mins elapsed.
+2020-08-17 21:05:24 : Perturb_CD4_stim (1 of 1) : Deviations for Annotation 648 of 870, 16.664 mins elapsed.
+2020-08-17 21:05:35 : Perturb_CD4_stim (1 of 1) : Deviations for Annotation 656 of 870, 16.837 mins elapsed.
+2020-08-17 21:05:48 : Perturb_CD4_stim (1 of 1) : Deviations for Annotation 664 of 870, 17.067 mins elapsed.
+2020-08-17 21:06:02 : Perturb_CD4_stim (1 of 1) : Deviations for Annotation 672 of 870, 17.287 mins elapsed.
+2020-08-17 21:06:14 : Perturb_CD4_stim (1 of 1) : Deviations for Annotation 680 of 870, 17.487 mins elapsed.
+2020-08-17 21:06:26 : Perturb_CD4_stim (1 of 1) : Deviations for Annotation 688 of 870, 17.685 mins elapsed.
+2020-08-17 21:06:39 : Perturb_CD4_stim (1 of 1) : Deviations for Annotation 696 of 870, 17.903 mins elapsed.
+2020-08-17 21:06:51 : Perturb_CD4_stim (1 of 1) : Deviations for Annotation 704 of 870, 18.105 mins elapsed.
+2020-08-17 21:07:02 : Perturb_CD4_stim (1 of 1) : Deviations for Annotation 712 of 870, 18.289 mins elapsed.
+2020-08-17 21:07:15 : Perturb_CD4_stim (1 of 1) : Deviations for Annotation 720 of 870, 18.515 mins elapsed.
+2020-08-17 21:07:28 : Perturb_CD4_stim (1 of 1) : Deviations for Annotation 728 of 870, 18.723 mins elapsed.
+2020-08-17 21:07:33 : Perturb_CD4_stim (1 of 1) : Deviations for Annotation 731 of 870, 18.804 mins elapsed.
+2020-08-17 21:07:44 : Perturb_CD4_stim (1 of 1) : Deviations for Annotation 736 of 870, 18.987 mins elapsed.
+2020-08-17 21:07:55 : Perturb_CD4_stim (1 of 1) : Deviations for Annotation 744 of 870, 19.184 mins elapsed.
+2020-08-17 21:08:08 : Perturb_CD4_stim (1 of 1) : Deviations for Annotation 752 of 870, 19.4 mins elapsed.
+2020-08-17 21:08:20 : Perturb_CD4_stim (1 of 1) : Deviations for Annotation 760 of 870, 19.588 mins elapsed.
+2020-08-17 21:08:32 : Perturb_CD4_stim (1 of 1) : Deviations for Annotation 768 of 870, 19.799 mins elapsed.
+2020-08-17 21:08:42 : Perturb_CD4_stim (1 of 1) : Deviations for Annotation 774 of 870, 19.964 mins elapsed.
+2020-08-17 21:08:47 : Perturb_CD4_stim (1 of 1) : Deviations for Annotation 776 of 870, 20.035 mins elapsed.
+2020-08-17 21:09:00 : Perturb_CD4_stim (1 of 1) : Deviations for Annotation 784 of 870, 20.266 mins elapsed.
+2020-08-17 21:09:13 : Perturb_CD4_stim (1 of 1) : Deviations for Annotation 792 of 870, 20.47 mins elapsed.
+2020-08-17 21:09:25 : Perturb_CD4_stim (1 of 1) : Deviations for Annotation 800 of 870, 20.675 mins elapsed.
+2020-08-17 21:09:38 : Perturb_CD4_stim (1 of 1) : Deviations for Annotation 808 of 870, 20.898 mins elapsed.
+2020-08-17 21:09:56 : Perturb_CD4_stim (1 of 1) : Deviations for Annotation 816 of 870, 21.195 mins elapsed.
+2020-08-17 21:09:57 : Perturb_CD4_stim (1 of 1) : Deviations for Annotation 817 of 870, 21.208 mins elapsed.
+2020-08-17 21:10:08 : Perturb_CD4_stim (1 of 1) : Deviations for Annotation 824 of 870, 21.393 mins elapsed.
+2020-08-17 21:10:22 : Perturb_CD4_stim (1 of 1) : Deviations for Annotation 832 of 870, 21.623 mins elapsed.
+2020-08-17 21:10:35 : Perturb_CD4_stim (1 of 1) : Deviations for Annotation 840 of 870, 21.839 mins elapsed.
+2020-08-17 21:10:49 : Perturb_CD4_stim (1 of 1) : Deviations for Annotation 848 of 870, 22.08 mins elapsed.
+2020-08-17 21:11:01 : Perturb_CD4_stim (1 of 1) : Deviations for Annotation 856 of 870, 22.275 mins elapsed.
+2020-08-17 21:11:07 : Perturb_CD4_stim (1 of 1) : Deviations for Annotation 860 of 870, 22.379 mins elapsed.
+2020-08-17 21:11:14 : Perturb_CD4_stim (1 of 1) : Deviations for Annotation 864 of 870, 22.492 mins elapsed.
+
+2020-08-17 21:11:28 : dev, Class = SummarizedExperiment
+class: SummarizedExperiment 
+dim: 870 5825 
+metadata(0):
+assays(2): z deviations
+rownames(870): TFAP2B_1 TFAP2D_2 ... TBX18_869 TBX22_870
+rowData names(2): fractionMatches fractionBackgroundOverlap
+colnames(5825): Perturb_CD4_stim#CATGTTTGTGTCGTCG-1
+  Perturb_CD4_stim#TGTAGCAAGCTACGCC-1 ...
+  Perturb_CD4_stim#GCTTAAGAGCGGACAT-1
+  Perturb_CD4_stim#TAGCTTTGTCCAGACC-1
+colData names(0):
+
+
+2020-08-17 21:11:28 : featureDF, Class = data.frame
+featureDF: nRows = 1740, nCols = 3
+      seqnames idx     name
+871 deviations   1 TFAP2B_1
+872 deviations   2 TFAP2D_2
+873 deviations   3 TFAP2C_3
+874 deviations   4 TFAP2E_4
+875 deviations   5 TFAP2A_5
+876 deviations   6 ARID3A_6
+
+
+###########
+2020-08-17 21:11:31 : Completed Computing Deviations!, 23.163 mins elapsed.
+###########
+
+------- Completed
+
+End Time : 2020-08-17 21:11:31
+Elapsed Time Minutes = 23.1710305213928
+Elapsed Time Hours = 0.386183895799849
+
+-------
+
+
+

@@ -7,7 +7,7 @@ mSE <- readRDS("../output/mitoMutaitons_cov10_marrow.rds")
 archr_cluster_vec <- archr_df$Clusters; names(archr_cluster_vec) <- as.character(archr_df$barcode) 
 
 c_map<- c("Ery", "Ery", rep("Lym", 5), "Prog", # first 8
-           rep("Lym", 5), rep("Myeloid", 8))
+          rep("Lym", 5), rep("Myeloid", 8))
 names(c_map) <- paste0("C", as.character(1:21))
 clusters_ordered <- c_map[archr_cluster_vec[as.character(mSE@colData$sample)]]
 var_meta_df <- data.frame(rowData(mSE))
@@ -74,4 +74,3 @@ pS1 <- ggplot(plot_df %>% arrange((X13711G.A)), aes(x = UMAP1, y = UMAP2, color 
 
 cowplot::ggsave2(pS1, 
                  file = "../plots/supplemental_mtDNA_plot.png", height = 1.8, width = 1.8, dpi = 500)
-

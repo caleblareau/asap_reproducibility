@@ -38,7 +38,7 @@ vars_clone <- data.frame(muts_df) %>%  filter(boo)
 vars_clone %>% arrange(desc(mean))
 
 dim(vars_clone)
-saveRDS(mSE[boo,], file = "../output/mitoMutaitons_cov10_marrow.rds")
+saveRDS(mSE[boo,], file = "../output/mitoMutations_cov10_marrow.rds")
 
 
 ref_all <- fread("../../global_functions/data/chrM_refAllele.txt")

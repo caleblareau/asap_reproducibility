@@ -1,0 +1,8 @@
+hashtag	sample	sgRNA
+TotalSeq_Human_Hashtag01	Perturb_CD4_stim	sgNTC
+TotalSeq_Human_Hashtag02	Perturb_CD4_stim	sgCD4
+TotalSeq_Human_Hashtag03	Perturb_CD4_stim	sgNFKB2
+TotalSeq_Human_Hashtag04	Perturb_CD4_stim	sgCD3E
+TotalSeq_Human_Hashtag05	Perturb_CD4_stim	sgZAP70
+TotalSeq_Human_Hashtag12	Perturb_CD4_stim	sgGuide1
+TotalSeq_Human_Hashtag13	Perturb_CD4_stim	sgGuide2

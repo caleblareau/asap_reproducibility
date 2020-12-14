@@ -1,0 +1,251 @@
+
+           ___      .______        ______  __    __  .______      
+          /   \     |   _  \      /      ||  |  |  | |   _  \     
+         /  ^  \    |  |_)  |    |  ,----'|  |__|  | |  |_)  |    
+        /  /_\  \   |      /     |  |     |   __   | |      /     
+       /  _____  \  |  |\  \\___ |  `----.|  |  |  | |  |\  \\___.
+      /__/     \__\ | _| `._____| \______||__|  |__| | _| `._____|
+    
+Logging With ArchR!
+
+Start Time : 2020-08-17 20:37:47
+
+------- ArchR Info
+
+ArchRThreads = 30
+ArchRGenome = Hg38
+
+------- System Info
+
+Computer OS = unix
+Total Cores = 112
+
+------- Session Info
+
+R version 3.6.3 (2020-02-29)
+Platform: x86_64-pc-linux-gnu (64-bit)
+Running under: CentOS Linux 7 (Core)
+
+Matrix products: default
+BLAS:   /home/ytakeshima/tool/R-3.6.3/lib/libRblas.so
+LAPACK: /home/ytakeshima/tool/R-3.6.3/lib/libRlapack.so
+
+locale:
+ [1] LC_CTYPE=en_US.UTF-8       LC_NUMERIC=C              
+ [3] LC_TIME=en_US.UTF-8        LC_COLLATE=en_US.UTF-8    
+ [5] LC_MONETARY=en_US.UTF-8    LC_MESSAGES=en_US.UTF-8   
+ [7] LC_PAPER=en_US.UTF-8       LC_NAME=C                 
+ [9] LC_ADDRESS=C               LC_TELEPHONE=C            
+[11] LC_MEASUREMENT=en_US.UTF-8 LC_IDENTIFICATION=C       
+
+attached base packages:
+ [1] grid      parallel  stats4    stats     graphics  grDevices utils    
+ [8] datasets  methods   base     
+
+other attached packages:
+ [1] nabor_0.5.0                       uwot_0.1.8                       
+ [3] Seurat_3.1.5                      Rsamtools_2.2.3                  
+ [5] BSgenome.Hsapiens.UCSC.hg38_1.4.1 BSgenome_1.54.0                  
+ [7] rtracklayer_1.46.0                Biostrings_2.54.0                
+ [9] XVector_0.26.0                    gridExtra_2.3                    
+[11] forcats_0.5.0                     stringr_1.4.0                    
+[13] dplyr_1.0.0                       purrr_0.3.4                      
+[15] readr_1.3.1                       tidyr_1.0.3                      
+[17] tibble_3.0.1                      tidyverse_1.3.0                  
+[19] patchwork_1.0.0                   ArchR_0.9.4                      
+[21] magrittr_1.5                      rhdf5_2.30.1                     
+[23] Matrix_1.2-18                     data.table_1.12.8                
+[25] SummarizedExperiment_1.16.1       DelayedArray_0.12.3              
+[27] BiocParallel_1.20.1               matrixStats_0.56.0               
+[29] Biobase_2.46.0                    GenomicRanges_1.38.0             
+[31] GenomeInfoDb_1.22.1               IRanges_2.20.2                   
+[33] S4Vectors_0.24.4                  BiocGenerics_0.32.0              
+[35] ggplot2_3.3.2                    
+
+loaded via a namespace (and not attached):
+ [1] Rtsne_0.15               colorspace_1.4-1         ellipsis_0.3.1          
+ [4] ggridges_0.5.2           fs_1.4.1                 rstudioapi_0.11         
+ [7] leiden_0.3.3             listenv_0.8.0            farver_2.0.3            
+[10] npsurv_0.4-0.1           ggrepel_0.8.2            RSpectra_0.16-0         
+[13] fansi_0.4.1              lubridate_1.7.8          xml2_1.3.1              
+[16] codetools_0.2-16         splines_3.6.3            lsei_1.2-0.1            
+[19] jsonlite_1.6.1           Cairo_1.5-12             broom_0.5.6             
+[22] ica_1.0-2                cluster_2.1.0            dbplyr_1.4.3            
+[25] png_0.1-7                sctransform_0.2.1        compiler_3.6.3          
+[28] httr_1.4.1               backports_1.1.8          lazyeval_0.2.2          
+[31] assertthat_0.2.1         cli_2.0.2                htmltools_0.4.0         
+[34] tools_3.6.3              rsvd_1.0.3               igraph_1.2.5            
+[37] gtable_0.3.0             glue_1.4.1               GenomeInfoDbData_1.2.2  
+[40] reshape2_1.4.4           RANN_2.6.1               rappdirs_0.3.1          
+[43] Rcpp_1.0.4.6             cellranger_1.1.0         vctrs_0.3.1             
+[46] ape_5.3                  nlme_3.1-147             lmtest_0.9-37           
+[49] globals_0.12.5           rvest_0.3.5              lifecycle_0.2.0         
+[52] irlba_2.3.3              gtools_3.8.2             XML_3.99-0.3            
+[55] future_1.17.0            zlibbioc_1.32.0          MASS_7.3-51.6           
+[58] zoo_1.8-7                scales_1.1.1             hms_0.5.3               
+[61] RColorBrewer_1.1-2       pbapply_1.4-2            reticulate_1.15         
+[64] stringi_1.4.6            rlang_0.4.6              pkgconfig_2.0.3         
+[67] bitops_1.0-6             lattice_0.20-41          ROCR_1.0-11             
+[70] Rhdf5lib_1.8.0           htmlwidgets_1.5.1        GenomicAlignments_1.22.1
+[73] labeling_0.3             cowplot_1.0.0            tidyselect_1.1.0        
+[76] RcppAnnoy_0.0.16         plyr_1.8.6               R6_2.4.1                
+[79] generics_0.0.2           DBI_1.1.0                pillar_1.4.4            
+[82] haven_2.2.0              withr_2.2.0              fitdistrplus_1.0-14     
+[85] survival_3.1-12          RCurl_1.98-1.2           tsne_0.1-3              
+[88] future.apply_1.5.0       modelr_0.1.6             crayon_1.3.4            
+[91] KernSmooth_2.23-17       plotly_4.9.2.1           readxl_1.3.1            
+[94] reprex_0.3.0             digest_0.6.25            munsell_0.5.0           
+[97] viridisLite_0.3.0       
+
+
+------- Log Info
+
+
+2020-08-17 20:37:47 : markerHeatmap Input-Parameters, Class = list
+
+markerHeatmap Input-Parameters$seMarker: length = 112469
+class: SummarizedExperiment 
+dim: 6 10 
+metadata(2): MatchInfo Params
+assays(6): Log2FC Mean ... AUC MeanBGD
+rownames(6): 1 2 ... 5 6
+rowData names(4): seqnames idx start end
+colnames(10): sgCD3E_sgGuide2 sgCD3ECD4_sgGuide1 ... sgZAP70_sgGuide1
+  sgZAP70_sgGuide2
+colData names(0):
+
+
+markerHeatmap Input-Parameters$cutOff: length = 1
+[1] "FDR <= 0.1 & abs(Log2FC) >= 0.5"
+
+
+markerHeatmap Input-Parameters$log2Norm: length = 1
+[1] TRUE
+
+
+markerHeatmap Input-Parameters$scaleTo: length = 1
+[1] 10000
+
+
+markerHeatmap Input-Parameters$scaleRows: length = 1
+[1] TRUE
+
+
+markerHeatmap Input-Parameters$plotLog2FC: length = 1
+[1] FALSE
+
+
+markerHeatmap Input-Parameters$limits: length = 2
+[1] -2  2
+
+
+markerHeatmap Input-Parameters$grepExclude: length = 0
+NULL
+
+
+markerHeatmap Input-Parameters$pal: length = 0
+NULL
+
+
+markerHeatmap Input-Parameters$binaryClusterRows: length = 1
+[1] TRUE
+
+
+markerHeatmap Input-Parameters$clusterCols: length = 1
+[1] TRUE
+
+
+markerHeatmap Input-Parameters$labelMarkers: length = 0
+NULL
+
+
+markerHeatmap Input-Parameters$nLabel: length = 0
+NULL
+
+
+markerHeatmap Input-Parameters$nPrint: length = 1
+[1] 20
+
+
+markerHeatmap Input-Parameters$labelRows: length = 1
+[1] FALSE
+
+
+markerHeatmap Input-Parameters$returnMat: length = 1
+[1] FALSE
+
+
+markerHeatmap Input-Parameters$transpose: length = 1
+[1] TRUE
+
+
+markerHeatmap Input-Parameters$invert: length = 1
+[1] FALSE
+
+
+markerHeatmap Input-Parameters$logFile: length = 1
+[1] "ArchRLogs/ArchR-plotMarkerHeatmap-35d90b22bb51-Date-2020-08-17_Time-20-37-47.log"
+
+
+
+2020-08-17 20:37:48 : passMat, Class = matrix
+  sgCD3E_sgGuide2 sgCD3ECD4_sgGuide1 sgCD4_sgGuide1 sgCD4_sgGuide2
+1           FALSE              FALSE          FALSE          FALSE
+2           FALSE              FALSE          FALSE          FALSE
+3           FALSE              FALSE          FALSE          FALSE
+4           FALSE               TRUE          FALSE          FALSE
+5           FALSE              FALSE          FALSE          FALSE
+  sgNFKB2_sgGuide1
+1            FALSE
+2            FALSE
+3            FALSE
+4            FALSE
+5            FALSE
+
+passMat: nRows = 112469, nCols = 10
+
+
+2020-08-17 20:37:48 : mat, Class = matrix
+  sgCD3E_sgGuide2 sgCD3ECD4_sgGuide1 sgCD4_sgGuide1 sgCD4_sgGuide2
+1      -2.0000000        -0.27663893     0.01355814      0.7870042
+2       1.9423767        -0.07043308    -1.04810883     -0.1410677
+3      -0.1621197        -1.53512822     1.19167209     -0.7960774
+4      -0.8744239        -1.27728215     1.06745585      0.4551751
+5      -1.3742724        -1.03602776    -0.93944357      0.5660739
+  sgNFKB2_sgGuide1
+1        1.1397923
+2       -0.4624050
+3        1.4836915
+4        1.1751764
+5        0.4972315
+
+mat: nRows = 112469, nCols = 10
+
+
+2020-08-17 20:37:48 : mat-plot, Class = matrix
+                         sgCD3E_sgGuide2 sgCD3ECD4_sgGuide1 sgCD4_sgGuide1
+chr14:50038552-50039052        -1.550690          -1.414630      0.7747362
+chr8:30133684-30134184          1.386529           1.166879     -0.8259279
+chr1:193479149-193479649        1.619867           1.629484     -0.7412452
+chr7:76051774-76052274          1.865303           1.473575     -0.6774947
+chr8:60796526-60797026          1.349246           1.833319     -0.8087592
+                         sgCD4_sgGuide2 sgNFKB2_sgGuide1
+chr14:50038552-50039052       0.9534773        0.6564442
+chr8:30133684-30134184       -0.7123722       -0.8459890
+chr1:193479149-193479649     -0.6451490       -0.8363603
+chr7:76051774-76052274       -0.6206929       -0.7726887
+chr8:60796526-60797026       -0.8241478       -0.6705667
+
+mat-plot: nRows = 17877, nCols = 10
+
+
+------- Completed
+
+End Time : 2020-08-17 20:37:49
+Elapsed Time Minutes = 0.0422299305597941
+Elapsed Time Hours = 0.000703903237978617
+
+-------
+
+
+
