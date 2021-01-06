@@ -36,8 +36,8 @@ import_kite_counts <- function(library, bcs, tech, bio){
 }
 
 # Import counts 
-asap_control <- import_kite_counts("../../pbmc_stimulation_asapseq/data/adt/ASAP_ctrl_ADT/",  Ac_bcs, "ATAC", "control")
-asap_stim <- import_kite_counts("../../pbmc_stimulation_asapseq/data/adt/ASAP_stim_ADT/",  As_bcs,"ATAC", "stim")
+asap_control <- import_kite_counts("../data/asapseq/dt/ASAP_ctrl_ADT/",  Ac_bcs, "ATAC", "control")
+asap_stim <- import_kite_counts("../data/asapseq/adt/ASAP_stim_ADT/",  As_bcs,"ATAC", "stim")
 pbmc <- merge(asap_control, asap_stim,  add.cell.ids = c("", ""))
 
 # Do dimension reduction

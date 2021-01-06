@@ -1,0 +1,211 @@
+library(data.table)
+library(dplyr)
+library(ArchR)
+library(Seurat)
+library(Matrix)
+
+addArchRGenome("hg38")
+
+import_kite_counts_NYGC <- function(path, library, gz = FALSE, string_col = "", string_row = ""){
+  
+  xx <- ifelse(gz, ".gz", "")
+  mtx <- fread(paste0(path, "featurecounts",library,".mtx",xx), header = FALSE)
+  dim <- mtx[1,]
+  mtx <- mtx[-1,]
+  matx <- sparseMatrix(i = mtx[[1]], j = mtx[[2]], x = mtx[[3]])
+  rownames(matx) <- paste0(fread(paste0(path, "featurecounts",library,".barcodes.txt",xx), header = FALSE)[[1]], "-1")
+  colnames(matx) <- paste0(fread(paste0(path, "featurecounts",library,".genes.txt",xx), header = FALSE)[[1]])
+  rownames(matx) <- paste0(string_row, rownames(matx))
+  colnames(matx) <- paste0(string_col, colnames(matx))
+  
+  return(matx)
+}
+
+if(FALSE){
+  arrow_intra <- createArrowFiles(
+    inputFiles = "../../../asap_large_data_files/nygc_pbmc/input/Intra_ATAC_fragments.tsv.gz",
+    sampleNames = "PBMCs_Intra",
+    filterTSS = 4, 
+    filterFrags = 1000,
+    addTileMat = TRUE,
+    addGeneScoreMat = TRUE
+  )
+}
+proj <- ArchRProject(
+  ArrowFiles = c("../../../asap_large_data_files/nygc_pbmc/output/archr/PBMCs_Intra.arrow"),
+  outputDirectory = "../../../asap_large_data_files/nygc_pbmc/output/archr/intra_out",
+  copyArrows = FALSE
+)
+
+set.seed(1)
+dim(proj@cellColData)
+proj <- addIterativeLSI(ArchRProj = proj, useMatrix = "TileMatrix", name = "IterativeLSI", sampleCellsPre = 12000)
+proj <- addClusters(input = proj, reducedDims = "IterativeLSI")
+proj <- addUMAP(ArchRProj = proj, reducedDims = "IterativeLSI")
+p2 <- plotEmbedding(ArchRProj = proj, colorBy = "cellColData", name = "Clusters", embedding = "UMAP")
+p2
+
+
+# importing ADT counts, again extracting from seurat object
+
+TSA = OMNI.comb@assays$TSA@scale.data
+TSB = OMNI.comb@assays$TSB@scale.data
+tsa = t(TSA)
+tsb = t(TSB)
+rownames(tsa) <- paste0("OMNI#", rownames(tsa))
+rownames(tsb) <- paste0("OMNI#", rownames(tsb))
+tag.cells = intersect(rownames(tsa), rownames(tsb))
+cells.to.keep = intersect(proj$cellNames, tag.cells)
+subset <- subsetCells(ArchRProj = proj, cellNames = cells.to.keep)
+
+tsa.matched = tsa[match(subset$cellNames, rownames(tsa)),]
+tsb.matched = tsb[match(subset$cellNames, rownames(tsb)),]
+
+subset@cellColData$TSA_CD45 = tsa.matched[,9]
+subset@cellColData$TSA_CD8 = tsa.matched[,8]
+subset@cellColData$TSA_CD14 = tsa.matched[,7]
+subset@cellColData$TSA_CD56 = tsa.matched[,6]
+subset@cellColData$TSA_CD11c = tsa.matched[,5]
+subset@cellColData$TSA_CD4 = tsa.matched[,4]
+subset@cellColData$TSA_CD16 = tsa.matched[,3]
+subset@cellColData$TSA_CD3 = tsa.matched[,2]
+subset@cellColData$TSA_CD19 = tsa.matched[,1]
+subset@cellColData$TSB_Zap70 = tsb.matched[,1]
+subset@cellColData$TSB_Perforin = tsb.matched[,2]
+subset@cellColData$TSB_GranzymeB = tsb.matched[,3]
+
+subset <- addIterativeLSI(ArchRProj = subset, useMatrix = "TileMatrix", name = "IterativeLSI")
+subset <- addImputeWeights(subset)
+subset <- addUMAP(ArchRProj = subset, reducedDims = "IterativeLSI", minDist = 0.4, force = TRUE)
+subset <- addClusters(input = subset, reducedDims = "IterativeLSI")
+
+plotEmbedding(ArchRProj = subset, colorBy = "cellColData", name = "Clusters", embedding = "UMAP")
+
+# panel c
+
+tsa2 = as.data.frame(t(TSA2))
+tsb2 = as.data.frame(t(TSB2))
+omni = cbind(tsa2,tsb2)
+colnames(omni) = c("TSA_CD4",  "TSA_CD56" ,"TSA_CD45", "TSA_CD16", "TSA_CD14", "TSA_CD3", "TSA_CD19", "TSA_CD8", "TSA_CD11c", "TSB_CD4", "TSB_CD56", "TSB_CD45", "TSB_CD16", "TSB_CD14", "TSB_CD3", "TSB_CD19", "TSB_CD8", "TSB_CD11c")
+
+pal <- colorRampPalette(c("white", "dark green"))
+greens = pal(10)
+
+par(mfrow=c(3,3))
+par(mar=c(1,1,1,1))
+smoothScatter(omni$TSA_CD3, omni$TSB_CD3, nbin = 328, colramp = colorRampPalette(c("white", greens)),nrpoints = 0, ret.selection = FALSE, xlab="", ylab="", xlim=c(0,4), ylim=c(0,4),labels=FALSE)
+dg <- par("usr")
+segments(dg[1],dg[3],dg[2],dg[4], col='black', lty=2)
+smoothScatter(omni$TSA_CD4, omni$TSB_CD4, nbin = 328, colramp = colorRampPalette(c("white", greens)),nrpoints = 0, ret.selection = FALSE, xlab="", ylab="",  xlim=c(0,4), ylim=c(0,4),labels=FALSE)
+dg <- par("usr")
+segments(dg[1],dg[3],dg[2],dg[4], col='black', lty=2)
+smoothScatter(omni$TSA_CD8, omni$TSB_CD8, nbin = 328, colramp = colorRampPalette(c("white", greens)),nrpoints = 0, ret.selection = FALSE, xlab="", ylab="", xlim=c(0,4), ylim=c(0,4),labels=FALSE)
+dg <- par("usr")
+segments(dg[1],dg[3],dg[2],dg[4], col='black', lty=2)
+smoothScatter(omni$TSA_CD19, omni$TSB_CD19, nbin = 328, colramp = colorRampPalette(c("white", greens)),nrpoints = 0, ret.selection = FALSE, xlab="", ylab="",  xlim=c(0,4), ylim=c(0,4),labels=FALSE)
+dg <- par("usr")
+segments(dg[1],dg[3],dg[2],dg[4], col='black', lty=2)
+smoothScatter(omni$TSA_CD16, omni$TSB_CD16, nbin = 328, colramp = colorRampPalette(c("white", greens)),nrpoints = 0, ret.selection = FALSE, xlab="", ylab="",xlim=c(0,4), ylim=c(0,4),labels=FALSE)
+dg <- par("usr")
+segments(dg[1],dg[3],dg[2],dg[4], col='black', lty=2)
+smoothScatter(omni$TSA_CD56, omni$TSB_CD56, nbin = 328, colramp = colorRampPalette(c("white", greens)),nrpoints = 0, ret.selection = FALSE, xlab="", ylab="",xlim=c(0,4), ylim=c(0,4),labels=FALSE)
+dg <- par("usr")
+segments(dg[1],dg[3],dg[2],dg[4], col='black', lty=2)
+smoothScatter(omni$TSA_CD11c, omni$TSB_CD11c, nbin = 328, colramp = colorRampPalette(c("white", greens)),nrpoints = 0, ret.selection = FALSE, xlab="", ylab="",xlim=c(0,4), ylim=c(0,4),labels=FALSE)
+dg <- par("usr")
+segments(dg[1],dg[3],dg[2],dg[4], col='black', lty=2)
+smoothScatter(omni$TSA_CD14, omni$TSB_CD14, nbin = 328, colramp = colorRampPalette(c("white", greens)),nrpoints = 0, ret.selection = FALSE, xlab="", ylab="",xlim=c(0,4), ylim=c(0,4),labels=FALSE)
+dg <- par("usr")
+segments(dg[1],dg[3],dg[2],dg[4], col='black', lty=2)
+smoothScatter(omni$TSA_CD45, omni$TSB_CD45, nbin = 328, colramp = colorRampPalette(c("white", greens)),nrpoints = 0, ret.selection = FALSE, xlab="", ylab="", xlim=c(0,4), ylim=c(0,4),labels=FALSE)
+dg <- par("usr")
+segments(dg[1],dg[3],dg[2],dg[4], col='black', lty=2)
+
+# panel d
+
+tsb1 = as.data.frame(t(TSB1))
+tsb1$lysis = "LLL"
+colnames(tsb1) = c("CD4", "CD56", "CD45", "CD16", "CD14", "CD3", "CD19", "CD8", "CD11c", "lysis")
+tsb2 = as.data.frame(t(TSB2))
+tsb2$lysis = "OMNI"
+colnames(tsb2) = c("CD4", "CD56", "CD45", "CD16", "CD14", "CD3", "CD19", "CD8", "CD11c", "lysis")
+tsb1.df <- data.frame(group = "LLL",
+                      CD4 = tsb1[,1],
+                      CD56 = tsb1[,2],
+                      CD45 = tsb1[,3],
+                      CD16 = tsb1[,4],
+                      CD14 = tsb1[,5],
+                      CD3 = tsb1[,6],
+                      CD19 = tsb1[,7],
+                      CD8 = tsb1[,8],
+                      CD11c = tsb1[,9])
+tsb2.df <- data.frame(group = "OMNI",
+                      CD4 = tsb2[,1],
+                      CD56 = tsb2[,2],
+                      CD45 = tsb2[,3],
+                      CD16 = tsb2[,4],
+                      CD14 = tsb2[,5],
+                      CD3 = tsb2[,6],
+                      CD19 = tsb2[,7],
+                      CD8 = tsb2[,8],
+                      CD11c = tsb2[,9])
+tsb.all = rbind(tsb1.df, tsb2.df)
+tsb.tall <- tsb.all %>% gather(key = Antibody, value = Value, CD4:CD11c)
+
+p2 = ggplot(tsb.tall, aes(Antibody, Value, fill = group, colour = group)) + geom_violin(scale = "width", adjust = 0.8, width = 0.5) + ylab("CLR TSB UMI counts")
+
+# panel e
+
+markerGenes  <- c(
+  "CD4", 
+  "CD8A", 
+  "CD19",
+  "ITGAX",
+  "CD14",
+  "FCGR3A",
+  "PTPRC",
+  "CD3D",
+  "NCAM1", "GZMB", "PRF1", "ZAP70"
+)
+p <- plotEmbedding(
+  ArchRProj = subset, 
+  colorBy = "GeneScoreMatrix", 
+  name = markerGenes, 
+  embedding = "UMAP",
+  imputeWeights = NULL
+)
+
+p.genes <- lapply(p, function(x){
+  x + guides(color = FALSE, fill = FALSE) + 
+    theme_ArchR(baseSize = 6.5) +
+    theme(plot.margin = unit(c(0, 0, 0, 0), "cm")) +
+    theme(
+      axis.text.x=element_blank(), 
+      axis.ticks.x=element_blank(), 
+      axis.text.y=element_blank(), 
+      axis.ticks.y=element_blank()
+    )
+})
+do.call(cowplot::plot_grid, c(list(ncol = 3),p.genes))
+
+# panel f
+
+p1 = plotEmbedding(ArchRProj = subset, colorBy = "cellColData", name = "TSA_CD4", embedding = "UMAP", quantCut = c(0.1,0.9))
+p2 = plotEmbedding(ArchRProj = subset, colorBy = "cellColData", name = "TSA_CD8", embedding = "UMAP", quantCut = c(0.1,0.9))
+p3 = plotEmbedding(ArchRProj = subset, colorBy = "cellColData", name = "TSA_CD19", embedding = "UMAP", quantCut = c(0.1,0.9))
+p4 = plotEmbedding(ArchRProj = subset, colorBy = "cellColData", name = "TSA_CD11c", embedding = "UMAP", quantCut = c(0.1,0.9))
+p5 = plotEmbedding(ArchRProj = subset, colorBy = "cellColData", name = "TSA_CD14", embedding = "UMAP", quantCut = c(0.1,0.9))
+p6 = plotEmbedding(ArchRProj = subset, colorBy = "cellColData", name = "TSA_CD16", embedding = "UMAP", quantCut = c(0.1,0.9))
+p7 = plotEmbedding(ArchRProj = subset, colorBy = "cellColData", name = "TSA_CD45", embedding = "UMAP", quantCut = c(0.1,0.9))
+p8 = plotEmbedding(ArchRProj = subset, colorBy = "cellColData", name = "TSA_CD3", embedding = "UMAP", quantCut = c(0.1,0.9))
+p9 = plotEmbedding(ArchRProj = subset, colorBy = "cellColData", name = "TSA_CD56", embedding = "UMAP", quantCut = c(0.1,0.9))
+p10 = plotEmbedding(ArchRProj = subset, colorBy = "cellColData", name = "TSB_GranzymeB", embedding = "UMAP", quantCut = c(0.1,0.9))
+p11 = plotEmbedding(ArchRProj = subset, colorBy = "cellColData", name = "TSB_Perforin", embedding = "UMAP", quantCut = c(0.1,0.9))
+p12 = plotEmbedding(ArchRProj = subset, colorBy = "cellColData", name = "TSB_Zap70", embedding = "UMAP", quantCut = c(0.1,0.9))
+
+plot_grid(p1, p2, p3, p4, p5, p6, p7, p8, p9, p10, p11, p12, nrow = 4)
+
+# panel h, plots defined in suppl fig 2, panel f below
+
+plot_grid(p1, p2, p6,  p12, p10, p11, nrow = 2)
+

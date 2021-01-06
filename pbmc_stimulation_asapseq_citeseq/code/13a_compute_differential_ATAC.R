@@ -6,7 +6,7 @@ library(Signac)
 library(matrixStats)
 
 # Import main objects and annotations
-atac_mat <- Read10X_h5("../../pbmc_stimulation_asapseq/data/cellranger/asap_pbmcstim-control_filtered_peak_bc_matrix.h5")
+atac_mat <- Read10X_h5("../data/asapseq/cellranger/asap_pbmcstim-control_filtered_peak_bc_matrix.h5")
 coembed4 <- readRDS(file = "../../../asap_large_data_files/pbmc_stim_data/output/22July2020_Seurat_Coembed4.rds")
 bcdt <- fread('../output/HQ_barcodes_4exps.tsv')
 tcellsboo <- c(coembed4@meta.data$seurat_clusters %in% as.character(c(0,1,2,5,6,7,8,11)))

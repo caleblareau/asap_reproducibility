@@ -31,10 +31,10 @@ import_kite_counts_known_bcs <- function(library, bcs, tech, bio){
 }
 
 # Import counts 
-cite_control <- import_kite_counts_known_bcs("../../pbmc_stimulation_citeseq/data/adt/ctrl_featurecounts/",  colnames(ctrl_scRNA),"CITE", "noStim")
-cite_stim <- import_kite_counts_known_bcs("../../pbmc_stimulation_citeseq/data/adt/stim_featurecounts/",  colnames(stim_scRNA),"CITE", "Stim")
-asap_control <- import_kite_counts_known_bcs("../../pbmc_stimulation_asapseq/data/adt/ASAP_ctrl_ADT/",  colnames(ga_control), "ASAP", "noStim")
-asap_stim <- import_kite_counts_known_bcs("../../pbmc_stimulation_asapseq/data/adt/ASAP_stim_ADT/",  colnames(ga_stim),"ASAP", "Stim")
+cite_control <- import_kite_counts_known_bcs("../data/citeseq/adt/ctrl_featurecounts/",  colnames(ctrl_scRNA),"CITE", "noStim")
+cite_stim <- import_kite_counts_known_bcs("../data/citeseq/adt/stim_featurecounts/",  colnames(stim_scRNA),"CITE", "Stim")
+asap_control <- import_kite_counts_known_bcs("../data/asapseq//adt/ASAP_ctrl_ADT/",  colnames(ga_control), "ASAP", "noStim")
+asap_stim <- import_kite_counts_known_bcs("../data/asapseq/adt/ASAP_stim_ADT/",  colnames(ga_stim),"ASAP", "Stim")
 
 # Look for super expressors in the citeseq data
 ctrl_meta <- data.frame(

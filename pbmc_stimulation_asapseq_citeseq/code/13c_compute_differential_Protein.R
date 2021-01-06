@@ -13,6 +13,11 @@ boo_stim <- (bcdt$assay %in% c("ATAC_stim"))& tcellsboo
 table(boo_stim)
 table(boo_control)
 
+summary(colSums(coembed4@assays$ADT@counts[,bcdt$assay %in% c("ATAC_control")]))
+summary(colSums(coembed4@assays$ADT@counts[,bcdt$assay %in% c("ATAC_stim")]))
+summary(colSums(coembed4@assays$ADT@counts[,bcdt$assay %in% c("RNA_control")]))
+summary(colSums(coembed4@assays$ADT@counts[,bcdt$assay %in% c("RNA_stim")]))
+
 # Do protein
 control_protein_mat <- t(coembed4@assays$ADT@data)[boo_control,]
 stim_protein_mat <- t(coembed4@assays$ADT@data)[boo_stim,]

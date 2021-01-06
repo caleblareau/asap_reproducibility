@@ -5,7 +5,7 @@ library(dplyr)
 library(Matrix)
 
 # Load the reference dataset
-InstallData("bmcite")
+#InstallData("bmcite")
 bm <- LoadData(ds = "bmcite")
 DefaultAssay(bm) <- 'RNA'
 bm <- NormalizeData(bm) %>% FindVariableFeatures() %>% ScaleData() %>% RunPCA()
@@ -107,6 +107,11 @@ names(cluster_reanno) <- paste0("C", as.character(1:21))
 mdf$archr_cluster <- cluster_reanno[as.character(mdf$Clusters)]
 mdf$predictions_l1 <- query@meta.data$predicted.celltype.l1
 mdf$predictions_l2 <- query@meta.data$predicted.celltype.l2
+mdf$confidence_l1 <-  query@meta.data$predicted.celltype.l1.score
+mdf$confidence_l2 <-  query@meta.data$predicted.celltype.l2.score
+
+ggplot(mdf, aes(x = archr_cluster, y = confidence_l1)) +
+  geom_boxplot()
 
 saveRDS(mdf, file = "../output/Seurat_Proteinprojections_allMeta.rds")
 
