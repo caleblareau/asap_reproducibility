@@ -4,173 +4,58 @@ library(dplyr)
 library(data.table)
 "%ni%" <- Negate("%in%")
 
-call_mutations_mgatk <- function(SE, stabilize_variance = TRUE, low_coverage_threshold = 10){
+source("../../global_functions/variant_calling.R")
+
+# Expensive computation to ID the variants
+if(FALSE){
   
-  # Determinie key coverage statistics every which way
-  cov <- assays(SE)[["coverage"]]
-  ref_allele <- toupper(as.character(rowRanges(SE)$refAllele))
+  # Pull out the cells
+  ctrl <- readRDS("../../../asap_large_data_files/multiome_pbmc_stim/input/LLL_CTRL_GRCh38-mtMask_atac_mgatk.rds") 
+  stim <- readRDS("../../../asap_large_data_files/multiome_pbmc_stim/input/LLL_STIM_GRCh38-mtMask_atac_mgatk.rds")
+  table(stim$depth > 20)
+  table(ctrl$depth > 20)
   
-  # Process mutation for one alternate letter
-  process_letter <- function(letter){
-    print(letter)
-    boo <- ref_allele != letter & ref_allele != "N"
-    pos <- start(rowRanges(SE))
-    variant_name <- paste0(as.character(pos), ref_allele, ">", letter)[boo]
-    nucleotide <- paste0(ref_allele, ">", letter)[boo]
-    position_filt <- pos[boo]
-    
-    # Single cell functions
-    getMutMatrix <- function(letter){
-      mat <- ((assays(SE)[[paste0(letter, "_counts_fw")]] + assays(SE)[[paste0(letter, "_counts_rev")]]) / cov)[boo,]
-      rownames(mat) <- variant_name
-      mat <- as(mat, "dgCMatrix")
-      return(mat)
-    }
-    
-    getMutMatrix_fw  <- function(letter){
-      mat <- ((assays(SE)[[paste0(letter, "_counts_fw")]]) / cov_fw)[boo,]
-      rownames(mat) <- variant_name
-      mat <- as(mat, "dgCMatrix")
-      return(mat)
-    }
-    
-    getMutMatrix_rev  <- function(letter){
-      mat <- ((assays(SE)[[paste0(letter, "_counts_rev")]]) / cov_rev)[boo,]
-      rownames(mat) <- variant_name
-      mat <- as(mat, "dgCMatrix")
-      return(mat)
-    }
-    
-    # Bulk functions
-    getBulk <- function(letter){
-      vec <- (Matrix::rowSums(assays(SE)[[paste0(letter, "_counts_fw")]] + assays(SE)[[paste0(letter, "_counts_rev")]]) / Matrix::rowSums(cov))[boo]
-      return(vec)
-    }
-    rowVars <- function(x, ...) {
-      Matrix::rowSums((x - Matrix::rowMeans(x, ...))^2, ...)/(dim(x)[2] - 1)
-    }
-    
-    update_missing_w_zero <- function(vec){
-      ifelse(is.na(vec)  | is.nan(vec), 0, vec)
-    }
-    # Set up correlation per non-zero mutation based on the strands
-    dt <- merge(data.table(Matrix::summary(assays(SE)[[paste0(letter, "_counts_fw")]][boo,])), 
-                data.table(Matrix::summary(assays(SE)[[paste0(letter, "_counts_rev")]][boo,])), 
-                by.x = c("i", "j"), by.y = c("i", "j"), 
-                all = TRUE)[x.x >0 | x.y >0]
-    dt$x.x <- update_missing_w_zero(dt$x.x)
-    dt$x.y <- update_missing_w_zero(dt$x.y)
-    
-    dt2 <- data.table(variant = variant_name[dt[[1]]],
-                      cell_idx = dt[[2]], 
-                      forward = dt[[3]],
-                      reverse = dt[[4]])
-    rm(dt)
-    cor_dt <- dt2[, .(cor = cor(c(forward), c(reverse), method = "pearson", use = "pairwise.complete")), by = list(variant)]
-    
-    # Put in vector for convenience
-    cor_vec_val <- cor_dt$cor
-    names(cor_vec_val) <- as.character(cor_dt$variant )
-    
-    # Compute the single-cell data
-    mat <- getMutMatrix(letter)
-    mmat <- sparseMatrix(
-      i = c(summary(mat)$i,dim(mat)[1]),
-      j = c(summary(mat)$j,dim(mat)[2]),
-      x = c(update_missing_w_zero(summary(mat)$x), 0)
-    )
-    
-    # Compute bulk statistics
-    mean = update_missing_w_zero(getBulk(letter))
-    
-    # Stablize variances by replacing low coverage cells with mean
-    if(stabilize_variance){
-      
-      # Get indices of cell/variants where the coverage is low and pull the mean for that variant
-      idx_mat <- which(data.matrix(cov[boo,] < low_coverage_threshold), arr.ind = TRUE)
-      idx_mat_mean <- mean[idx_mat[,1]]
-      
-      # Now, make sparse matrices for quick conversion
-      ones <- 1 - sparseMatrix(
-        i = c(idx_mat[,1], dim(mmat)[1]),
-        j = c(idx_mat[,2], dim(mmat)[2]),
-        x = 1
-      )
-      
-      means_mat <- sparseMatrix(
-        i = c(idx_mat[,1], dim(mmat)[1]),
-        j = c(idx_mat[,2], dim(mmat)[2]),
-        x = c(idx_mat_mean, 0)
-      )
-      
-      mmat2 <- mmat * ones + means_mat
-      variance = rowVars(mmat2)
-      rm(mmat2); rm(ones); rm(means_mat); rm(idx_mat); rm(idx_mat_mean)
-      
-    } else {
-      variance = rowVars(mmat)
-    }
-    
-    detected <- (assays(SE)[[paste0(letter, "_counts_fw")]][boo,] >= 2) + (assays(SE)[[paste0(letter, "_counts_rev")]][boo,] >=2 )
-    
-    # Compute per-mutation summary statistics
-    var_summary_df <- data.frame(
-      position = position_filt,
-      nucleotide = nucleotide, 
-      variant = variant_name,
-      vmr = variance/(mean + 0.00000000001),
-      mean = round(mean,7),
-      variance = round(variance,7),
-      n_cells_conf_detected = Matrix::rowSums(detected == 2),
-      n_cells_over_5 = Matrix::rowSums(mmat >= 0.05), 
-      n_cells_over_10 = Matrix::rowSums(mmat >= 0.10),
-      n_cells_over_20 = Matrix::rowSums(mmat >= 0.20),
-      strand_correlation = cor_vec_val[variant_name],
-      mean_coverage = Matrix::rowMeans(cov)[boo], 
-      stringsAsFactors = FALSE, row.names = variant_name
-    )
-    se_new <- SummarizedExperiment(
-      rowData = var_summary_df, 
-      colData = colData(SE), 
-      assays = list(allele_frequency = mmat, coverage = cov[boo,])
-    )
-    return(se_new)
-  }
+  colnames(stim) <- gsub("-1", "-2", colnames(stim))
+  both_mgatk <- call_mutations_mgatk(cbind(ctrl[,ctrl$depth > 20], stim[,stim$depth > 20]))
   
-  return(SummarizedExperiment::rbind(process_letter("A"), process_letter("C"), process_letter("G"), process_letter("T")))
-  
+  # Make the standard mtscatac variant calling plot
+  misc_df <- data.frame(rowData(both_mgatk))
+  p1 <- ggplot(misc_df %>%  filter(n_cells_conf_detected >= 5 ), aes(x = strand_correlation, y = log10(vmr), color = log10(vmr) > -2 & strand_correlation > 0.65)) +
+    geom_point(size = 0.4) + scale_color_manual(values = c("black", "firebrick")) +
+    labs(color = "HQ", x = "Strand concordance", y = "log VMR") +
+    pretty_plot(fontsize = 8) + L_border() +
+    theme(legend.position = "bottom") + 
+    geom_vline(xintercept = 0.65, linetype = 2) +
+    geom_hline(yintercept = -2, linetype = 2) + theme(legend.position = "none")
+  cowplot::ggsave2(p1, file = "LLLboth_var_call_mtscatac.pdf", width = 1.55, height = 1.55)
+  saveRDS(assays(both_mgatk)[["allele_frequency"]][variants,], file = "both_LLL_allele_freqs.rds")
 }
-ctrl <- readRDS("LLL_CTRL_GRCh38-mtMask_atac_mgatk/final/LLL_CTRL_GRCh38-mtMask_atac_mgatk.rds") 
-stim <- readRDS("LLL_STIM_GRCh38-mtMask_atac_mgatk/final/LLL_STIM_GRCh38-mtMask_atac_mgatk.rds")
-table(stim$depth > 20)
-table(ctrl$depth > 20)
-stim_mgatk <- call_mutations_mgatk(stim[,stim$depth > 20])
-ctrl_mgatk <- call_mutations_mgatk(ctrl[,ctrl$depth > 20])
-both_mgatk <- call_mutations_mgatk(cbind(ctrl[,ctrl$depth > 20], stim[,stim$depth > 20]))
 
-variants <- data.frame(rowData(both_mgatk)) %>%  dplyr::filter(n_cells_conf_detected >= 5 & strand_correlation > 0.65 & log10(vmr) > -2 ) %>% pull(variant)
-ddf <- data.frame(
-  variants = variants,
-  ctrl_af = rowData(ctrl_mgatk)[variants,c("mean")],
-  stim_af = rowData(stim_mgatk)[variants,c("mean")]
-)
-  
-ggplot(ddf, aes(x = ctrl_af*100, y = stim_af*100, label = variants)) +
-  geom_text() + scale_y_log10() + scale_x_log10() + pretty_plot() + L_border() +
-  labs(x = "Control AF%", y = "Stim AF%")
-
-cor(log10(ddf$ctrl_af), log10(ddf$stim_af))
-data.frame(rowData(both_mgatk))[variants,] %>% arrange((mean))
-
-mmdf <- merge(
-  fread("LLL_CTRL_GRCh38-mtMask_atac_mgatk/final/LLL_CTRL_GRCh38-mtMask_atac_mgatk.depthTable.txt"),
-  fread("LLL_CTRL_GRCh38-mtMask_rna_mgatk/final/LLL_CTRL_GRCh38-mtMask_rna_mgatk.depthTable.txt"),
-  by = "V1"
+af <- readRDS("../output/both_LLL_allele_freqs.rds")
+set.seed(1)
+stimvec <- substr(colnames(af), 18, 18) == 2
+stimvec_permuted <- sample(stimvec)
+af_change_df <- data.frame(
+  variant = rownames(af),
+  observed = log2(rowMeans(af[,stimvec])/rowMeans(af[,!stimvec])),
+  permuted = log2(rowMeans(af[,stimvec_permuted])/rowMeans(af[,!stimvec_permuted]))
 )
 
+ks.test(af_change_df$observed, af_change_df$permuted)
+density_df <- af_change_df %>% reshape2::melt()
+p2 <- ggplot(density_df, aes(x = value, fill = variable)) + 
+  geom_density(alpha = 0.5) +
+  scale_fill_manual(values =c ("firebrick", "grey")) +
+  scale_y_continuous(expand = c(0,0)) +
+  pretty_plot(fontsize = 8) + L_border() +
+  labs(x = "log2 FC stim / control", y = "empirical density") +
+  theme(legend.position = "none")
 
-ggplot(mmdf %>% dplyr::filter(V2.x < 250), aes(x = V2.x, y = V2.y)) + geom_point(alpha = 0.3) +
-  pretty_plot() + L_border() + scale_y_log10() + scale_x_log10() + labs(x = "mean mtDNA coverage - ATAC", y = "mean mtDNA coverage - RNA")
+cowplot::ggsave2(p2, file = "../plots/allele_frequency_shift_stim.pdf", width = 1.9, height = 1.6)
+
+# Look at the global gain of mtDNA
+ctrl <- readRDS("../../../asap_large_data_files/multiome_pbmc_stim/input/LLL_CTRL_GRCh38-mtMask_atac_mgatk.rds") 
+stim <- readRDS("../../../asap_large_data_files/multiome_pbmc_stim/input/LLL_STIM_GRCh38-mtMask_atac_mgatk.rds")
 
 
 posdf <- data.frame(
@@ -178,9 +63,11 @@ posdf <- data.frame(
   ctrl = rowMeans(assays(ctrl)[["coverage"]]),
   stim = rowMeans(assays(stim)[["coverage"]])
 )
-reshape2::melt(posdf , id.vars = "pos") %>%
-  dplyr::filter(value > 20)%>% 
+pcoverage  <- reshape2::melt(posdf , id.vars = "pos") %>%
+  dplyr::filter(value > 25)%>%  # one outlier point
   ggplot(aes(x = pos, y = value, color = variable)) +
   geom_line() +
-  pretty_plot() + L_border() +
-  
+  pretty_plot(fontsize = 7) + L_border() +
+  scale_color_manual(values = c("dodgerblue3", "firebrick"))  +
+  theme(legend.position = "none") + labs(x = "Position along mtDNA genome", y = "Mean coverage of mtDNA per cell")
+cowplot::ggsave2(pcoverage, file = "../plots/Stim_mtDNAcoverage.pdf", width = 2.5, height = 1.5)

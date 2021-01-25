@@ -38,14 +38,14 @@ vals_mat[vals_mat[,1] %in% tag_features,c(2:5)] %>%
 ggplot(vals_mat, aes(x = ac, y = as, label = tag )) +
   geom_text()
 
-go_pal = jdb_palette("solar_blues")
+go_pal = "black"
 
 pdf("../plots/correlation_heat_control.pdf", width = 2.5, height = 3)
 smoothScatter(vals_mat$ac,  vals_mat$cc, nbin = 128, colramp = colorRampPalette(c("white", go_pal)),
               nrpoints = 0, ret.selection = FALSE, xlab="", ylab="")
 dev.off()
 pdf("../plots/correlation_heat_stim.pdf", width = 2.5, height = 3)
-smoothScatter(vals_mat$cc,  vals_mat$ac, nbin =128, colramp = colorRampPalette(c("white", go_pal)),
+smoothScatter(vals_mat$as,  vals_mat$cs, nbin =128, colramp = colorRampPalette(c("white", go_pal)),
               nrpoints = 0, ret.selection = FALSE, xlab="", ylab="")
 dev.off()
 

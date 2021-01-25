@@ -6,7 +6,7 @@ import_scRNAseq_cite_stim <- function(dir_base){
   colnames(raw) <- paste0(substr(colnames(raw), 1, 16), "-1")
   
   # import scrublet results
-  singlets <- fread(paste0("../data/citeseq/rnaseq/", dir_base, ".scrub.tsv")) %>%
+  singlets <- fread(paste0("../data/citeseq/rnaseq/scrublet_out/", dir_base, ".scrub.tsv")) %>%
     data.frame() %>% dplyr::filter(score < 0.25) %>% pull(barcode) # the original called threshold seemed too conservative; this is a better estimate for these libraries
   
   # Remove crazy high and low expressors

@@ -41,7 +41,7 @@ dim(vars_clone)
 saveRDS(mSE[boo,], file = "../output/mitoMutations_cov10_marrow.rds")
 
 
-ref_all <- fread("../../global_functions/data/chrM_refAllele.txt")
+ref_all <- fread("../../global_functions/references/chrM_refAllele.txt")
 
 prop_df <- get_enrich_mutation_df(vars_clone$variant, ref_all)
 

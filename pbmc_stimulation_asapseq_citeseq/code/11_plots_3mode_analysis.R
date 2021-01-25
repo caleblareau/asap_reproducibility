@@ -234,6 +234,9 @@ make_six_plot <- function(protein_name, gene_name){
     width = 9, height = 6, file = paste0("../plots/dog/", protein_name, "_dog.png"))
   
 }
+
+make_six_plot("CD138-1(Syndecan-1)","SDC1")
+
 make_six_plot("CD52","CD52")
 
 make_six_plot("CD45-1","PTPRC")
