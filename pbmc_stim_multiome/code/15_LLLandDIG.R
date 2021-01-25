@@ -138,7 +138,7 @@ pbmc_all <- FindClusters(pbmc_all, graph.name = "wsnn", algorithm = 3, resolutio
 p1 <- DimPlot(pbmc_all, reduction = 'wnn.3.umap', label = FALSE, pt.size = 0.01, split.by = "stim_assay" , group.by = "assay") & 
   scale_color_manual(values = c("dodgerblue3", "firebrick")) & theme_void() &
   theme(legend.position = "none")
-cowplot::ggsave2(p1, file = "../plots/dig_lll_out_all4.png", width = 7, height = 1.8, dpi = 500)
+cowplot::ggsave2(p1, file = "../plots/dig_lll_out_all4.png", width = 14, height = 3.6, dpi = 500)
 
 # Visualize some stuff
 DefaultAssay(pbmc_all) <- "ADT"
