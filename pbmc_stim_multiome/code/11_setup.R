@@ -44,16 +44,18 @@ lll_stim_rna <- process_scRNA(lll_stim_rna)
 lll_ctrl_rna <- process_scRNA(Read10X_h5("../data/LLL_CTRL_feature_bc_matrix.h5")$`Gene Expression`)
 
 # Import the meta data and create seurat object
-ctrl <- fread("../data/metrics/LLL_CTRL_per_barcode_metrics.csv.gz") %>% filter(is_cell == 1) %>% data.frame()
-stim <- fread("../data/metrics/LLL_STIM_per_barcode_metrics.csv.gz")%>% filter(is_cell == 1) %>% data.frame()
+ctrl <- fread("../data/metrics/LLL_CTRL_per_barcode_metrics.csv.gz") %>% dplyr::filter(is_cell == 1) %>% data.frame()
+stim <- fread("../data/metrics/LLL_STIM_per_barcode_metrics.csv.gz")%>% dplyr::filter(is_cell == 1) %>% data.frame()
 stim$barcode <- gsub("-1", "-2", stim$barcode)
 rownames(ctrl) <-ctrl$barcode; rownames(stim) <- stim$barcode
 
 full_meta <- merge(rbind(ctrl, stim), data.frame(barcode = colnames(lll_protein), 
+                                                 CD4adt = lll_protein["CD4-1",],
+                                                 CD8adt = lll_protein["CD8",],
                                                  totalADT = colSums(lll_protein), 
                                                  totalCTRLadt = colSums(lll_protein[grepl("Ctrl", rownames(lll_protein)), ])), by = "barcode")
 rownames(full_meta) <- full_meta$barcode
-
+dim(full_meta)
 
 # Do some visualization to determine thresholds
 ggplot(full_meta, aes(x = totalCTRLadt, y = totalADT)) +
@@ -64,11 +66,13 @@ pbmc_lll <- CreateSeuratObject(counts = cbind(lll_ctrl_rna,lll_stim_rna),
                                meta.data = full_meta)
 pbmc_lll$pct_in_peaks <- pbmc_lll$atac_peak_region_fragments / pbmc_lll$atac_fragments *100
 qplot(pbmc_lll$pct_in_peaks)
+full_meta <- full_meta[colnames(pbmc_lll),] 
 
 # Prospectively subset on attributes
-pbmc_lll <- subset(pbmc_lll, subset = pct_in_peaks > 50 & ull_meta$totalCTRLadt < 10)
+pbmc_lll <- subset(pbmc_lll, subset = pct_in_peaks > 50 & totalCTRLadt < 10 & totalADT > 100 & nCount_RNA < (10^4.5) & !(full_meta$CD8adt > 30 & full_meta$CD4adt > 100))
 pbmc_lll@meta.data$stim <- ifelse(substr(colnames(pbmc_lll), 18, 18) == 1, "Control", "Stim")
 table(pbmc_lll@meta.data$stim)
+dim(pbmc_lll)
 
 # Import ATAC-seq
 peaks <- Read10X_h5("../../../asap_large_data_files/multiome_pbmc_stim/input/filtered_peak_bc_matrix.h5")
@@ -115,17 +119,9 @@ pbmc_lll <- FindMultiModalNeighbors(object = pbmc_lll,
                                     reduction.list = list("harmony_RNA", "harmony_Peaks", "harmony_ADT"),
                                     dims.list = list(1:30, 2:30, 1:30))
 pbmc_lll <- RunUMAP(pbmc_lll, nn.name = "weighted.nn", reduction.name = "wnn.3.umap", reduction.key = "Uw3_" )
-pbmc_lll <- FindClusters(pbmc_lll, graph.name = "wsnn", algorithm = 3, resolution = 0.2, verbose = FALSE) # 
 pbmc_lll <- FindClusters(pbmc_lll, graph.name = "wsnn", algorithm = 3, resolution = 0.8, verbose = FALSE)
 
-# Visualize
-DimPlot(pbmc_lll, reduction = 'wnn.3.umap', label = TRUE, repel = TRUE, label.size = 2.5, split.by = "stim") + NoLegend()
-FeaturePlot(pbmc_lll, features = c("ADT.weight", "RNA.weight", "peaks.weight"),
-            min.cutoff = "q10", max.cutoff = "q90",
-            reduction =  'wnn.3.umap', split.by = "stim") &
-  scale_color_viridis()
-
-FeaturePlot(pbmc_lll, features = c( "CD138-1(Syndecan-1)", "CD4-1", "CD8", "CD69"), 
+FeaturePlot(pbmc_lll, features = c( "CD138-1(Syndecan-1)"), min.cutoff = "q10", max.cutoff = "q90",
                           reduction =  'wnn.3.umap',   pt.size = 0.01) &
   theme(legend.position = "none")
 
@@ -146,9 +142,35 @@ p_embedding <- DimPlot(pbmc_lll, reduction = 'wnn.3.umap', label = TRUE, repel =
 cowplot::ggsave2(p_embedding, file = "../plots/stim_split_embedding.pdf", 
                  width = 4.5, height = 1.8)
 
+p_mode_weights <- FeaturePlot(pbmc_lll, features = c("peaks.weight","RNA.weight", "ADT.weight"),
+                              min.cutoff = "q10", max.cutoff = "q90",
+                              reduction =  'wnn.3.umap', split.by = "stim", pt.size = 0.1,
+                              by.col = FALSE) &
+  scale_color_gradientn(colors =jdb_palette("Zissou")) &
+  theme_void() & ggtitle("") &
+  theme(legend.position = "none") &
+  theme(plot.margin = margin(0.2, 0.2, 0.2, 0.2, "cm"))
+
+cowplot::ggsave2(p_mode_weights, file = "../plots/umap_3wnn_modality_weights.png", width = 9, height = 6)
+
+
+p_mode_weights_nosplit <- FeaturePlot(pbmc_lll, features = c("peaks.weight","RNA.weight", "ADT.weight"),
+                                      min.cutoff = "q10", max.cutoff = "q90",
+                                      reduction =  'wnn.3.umap',  pt.size = 0.1,ncol = 3,
+                                      by.col = FALSE) &
+  scale_color_gradientn(colors =jdb_palette("Zissou")) &
+  theme_void() & ggtitle("") &
+  theme(legend.position = "none") &
+  theme(plot.margin = margin(0.2, 0.2, 0.2, 0.2, "cm"))
+
+cowplot::ggsave2(p_mode_weights_nosplit, file = "../plots/umap_3wnn_modality_weights_nosplit.png", width = 9, height = 3)
+
+
+VlnPlot(pbmc_lll, features = c("nCount_RNA", "nCount_ADT", "nCount_peaks")) &
+  scale_y_log10()
 
 # Tangent about 2 to 3 gain in cluster stuff
-if(FALSE){
+if(TRUE){
   
   # Compute ADJ for leave one out modalities
   compute_clusters <- function(indices, resolutionparam = 0.8){
@@ -181,7 +203,7 @@ if(FALSE){
     )
     dd <- mdf %>% group_by(three_cluster, test_two) %>%
       summarize(count = n()) %>% ungroup() %>% group_by(three_cluster) %>% mutate(prop = count/sum(count)*100)
-    oo <- dd %>% filter(prop > 40) %>% arrange((three_cluster)) %>% pull(test_two) %>% unique()
+    oo <- dd %>% dplyr::filter(prop > 40) %>% arrange((three_cluster)) %>% pull(test_two) %>% unique()
     dd$order_tt <- factor(as.character(dd$test_two), levels = oo)
     
     po <- ggplot(dd, aes(y = three_cluster, x = order_tt, fill =  prop)) +
@@ -197,12 +219,12 @@ if(FALSE){
   }
   cowplot::ggsave2(cowplot::plot_grid(
     make_plot("RNA_ATAC"),  make_plot("ATAC_Protein"), make_plot("RNA_Protein"),nrow = 1), 
-    height = 2, width = 7, file = "../plots/all_plots_prop_pairs_together.pdf")
+    height = 1.7, width = 7, file = "../plots/all_plots_prop_pairs_together.pdf")
 }
 
 
 # Dedicated mode for reference projection
-if(FALSE){
+if(TRUE){
   reference <- SeuratDisk::LoadH5Seurat("../../../asap_large_data_files/multiome_pbmc_stim/reference/pbmc_multimodal.h5seurat")
   DefaultAssay(pbmc_lll) <- "RNA"
   pbmc_lll <- SCTransform(pbmc_lll, verbose = FALSE)
@@ -242,29 +264,6 @@ if(FALSE){
   DimPlot(pbmc_lll, reduction = 'ref.umap', label = TRUE, repel = TRUE, label.size = 2.5, group.by = "seurat_clusters", 
           split.by = "stim") 
 }
-
-p_mode_weights <- FeaturePlot(pbmc_lll, features = c("peaks.weight","RNA.weight", "ADT.weight"),
-                              min.cutoff = "q10", max.cutoff = "q90",
-                              reduction =  'wnn.3.umap', split.by = "stim", pt.size = 0.1,
-                              by.col = FALSE) &
-  scale_color_gradientn(colors =jdb_palette("Zissou")) &
-  theme_void() & ggtitle("") &
-  theme(legend.position = "none") &
-  theme(plot.margin = margin(0.2, 0.2, 0.2, 0.2, "cm"))
-
-cowplot::ggsave2(p_mode_weights, file = "../plots/umap_3wnn_modality_weights.png", width = 9, height = 6)
-
-
-p_mode_weights_nosplit <- FeaturePlot(pbmc_lll, features = c("peaks.weight","RNA.weight", "ADT.weight"),
-                                      min.cutoff = "q10", max.cutoff = "q90",
-                                      reduction =  'wnn.3.umap',  pt.size = 0.1,ncol = 3,
-                                      by.col = FALSE) &
-  scale_color_gradientn(colors =jdb_palette("Zissou")) &
-  theme_void() & ggtitle("") &
-  theme(legend.position = "none") &
-  theme(plot.margin = margin(0.2, 0.2, 0.2, 0.2, "cm"))
-
-cowplot::ggsave2(p_mode_weights_nosplit, file = "../plots/umap_3wnn_modality_weights_nosplit.png", width = 9, height = 3)
 
 # Last thing-- add gene activities for dog plots
 annotations <- GetGRangesFromEnsDb(ensdb = EnsDb.Hsapiens.v86)

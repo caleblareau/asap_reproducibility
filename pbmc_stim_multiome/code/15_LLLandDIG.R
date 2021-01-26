@@ -59,8 +59,13 @@ tenx_qc <- rbind(
 )
 
 full_meta <- merge(tenx_qc, data.frame(barcode = colnames(all_protein), 
+                                       CD4adt = all_protein["CD4-1",],
+                                       CD8adt = all_protein["CD8",],
                                        totalADT = colSums(all_protein), 
                                        totalCTRLadt = colSums(all_protein[grepl("Ctrl", rownames(all_protein)), ])), by = "barcode")
+rownames(full_meta) <- full_meta$barcode
+dim(full_meta)
+
 rownames(full_meta) <- full_meta$barcode
 dim(full_meta)
 full_meta$channel <- substr(rownames(full_meta), 18, 18)
@@ -80,7 +85,7 @@ pbmc_all <- CreateSeuratObject(counts = cbind(lll_ctrl_rna,lll_stim_rna, dig_ctr
 qplot(pbmc_all$pct_in_peaks)
 
 # Prospectively subset on attributes
-pbmc_all <- subset(pbmc_all, subset = (pct_in_peaks > 50) & (totalCTRLadt < 10) & totalADT > 100)
+pbmc_all <- subset(pbmc_all, subset = pct_in_peaks > 50 & totalCTRLadt < 10 & totalADT > 100 & nCount_RNA < (10^4.5) & !(CD8adt > 30 & full_meta$CD4adt > 100))
 pbmc_all@meta.data$stim <- ifelse(substr(colnames(pbmc_all), 18, 18) %in% c(1,3), "Control", "Stim")
 pbmc_all@meta.data$assay <- ifelse(substr(colnames(pbmc_all), 18, 18) %in% c(1,2), "LLL", "DIG")
 pbmc_all@meta.data$stim_assay <- paste0(pbmc_all@meta.data$stim, "_", pbmc_all@meta.data$assay)
@@ -143,7 +148,7 @@ cowplot::ggsave2(p1, file = "../plots/dig_lll_out_all4.png", width = 14, height 
 # Visualize some stuff
 DefaultAssay(pbmc_all) <- "ADT"
 p_feature <- FeaturePlot(pbmc_all, features = c( "CD138-1(Syndecan-1)"), split.by = "stim",
-                          reduction =  'wnn.3.umap',  min.cutoff = "q10", max.cutoff = "q90", pt.size = 0.01) &
+                         reduction =  'wnn.3.umap',  min.cutoff = "q10", max.cutoff = "q90", pt.size = 0.01) &
   theme_void() & scale_color_gradientn(colors = jdb_palette("solar_extra")) &
   theme(legend.position = "none")
 cowplot::ggsave2(p_feature, file = "../plots/cd138_expression_LLLdig.pdf", 
@@ -156,148 +161,4 @@ p_embedding <- DimPlot(pbmc_all, reduction = 'wnn.3.umap', label = TRUE, repel =
 
 cowplot::ggsave2(p_embedding, file = "../plots/stim_split_embedding.pdf", 
                  width = 4.5, height = 1.8)
-
-
-# Tangent about 2 to 3 gain in cluster stuff
-if(FALSE){
-  
-  # Compute ADJ for leave one out modalities
-  compute_clusters <- function(indices, resolutionparam = 0.8){
-    reduc <- list("harmony_RNA", "harmony_Peaks", "harmony_ADT")[indices]
-    dims <- list(1:30, 2:30, 1:30)[indices]
-    (FindMultiModalNeighbors(object = pbmc_all, reduction.list = reduc, dims.list = dims, snn.graph.name = "wsnn_test", knn.graph.name = "wknn_test") %>%
-        FindClusters(graph.name = "wsnn_test", algorithm = 3, resolution = resolutionparam, verbose = FALSE))$seurat_clusters
-  }
-  
-  cluster_df <- data.frame(
-    barcode = colnames(pbmc_all),
-    all3 = compute_clusters(c(1,2,3)),
-    RNA_Protein = compute_clusters(c(1,3)),
-    RNA_ATAC = compute_clusters(c(1,2)),
-    ATAC_Protein = compute_clusters(c(2,3))
-  )
-  str(cluster_df)
-  write.table(cluster_df, file = "../output/pairs_of_wnn.tsv", 
-              sep = "\t", quote = FALSE, row.names = FALSE, col.names = TRUE)
-  
-  str(cluster_df)
-  adjustedRandIndex(cluster_df$all3, cluster_df$RNA_ATAC)
-  adjustedRandIndex(cluster_df$all3, cluster_df$ATAC_Protein)
-  adjustedRandIndex(cluster_df$all3, cluster_df$RNA_Protein)
-  
-  make_plot <- function(two_to_test){
-    mdf <- data.frame(
-      three_cluster = cluster_df[,"all3"],
-      test_two = cluster_df[,two_to_test]
-    )
-    dd <- mdf %>% group_by(three_cluster, test_two) %>%
-      summarize(count = n()) %>% ungroup() %>% group_by(three_cluster) %>% mutate(prop = count/sum(count)*100)
-    oo <- dd %>% filter(prop > 40) %>% arrange((three_cluster)) %>% pull(test_two) %>% unique()
-    dd$order_tt <- factor(as.character(dd$test_two), levels = oo)
-    
-    po <- ggplot(dd, aes(y = three_cluster, x = order_tt, fill =  prop)) +
-      geom_tile() + pretty_plot(fontsize = 6) + L_border() +
-      scale_fill_gradientn(colours = jdb_palette("brewer_heat")) +
-      theme(legend.position = "none") +
-      scale_y_discrete(limits = rev(unique(dd$three_cluster)), expand = c(0,0))+ 
-      scale_x_discrete(expand = c(0,0)) +
-      labs(y = "3WNN Cluster ID", x = two_to_test) +
-      theme(axis.text.x=element_blank())
-    return(po)
-    
-  }
-  cowplot::ggsave2(cowplot::plot_grid(
-    make_plot("RNA_ATAC"),  make_plot("ATAC_Protein"), make_plot("RNA_Protein"),nrow = 1), 
-    height = 2, width = 7, file = "../plots/all_plots_prop_pairs_together.pdf")
-}
-
-
-# Dedicated mode for reference projection
-if(FALSE){
-  reference <- SeuratDisk::LoadH5Seurat("../../../asap_large_data_files/multiome_pbmc_stim/reference/pbmc_multimodal.h5seurat")
-  DefaultAssay(pbmc_all) <- "RNA"
-  pbmc_all <- SCTransform(pbmc_all, verbose = FALSE)
-  anchors <- FindTransferAnchors(
-    reference = reference,
-    query = pbmc_all,
-    normalization.method = "SCT",
-    reference.reduction = "spca",
-    dims = 1:50
-  )
-  pbmc_all <- MapQuery(
-    anchorset = anchors,
-    query = pbmc_all,
-    reference = reference,
-    refdata = list(
-      celltype.l1 = "celltype.l1",
-      celltype.l2 = "celltype.l2",
-      predicted_ADT = "ADT"
-    ),
-    reference.reduction = "spca", 
-    reduction.model = "wnn.umap"
-  )
-  
-  
-  p_embedding_azi <- DimPlot(pbmc_all, reduction = 'wnn.3.umap', label = TRUE, repel = TRUE, label.size = 2, 
-                             pt.size = 0.01, group.by = "predicted.celltype.l2",
-                             split.by = "stim")  + theme_void() + theme(legend.position = "none")  
-  cowplot::ggsave2(p_embedding_azi , file = "../plots/azimuth_reference_embedding.pdf", 
-                   width = 4.5, height = 2.05)
-  
-  
-  
-  DimPlot(pbmc_all, reduction = 'wnn.3.umap', label = TRUE, repel = TRUE, label.size = 2.5, group.by = "seurat_clusters", 
-          split.by = "stim") + theme_void()
-  DimPlot(pbmc_all, reduction = 'ref.umap', label = TRUE, repel = TRUE, label.size = 2.5, group.by = "predicted.celltype.l2", 
-          split.by = "stim") 
-  DimPlot(pbmc_all, reduction = 'ref.umap', label = TRUE, repel = TRUE, label.size = 2.5, group.by = "seurat_clusters", 
-          split.by = "stim") 
-}
-
-p_mode_weights <- FeaturePlot(pbmc_all, features = c("peaks.weight","RNA.weight", "ADT.weight"),
-                              min.cutoff = "q10", max.cutoff = "q90",
-                              reduction =  'wnn.3.umap', split.by = "stim", pt.size = 0.1,
-                              by.col = FALSE) &
-  scale_color_gradientn(colors =jdb_palette("Zissou")) &
-  theme_void() & ggtitle("") &
-  theme(legend.position = "none") &
-  theme(plot.margin = margin(0.2, 0.2, 0.2, 0.2, "cm"))
-
-cowplot::ggsave2(p_mode_weights, file = "../plots/umap_3wnn_modality_weights.png", width = 9, height = 6)
-
-
-p_mode_weights_nosplit <- FeaturePlot(pbmc_all, features = c("peaks.weight","RNA.weight", "ADT.weight"),
-                                      min.cutoff = "q10", max.cutoff = "q90",
-                                      reduction =  'wnn.3.umap',  pt.size = 0.1,ncol = 3,
-                                      by.col = FALSE) &
-  scale_color_gradientn(colors =jdb_palette("Zissou")) &
-  theme_void() & ggtitle("") &
-  theme(legend.position = "none") &
-  theme(plot.margin = margin(0.2, 0.2, 0.2, 0.2, "cm"))
-
-cowplot::ggsave2(p_mode_weights_nosplit, file = "../plots/umap_3wnn_modality_weights_nosplit.png", width = 9, height = 3)
-
-# Last thing-- add gene activities for dog plots
-annotations <- GetGRangesFromEnsDb(ensdb = EnsDb.Hsapiens.v86)
-
-# change to UCSC style since the data was mapped to hg38
-seqlevelsStyle(annotations) <- 'UCSC'
-genome(annotations) <- "hg38"
-
-# add the gene information to the object
-Annotation(chrom_assay) <- annotations
-gene.activities <- GeneActivity(CreateSeuratObject(
-  counts = chrom_assay
-))
-
-# Add and normalize gene activity scores
-pbmc_all[['GA']] <- CreateAssayObject(counts = gene.activities)
-pbmc_all <- NormalizeData(
-  object = pbmc_all,
-  assay = 'GA',
-  normalization.method = 'LogNormalize',
-  scale.factor = median(pbmc_all$nCount_GA)
-)
-
-saveRDS(pbmc_all, "../../../asap_large_data_files/multiome_pbmc_stim/output/pbmc_all_processed.rds")
 

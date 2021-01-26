@@ -32,7 +32,7 @@ dim(pbmc_lll_t)
 write.table(pbmc_lll@meta.data[,c("stim","protein_MS1", "rna_MS1","peaks.MS", "predicted.celltype.l1")],
             file = "../output/LLL_module_scores.csv", row.names = TRUE, col.names = TRUE, sep = ",", quote = FALSE)
 
-FeaturePlot(pbmc_lll_t, features = c("peaks.MS","rna_MS1", "protein_MS1"),
+p_MS_go <- FeaturePlot(pbmc_lll_t, features = c("peaks.MS","rna_MS1", "protein_MS1"),
                        min.cutoff = "q10", max.cutoff = "q90", split.by = "stim",
                        reduction =  'wnn.3.umap',  pt.size = 0.1,ncol = 3,
                        by.col = FALSE) &
@@ -44,7 +44,6 @@ FeaturePlot(pbmc_lll_t, features = c("peaks.MS","rna_MS1", "protein_MS1"),
 cowplot::ggsave2(p_MS_go, file = "../plots/umap_3wnn_tcellactivation_modulescores.png", width = 9, height = 6)
 
 values_df <- data.frame(data.matrix(pbmc_lll_t@meta.data[pbmc_lll_t@meta.data$stim == "Stim",c("protein_MS1", "rna_MS1","peaks.MS")]))
-library(gg3D)
 values_df$peaksMS <- ifelse(values_df$peaks.MS > 20, 20,  ifelse(values_df$peaks.MS < -10, -10, values_df$peaks.MS))
 p1 <- ggplot(values_df, aes(x=rna_MS1, y=protein_MS1, color=peaksMS)) + 
   pretty_plot(fontsize = 7) + L_border() + theme(legend.position = "none") +
@@ -55,3 +54,5 @@ cowplot::ggsave2(p1, file = "../plots/mod3_view_score_go.pdf", width = 1.6, heig
 
 ggplot(pbmc_lll_t@meta.data, aes(x = rna_MS1, y = protein_MS1, color = peaks.MS)) +
   geom_point() + facet_wrap(~stim)
+
+cor(values_df[,c("protein_MS1", "rna_MS1","peaks.MS")])
