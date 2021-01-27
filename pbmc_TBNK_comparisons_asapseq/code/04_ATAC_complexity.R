@@ -2,7 +2,7 @@ library(data.table)
 library(dplyr)
 source("../../global_functions/estimateLibraryComplexity.R")
 
-pbmc <- fread("../data/broad_pbmcs_aggr_singlecell.csv.gz") %>%
+pbmc <- fread("../data/three_comparison/broad_pbmcs_aggr_singlecell.csv.gz") %>%
   filter(cell_id != "None")
 pbmc$channel <- substr(pbmc$barcode, 18, 18)
 pbmc <- pbmc %>% filter(channel %in% c("1", "2")) %>% mutate(total = duplicate + passed_filters) %>% data.frame()

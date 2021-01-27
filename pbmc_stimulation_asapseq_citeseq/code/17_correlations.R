@@ -35,17 +35,19 @@ tag_features <- tag_df %>% arrange(desc(vst.variance)) %>% pull(tag) %>% head(50
 vals_mat[vals_mat[,1] %in% tag_features,c(2:5)] %>%
   cor()
 
-ggplot(vals_mat, aes(x = ac, y = as, label = tag )) +
+ggplot(vals_mat, aes(x = cs, y = as, label = tag )) +
   geom_text()
+max(vals_mat$as)
+max(vals_mat$cs)
 
 go_pal = "black"
 
 pdf("../plots/correlation_heat_control.pdf", width = 2.5, height = 3)
 smoothScatter(vals_mat$ac,  vals_mat$cc, nbin = 128, colramp = colorRampPalette(c("white", go_pal)),
-              nrpoints = 0, ret.selection = FALSE, xlab="", ylab="")
+              nrpoints = 0, ret.selection = FALSE, xlab="", ylab="", xlim = c(0, 3.85),  ylim = c(0, 3.85))
 dev.off()
 pdf("../plots/correlation_heat_stim.pdf", width = 2.5, height = 3)
 smoothScatter(vals_mat$as,  vals_mat$cs, nbin =128, colramp = colorRampPalette(c("white", go_pal)),
-              nrpoints = 0, ret.selection = FALSE, xlab="", ylab="")
+              nrpoints = 0, ret.selection = FALSE, xlab="", ylab="", xlim = c(0, 4.7),  ylim = c(0, 4.7))
 dev.off()
 

@@ -53,7 +53,7 @@ adt_peak_gene <- LinkPeaks(
 )@assays$peaks@links %>% data.frame()
 
 mdf <- merge(rna_peak_gene, adt_peak_gene, by = c("peak", "gene"))
-
+cor(mdf$zscore.x, mdf$zscore.y)
 p1 <- ggplot(mdf, aes(x = zscore.x, y = zscore.y, label = gene)) +
   geom_point(size = 0.2, alpha = 0.5)+ pretty_plot(fontsize = 7) + L_border() +
   labs(x = "Peak to RNA z-score ", y= "Zscore Peak to Protein")
