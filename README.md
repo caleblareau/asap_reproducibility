@@ -66,7 +66,7 @@ https://github.com/caleblareau/asap_to_kite
 
 ## Questions/ contact
 
-Corresponding author: [Peter Smibert](smibertp@gmail.com)
+Formal questions about this work should be addressed to the corresponding author: [Peter Smibert](mailto:smibertp@gmail.com). 
 
 For questions or comments related to the specific code, please raise an issue or submit a pull request. 
 
