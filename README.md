@@ -1,12 +1,12 @@
-# ASAPseq paper reproducibility
+# Reproducing ASAP-seq and DOGMA-seq analyses
 
-_Last updated: February 1, 2021_
+_Last updated: June 10, 2021_
 
 This repository contains all code needed to reproduce all analyses:
 
 **Scalable, multimodal profiling of chromatin accessibility, gene expression, and protein levels in single cells**
  
-Eleni P. Mimitou+, Caleb A. Lareau+, Kelvin Y. Chen+ et al. Scalable, multimodal profiling of chromatin accessibility, gene expression, and protein levels in single cells. _bioRxiv_ [doi: 0.1101/2020.09.08.286914v1](https://www.biorxiv.org/content/10.1101/2020.09.08.286914v1)
+Eleni P. Mimitou+, Caleb A. Lareau+, Kelvin Y. Chen+ et al. Scalable, multimodal profiling of chromatin accessibility, gene expression, and protein levels in single cells. _Nature Biotechnology_ 2021. [Online here](https://www.nature.com/articles/s41587-021-00927-2)
 
 # Setup
 
@@ -42,7 +42,7 @@ The code assumes a relative file path with this organization.
 
 
 # Figure to directory mapping
-**Note** this is for the updated version under review and _not_ the bioRxiv verison.
+**Note** this is for the version of the manuscript published in _Nature Biotechnolgy_ and _not_ the previous bioRxiv verison.
 ```
 Figure 1 | species_mix_asapseq,pbmc_TBNK_comparisons_asapseq
 Figure 2 | pbmc_TBNK_comparisons_asapseq
